@@ -1,5 +1,5 @@
 language: csharp
---project: UniversalAPI.sln
+project: UniversalAPI.sln
 mono: none
 dotnet: 3.1
 script:
