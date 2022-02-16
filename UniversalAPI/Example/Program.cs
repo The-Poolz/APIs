@@ -8,42 +8,23 @@ using System.IO;
 
 namespace Example
 {
-    public class A
-    {
-        public int Age { get; set; }
-        public string Name { get; set; }
-    }
-
     class Program
     {
-        public static void Run()
-        {
-            var a = new A
-            {
-                Age = 10,
-                Name = "10"
-            };
-
-            var json = System.Text.Json.JsonSerializer.Serialize(a);
-
-            var result = JsonConvert.DeserializeObject(json);
-
-
-
-            Console.WriteLine(result.GetType());
-        }
-
         static void Main(string[] args)
         {
-            //Run();
+            Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
+            {
+                { "TableName", "SignUp" },
+                { "Id", 3 }
+            };
+            var jsonString = JsonConvert.SerializeObject(inputData);
 
             UniversalAPI UniversalAPI = new UniversalAPI(ConnectionString.connectionString, DynamicDB.ConnectToDb());
-            StreamReader reader = new StreamReader("../../../../Interfaces/inputData.json");
-            string jsonString = reader.ReadToEnd();
 
             string jsonTable = UniversalAPI.GetTable(jsonString);
+
             List<object[]> table = JsonConvert.DeserializeObject<List<object[]>>(jsonTable);
-            DrawHeader("GetTable(string tableName)");
+            DrawHeader("GetTable(string data)");
             DrawTable(table);
 
 

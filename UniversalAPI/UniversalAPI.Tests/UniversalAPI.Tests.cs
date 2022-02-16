@@ -48,11 +48,15 @@ namespace UniversalAPITests
         public void GetTable()
         {
             // Arrange
+            Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
+            {
+                { "TableName", "SignUp" },
+                { "Id", 3 }
+            };
+            var jsonString = JsonConvert.SerializeObject(inputData);
             var context = GetTestContext();
             var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, context);
-            StreamReader reader = new StreamReader("../../../../Interfaces/inputTestData.json");
-            string jsonString = reader.ReadToEnd();
-
+            
             // Act
             var result = UniversalAPI.GetTable(jsonString);
 
