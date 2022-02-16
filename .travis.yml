@@ -1,4 +1,6 @@
 language: csharp
+solution: UniversalAPI.sln
 mono: none
 dotnet: 3.1
-solution: UniversalAPI.sln
+script:
+ - dotnet restore
