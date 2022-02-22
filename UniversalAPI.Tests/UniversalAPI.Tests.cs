@@ -1,4 +1,4 @@
-using Poolz;
+using UniversalApi;
 using Interfaces.DBModel;
 using Interfaces.DBModel.Models;
 using Interfaces.Helpers;
@@ -9,41 +9,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using System;
-using System.IO;
 using Newtonsoft.Json;
+using UniversalApi.Helpers;
+using System.Data;
 
 namespace UniversalAPITests
 {
     public class UniversalAPITests
     {
-        [Fact]
-        public void GetConnection()
-        {
-            var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, GetTestContext());
-
-            var result = UniversalAPI.GetConnection();
-            result.Open();
-
-            Assert.NotNull(result);
-            Assert.IsType<SqlConnection>(result);
-            result.Close();
-        }
-
-        [Fact]
-        public void GetReader()
-        {
-            var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, GetTestContext());
-            var connection = UniversalAPI.GetConnection();
-            connection.Open();
-
-            var result = UniversalAPI.GetReader("SELECT * FROM LeaderBoard", connection);
-
-            Assert.NotNull(result);
-            Assert.IsType<SqlDataReader>(result);
-            Assert.True(result.HasRows);
-            connection.Close();
-        }
-
         [Fact]
         public void GetTable()
         {
@@ -51,7 +24,8 @@ namespace UniversalAPITests
             Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
             {
                 { "TableName", "SignUp" },
-                { "Id", 3 }
+                { "Id", 3 },
+                { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
             };
             var jsonString = JsonConvert.SerializeObject(inputData);
             var context = GetTestContext();
@@ -64,8 +38,7 @@ namespace UniversalAPITests
             Assert.NotNull(result);
             var resultType = Assert.IsType<string>(result);
             var json = Assert.IsAssignableFrom<string>(resultType);
-            var table = JsonConvert.DeserializeObject<List<object[]>>(json);
-            Assert.Single(table);
+            Assert.Equal("[{\"Id\":\"3\"},{\"Id\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\"}]", json);
         }
 
         [Fact]
@@ -176,6 +149,57 @@ namespace UniversalAPITests
             mockContext.Setup(t => t.Set<SignUp>()).Returns(mockSetSignUp.Object);
 
             return mockContext.Object;
+        }
+    }
+    public class SqlHelpersTests
+    {
+        [Fact]
+        public void GetConnection()
+        {
+            var connection = SqlHelpers.GetConnection(ConnectionString.connectionString);
+            connection.Open();
+
+            Assert.NotNull(connection);
+            Assert.IsType<SqlConnection>(connection);
+            Assert.True(connection.State == ConnectionState.Open);
+
+            connection.Close();
+        }
+
+        [Fact]
+        public void GetReader()
+        {
+            var connection = SqlHelpers.GetConnection(ConnectionString.connectionString);
+            connection.Open();
+
+            var reader = SqlHelpers.GetReader("SELECT * FROM LeaderBoard", connection);
+
+            Assert.NotNull(reader);
+            Assert.IsType<SqlDataReader>(reader);
+            Assert.True(reader.HasRows);
+            connection.Close();
+        }
+    }
+    public class DataFormatterTests
+    {
+        [Fact]
+        public void FormatJson()
+        {
+            Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
+            {
+                { "TableName", "SignUp" },
+                { "Id", 3 },
+                { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+            };
+            var jsonString = JsonConvert.SerializeObject(inputData);
+
+            var data = DataFormatter.FormatJson(jsonString);
+
+            Assert.NotNull(data);
+            Assert.IsType<Dictionary<string, dynamic>>(data);
+            Assert.True(data["Id"] == 3 &&
+                data["TableName"] == "SignUp" &&
+                data["Address"] == "0x3a31ee5557c9369c35573496555b1bc93553b553");
         }
     }
 }
