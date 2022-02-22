@@ -15,12 +15,41 @@ using System.Data;
 
 namespace UniversalAPITests
 {
-    public class UniversalAPITests
+    public class SqlHelpersTests
     {
         [Fact]
-        public void GetTable()
+        public void GetConnection()
         {
-            // Arrange
+            var connection = SqlUtil.GetConnection(ConnectionString.connectionString);
+            connection.Open();
+
+            Assert.NotNull(connection);
+            Assert.IsType<SqlConnection>(connection);
+            Assert.True(connection.State == ConnectionState.Open);
+
+            connection.Close();
+        }
+
+        [Fact]
+        public void GetReader()
+        {
+            var connection = SqlUtil.GetConnection(ConnectionString.connectionString);
+            connection.Open();
+
+            var reader = SqlUtil.GetReader("SELECT * FROM LeaderBoard", connection);
+
+            Assert.NotNull(reader);
+            Assert.IsType<SqlDataReader>(reader);
+            Assert.True(reader.HasRows);
+            connection.Close();
+        }
+    }
+
+    public class DataFormatterTests
+    {
+        [Fact]
+        public void FormatJson()
+        {
             Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
             {
                 { "TableName", "SignUp" },
@@ -28,6 +57,30 @@ namespace UniversalAPITests
                 { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
             };
             var jsonString = JsonConvert.SerializeObject(inputData);
+
+            var data = DataFormatter.FormatJson(jsonString);
+
+            Assert.NotNull(data);
+            Assert.IsType<Dictionary<string, dynamic>>(data);
+            Assert.True(data["Id"] == 3 &&
+                data["TableName"] == "SignUp" &&
+                data["Address"] == "0x3a31ee5557c9369c35573496555b1bc93553b553");
+        }
+    }
+
+    public class UniversalAPITests
+    {
+        [Fact]
+        public void GetTable()
+        {
+            // Arrange
+            Dictionary<string, dynamic> data = new Dictionary<string, dynamic>
+            {
+                { "TableName", "SignUp" },
+                { "Id", 3 },
+                { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+            };
+            var jsonString = JsonConvert.SerializeObject(data);
             var context = GetTestContext();
             var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, context);
             
@@ -39,49 +92,6 @@ namespace UniversalAPITests
             var resultType = Assert.IsType<string>(result);
             var json = Assert.IsAssignableFrom<string>(resultType);
             Assert.Equal("[{\"Id\":\"3\"},{\"Id\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\"}]", json);
-        }
-
-        [Fact]
-        public void InnerJoinTables()
-        {
-            var context = GetTestContext();
-            var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, context);
-
-            var result = UniversalAPI.InnerJoinTables(
-                leftTableName: "LeaderBoard",
-                rightTableName: "Wallets",
-                conditions: new string[] {
-                    "LeaderBoard.rank = Wallets.id",
-                    "LeaderBoard.walletId = Wallets.id"
-                });
-
-            Assert.NotNull(result);
-            //var resultType = Assert.IsType<List<object[]>>(result);
-            //var table = Assert.IsAssignableFrom<List<object[]>>(resultType);
-            //Assert.Single(table);
-            //Assert.Equal(7, table[0].Length);
-        }
-
-        [Fact]
-        public void InnerJoinTablesWithSelectedColumns()
-        {
-            var context = GetTestContext();
-            var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, context);
-
-            var result = UniversalAPI.InnerJoinTables(
-                leftTableName: "LeaderBoard",
-                rightTableName: "Wallets",
-                conditions: new string[] { "LeaderBoard.rank = Wallets.id" },
-                selectColumns: new string[] {
-                    "LeaderBoard.rank",
-                    "Wallets.amount"
-                });
-
-            Assert.NotNull(result);
-            //var resultType = Assert.IsType<List<object[]>>(result);
-            //var table = Assert.IsAssignableFrom<List<object[]>>(resultType);
-            //Assert.Equal(2, table.Count);
-            //Assert.Equal(2, table[0].Length);
         }
 
         /* Emulate DB with data */
@@ -135,6 +145,20 @@ namespace UniversalAPITests
             mockSetSignUp.As<IQueryable<SignUp>>().Setup(m => m.ElementType).Returns(signUp.ElementType);
             mockSetSignUp.As<IQueryable<SignUp>>().Setup(m => m.GetEnumerator()).Returns(signUp.GetEnumerator);
 
+            /* Initialize APIRequestList table */
+            var APIRequestList = new List<APIRequestList>
+            {
+                new APIRequestList { Id = 1, Request = "mysignup", Tables = "SignUp, LeaderBoard"},
+                new APIRequestList { Id = 2, Request = "wallet", Tables = "Wallets"},
+            }.AsQueryable();
+
+            var mockSetAPIRequestList = new Mock<DbSet<APIRequestList>>();
+
+            mockSetAPIRequestList.As<IQueryable<APIRequestList>>().Setup(m => m.Provider).Returns(APIRequestList.Provider);
+            mockSetAPIRequestList.As<IQueryable<APIRequestList>>().Setup(m => m.Expression).Returns(APIRequestList.Expression);
+            mockSetAPIRequestList.As<IQueryable<APIRequestList>>().Setup(m => m.ElementType).Returns(APIRequestList.ElementType);
+            mockSetAPIRequestList.As<IQueryable<APIRequestList>>().Setup(m => m.GetEnumerator()).Returns(APIRequestList.GetEnumerator);
+
 
             /* Create and setting context */
             var mockContext = new Mock<DynamicDBContext>();
@@ -149,57 +173,6 @@ namespace UniversalAPITests
             mockContext.Setup(t => t.Set<SignUp>()).Returns(mockSetSignUp.Object);
 
             return mockContext.Object;
-        }
-    }
-    public class SqlHelpersTests
-    {
-        [Fact]
-        public void GetConnection()
-        {
-            var connection = SqlHelpers.GetConnection(ConnectionString.connectionString);
-            connection.Open();
-
-            Assert.NotNull(connection);
-            Assert.IsType<SqlConnection>(connection);
-            Assert.True(connection.State == ConnectionState.Open);
-
-            connection.Close();
-        }
-
-        [Fact]
-        public void GetReader()
-        {
-            var connection = SqlHelpers.GetConnection(ConnectionString.connectionString);
-            connection.Open();
-
-            var reader = SqlHelpers.GetReader("SELECT * FROM LeaderBoard", connection);
-
-            Assert.NotNull(reader);
-            Assert.IsType<SqlDataReader>(reader);
-            Assert.True(reader.HasRows);
-            connection.Close();
-        }
-    }
-    public class DataFormatterTests
-    {
-        [Fact]
-        public void FormatJson()
-        {
-            Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
-            {
-                { "TableName", "SignUp" },
-                { "Id", 3 },
-                { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-            };
-            var jsonString = JsonConvert.SerializeObject(inputData);
-
-            var data = DataFormatter.FormatJson(jsonString);
-
-            Assert.NotNull(data);
-            Assert.IsType<Dictionary<string, dynamic>>(data);
-            Assert.True(data["Id"] == 3 &&
-                data["TableName"] == "SignUp" &&
-                data["Address"] == "0x3a31ee5557c9369c35573496555b1bc93553b553");
         }
     }
 }

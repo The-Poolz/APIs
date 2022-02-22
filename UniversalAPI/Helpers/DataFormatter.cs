@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Nethereum.Util;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -6,9 +7,6 @@ namespace UniversalApi.Helpers
 {
     public static class DataFormatter
     {
-        public static string FormatTableToJson(Json<string, dynamic> table) =>
-            JsonConvert.SerializeObject(table);
-
         public static Dictionary<string, dynamic> FormatJson(string json) =>
             JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json);
 
@@ -39,16 +37,14 @@ namespace UniversalApi.Helpers
             if (data.ContainsKey("Address"))
             {
                 var address = data["Address"];
-                if (address == null)
-                    throw new ArgumentException("Parameter 'Address' cannot be null.");
-                if (address.Length != 42 || !address.StartsWith("0x"))
-                    throw new ArgumentException("Invalid address.");
+                bool result = AddressExtensions.IsValidEthereumAddressHexFormat(address);
+                if (result == false)
+                    throw new ArgumentException("Parameter 'Address' not valid.");
             }
             
 
             List<string> selectColumns = new List<string>();
             List<string> conditions = new List<string>();
-
             foreach (var item in data)
             {
                 var paramName = item.Key;
@@ -69,7 +65,6 @@ namespace UniversalApi.Helpers
             string condition = string.Join(" AND ", conditions);
 
             string commandQuery = $"SELECT {string.Join(", ", selectColumns)} FROM {tableName} WHERE {condition}";
-            Console.WriteLine(commandQuery);
             return commandQuery;
         }
     }

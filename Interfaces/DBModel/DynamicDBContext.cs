@@ -10,6 +10,7 @@ namespace Interfaces.DBModel
         public virtual DbSet<Wallet> Wallets { get; set; }
         public virtual DbSet<LeaderBoard> LeaderBoard { get; set; }
         public virtual DbSet<SignUp> SignUp { get; set; }
+        public virtual DbSet<APIRequestList> APIRequestList { get; set; }
 
         public DynamicDBContext() { }
         public DynamicDBContext(DbContextOptions options) { }
@@ -54,6 +55,12 @@ namespace Interfaces.DBModel
                 new SignUp { Id = 2, Address = "0x2a01ee5557c9d69c35577496555b1bc95558b552", PoolId = 2},
                 new SignUp { Id = 3, Address = "0x3a31ee5557c9369c35573496555b1bc93553b553", PoolId = 3},
                 new SignUp { Id = 4, Address = "0x4a71ee5577c9d79c37577496555b1bc95558b554", PoolId = 4}
+            });
+
+            modelBuilder.Entity<APIRequestList>().HasData(new APIRequestList[]
+            {
+                new APIRequestList { Id = 1, Request = "mysignup", Tables = "SignUp, LeaderBoard"},
+                new APIRequestList { Id = 2, Request = "wallet", Tables = "Wallets"},
             });
         }
     }

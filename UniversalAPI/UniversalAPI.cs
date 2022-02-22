@@ -22,11 +22,11 @@ namespace UniversalApi
             {
                 try
                 {
-                    var connection = SqlHelpers.GetConnection(ConnectionString);
+                    var connection = SqlUtil.GetConnection(ConnectionString);
                     using (connection)
                     {
                         connection.Open();
-                        var reader = SqlHelpers.GetReader(commandQuery, connection);
+                        var reader = SqlUtil.GetReader(commandQuery, connection);
                         if (!reader.HasRows)
                             return null;
 
