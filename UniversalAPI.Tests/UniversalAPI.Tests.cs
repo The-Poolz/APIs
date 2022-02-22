@@ -70,16 +70,10 @@ namespace UniversalAPITests
 
     public class UniversalAPITests
     {
-        [Fact]
-        public void GetTable()
+        [Theory, MemberData(nameof(GetTableData))]
+        public void GetTable(Dictionary<string, dynamic> data)
         {
             // Arrange
-            Dictionary<string, dynamic> data = new Dictionary<string, dynamic>
-            {
-                { "TableName", "SignUp" },
-                { "Id", 3 },
-                { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-            };
             var jsonString = JsonConvert.SerializeObject(data);
             var context = GetTestContext();
             var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, context);
@@ -91,8 +85,25 @@ namespace UniversalAPITests
             Assert.NotNull(result);
             var resultType = Assert.IsType<string>(result);
             var json = Assert.IsAssignableFrom<string>(resultType);
-            Assert.Equal("[{\"Id\":\"3\"},{\"Id\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\"}]", json);
+            Assert.NotEqual(string.Empty, json);
         }
+        public static IEnumerable<object[]> GetTableData =>
+            new List<object[]>
+            {
+                new object[] { new Dictionary<string, dynamic>
+                {
+                    { "TableName", "SignUp" },
+                    { "Id", 3 },
+                    { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                }},
+                new object[] { new Dictionary<string, dynamic>
+                {
+                    { "TableName", "Wallets" },
+                    { "Id", 3 },
+                    { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                }},
+            };
+
 
         /* Emulate DB with data */
         private DynamicDBContext GetTestContext()
