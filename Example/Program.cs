@@ -1,10 +1,10 @@
-﻿using Poolz;
+﻿using UniversalApi;
 using Interfaces.DBModel;
 using Interfaces.Helpers;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using System.IO;
+using System.Linq;
 
 namespace Example
 {
@@ -15,18 +15,16 @@ namespace Example
             Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
             {
                 { "TableName", "SignUp" },
-                { "Id", 3 }
+                { "Id", 3 },
+                { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
             };
             var jsonString = JsonConvert.SerializeObject(inputData);
+            Console.WriteLine(jsonString);
 
             UniversalAPI UniversalAPI = new UniversalAPI(ConnectionString.connectionString, DynamicDB.ConnectToDb());
 
             string jsonTable = UniversalAPI.GetTable(jsonString);
-
-            List<object[]> table = JsonConvert.DeserializeObject<List<object[]>>(jsonTable);
-            DrawHeader("GetTable(string data)");
-            DrawTable(table);
-
+            Console.WriteLine(jsonTable);
 
             Console.ReadLine();
         }
