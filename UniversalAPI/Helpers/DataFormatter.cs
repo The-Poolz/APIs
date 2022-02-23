@@ -1,7 +1,9 @@
-﻿using Nethereum.Util;
+﻿using Interfaces.DBModel;
+using Nethereum.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UniversalApi.Helpers
 {
@@ -10,38 +12,73 @@ namespace UniversalApi.Helpers
         public static Dictionary<string, dynamic> FormatJson(string json) =>
             JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json);
 
+        private static bool HasRequest(Dictionary<string, dynamic> data, out string tables)
+        {
+            tables = string.Empty;
+            if (data.ContainsKey("Request"))
+            {
+                string requestName = data["Request"];
+                IsValidRequestName(requestName, out tables);
+            }
+            return false;
+        }
+        private static bool IsValidRequestName(string requestName, out string tables)
+        {
+            tables = string.Empty;
+            using DynamicDBContext context = DynamicDB.ConnectToDb();
+            var request = context.APIRequestList.FirstOrDefault(p => p.Request == requestName);
+            if (request != null && request.Tables != string.Empty)
+            {
+                tables = request.Tables;
+                return true;
+            }
+            return false;
+        }
+        private static bool IsValidId(int? id)
+        {
+            if (id == null)
+                return false;
+            if (id < 0)
+                return false;
+
+            return true;
+        }
+        private static bool IsValidAddress(string address)
+        {
+            bool result = AddressExtensions.IsValidEthereumAddressHexFormat(address);
+            if (!result)
+                return false;
+
+            return true;
+        }
+
+        private static List<string> GetTablesName(string tables)
+        {
+            string[] names = tables.Split(", ");
+            return names.ToList();
+        }
+
         public static String CreateCommandQuery(string json)
         {
             Dictionary<string, dynamic> data = FormatJson(json);
             if (data == null || data.Count == 0)
                 throw new ArgumentException("An error occurred while trying to generate a query string. Missing data.");
 
+            string tables = string.Empty;
             string tableName = string.Empty;
-            if (data.ContainsKey("TableName"))
-            {
-                tableName = data["TableName"];
-                if (tableName == null || tableName == string.Empty)
-                    throw new ArgumentException("An error occurred while trying to generate a query string. Table name missing.");
-                data.Remove("TableName");
-            }
+            HasRequest(data, out tables);
 
             if (data.ContainsKey("Id"))
             {
-                var id = data["Id"];
-                if (id == null)
-                    throw new ArgumentException("Parameter 'Id' cannot be null.");
-                if (id < 0)
-                    throw new ArgumentException("Parameter 'Id' cannot be negative.");
+                int? id = data["Id"];
+                IsValidId(id);
             }
-
             if (data.ContainsKey("Address"))
             {
                 var address = data["Address"];
-                bool result = AddressExtensions.IsValidEthereumAddressHexFormat(address);
-                if (result == false)
-                    throw new ArgumentException("Parameter 'Address' not valid.");
+                IsValidAddress(address);
             }
-            
+
 
             List<string> selectColumns = new List<string>();
             List<string> conditions = new List<string>();

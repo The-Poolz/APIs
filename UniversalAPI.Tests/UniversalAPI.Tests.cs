@@ -52,7 +52,7 @@ namespace UniversalAPITests
         {
             Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
             {
-                { "TableName", "SignUp" },
+                { "Tables", "SignUp" },
                 { "Id", 3 },
                 { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
             };
@@ -63,7 +63,7 @@ namespace UniversalAPITests
             Assert.NotNull(data);
             Assert.IsType<Dictionary<string, dynamic>>(data);
             Assert.True(data["Id"] == 3 &&
-                data["TableName"] == "SignUp" &&
+                data["Tables"] == "SignUp" &&
                 data["Address"] == "0x3a31ee5557c9369c35573496555b1bc93553b553");
         }
     }
@@ -92,16 +92,16 @@ namespace UniversalAPITests
             {
                 new object[] { new Dictionary<string, dynamic>
                 {
-                    { "TableName", "SignUp" },
+                    { "Request", "mysignup" },
                     { "Id", 3 },
                     { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
                 }},
                 new object[] { new Dictionary<string, dynamic>
                 {
-                    { "TableName", "Wallets" },
+                    { "Request", "wallet" },
                     { "Id", 3 },
                     { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-                }},
+                }}
             };
 
 
