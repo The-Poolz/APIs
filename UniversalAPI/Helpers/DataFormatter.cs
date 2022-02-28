@@ -1,4 +1,5 @@
 ﻿using Interfaces.DBModel;
+using Interfaces.Helpers;
 using Nethereum.Util;
 using Newtonsoft.Json;
 using System;
@@ -18,7 +19,7 @@ namespace UniversalApi.Helpers
             if (data.ContainsKey("Request"))
             {
                 string requestName = data["Request"];
-                IsValidRequestName(requestName, out tables);
+                return IsValidRequestName(requestName, out tables);
             }
             return false;
         }
@@ -54,33 +55,47 @@ namespace UniversalApi.Helpers
 
         private static List<string> GetTablesName(string tables)
         {
-            string[] names = tables.Split(", ");
+            string[] names = tables.Split(",");
+            for (int i = 0; i < names.Count(); i++)
+                names[i].Trim();
             return names.ToList();
         }
 
-        public static String CreateCommandQuery(string json)
+        public static string GetCommandQuery(string json)
         {
             Dictionary<string, dynamic> data = FormatJson(json);
             if (data == null || data.Count == 0)
                 throw new ArgumentException("An error occurred while trying to generate a query string. Missing data.");
 
-            string tables = string.Empty;
-            string tableName = string.Empty;
-            HasRequest(data, out tables);
+            string tables;
+            if (!HasRequest(data, out tables))
+                return null;
+            else
+                data.Remove("Request");
+
 
             if (data.ContainsKey("Id"))
             {
-                int? id = data["Id"];
-                IsValidId(id);
+                int? id = (int?)data["Id"];
+                if (!IsValidId(id))
+                    return null;
             }
             if (data.ContainsKey("Address"))
             {
                 var address = data["Address"];
-                IsValidAddress(address);
+                if (!IsValidAddress(address))
+                    return null;
             }
 
-
-            List<string> selectColumns = new List<string>();
+            List<string> tablesName = GetTablesName(tables);
+            if (tablesName.Count == 1)
+                return CreateSelectQuery(tablesName.First(), data);
+            else
+                return CreateJoinQuery(tablesName, data);
+        }
+         
+        private static string CreateSelectQuery(string tableName, Dictionary<string, dynamic> data)
+        {
             List<string> conditions = new List<string>();
             foreach (var item in data)
             {
@@ -88,20 +103,45 @@ namespace UniversalApi.Helpers
                 var value = item.Value;
                 if (value == null)
                     throw new ArgumentException($"Parameter '{paramName}' cannot be null.");
-                
+
                 if (value.GetType() == typeof(string))
                     conditions.Add($"{tableName}.{paramName} = '{value}'");
                 else
                     conditions.Add($"{tableName}.{paramName} = {value}");
-
-                selectColumns.Add($"{tableName}.{paramName}");
             }
-            if (selectColumns == null || selectColumns.Count == 0)
-                throw new ArgumentException("An error occurred while trying to generate a query string. Missing parameters.");
-
             string condition = string.Join(" AND ", conditions);
 
-            string commandQuery = $"SELECT {string.Join(", ", selectColumns)} FROM {tableName} WHERE {condition}";
+            string commandQuery = $"SELECT * FROM {tableName} WHERE {condition}";
+            return commandQuery;
+        }
+
+        private static string CreateJoinQuery(List<string> tablesName, Dictionary<string, dynamic> data)
+        {
+            List<string> conditions = new List<string>();
+            string firstTable = tablesName.ToArray()[0];
+            string secondTable = tablesName.ToArray()[1];
+
+            foreach (var item in data)
+            {
+                var paramName = item.Key;
+                var value = item.Value;
+                if (value == null)
+                    throw new ArgumentException($"Parameter '{paramName}' cannot be null.");
+
+                if (value.GetType() == typeof(string))
+                    conditions.Add($"{firstTable}.{paramName} = '{value}'");
+                else
+                    conditions.Add($"{firstTable}.{paramName} = {value}");
+            }
+            string condition = string.Join(" AND ", conditions);
+
+
+            string commandQuery = $"SELECT * " +
+                $"FROM {firstTable} " +
+                $"INNER JOIN {secondTable} " +
+                $"ON {firstTable}.Id = {secondTable}.Id " +
+                $"WHERE {condition}";
+            Console.WriteLine(commandQuery);
             return commandQuery;
         }
     }

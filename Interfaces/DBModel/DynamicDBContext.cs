@@ -60,7 +60,7 @@ namespace Interfaces.DBModel
             modelBuilder.Entity<APIRequestList>().HasData(new APIRequestList[]
             {
                 new APIRequestList { Id = 1, Request = "mysignup", Tables = "SignUp, LeaderBoard"},
-                new APIRequestList { Id = 2, Request = "wallet", Tables = "Wallets"},
+                new APIRequestList { Id = 2, Request = "wallet", Tables = "Wallets"}
             });
         }
     }

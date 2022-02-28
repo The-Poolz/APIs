@@ -1,7 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using Interfaces.DBModel;
 using Microsoft.Data.SqlClient;
+using Newtonsoft.Json;
 using UniversalApi.Helpers;
+using System.Reflection;
+using System.Dynamic;
 
 namespace UniversalApi
 {
@@ -15,9 +21,9 @@ namespace UniversalApi
             Context = context;
         }
 
-        private Json<string, dynamic> GetData(string commandQuery)
+        private object[] GetData(string commandQuery)
         {
-            Json<string, dynamic> table = new Json<string, dynamic>();
+            List<object> table = new List<object>();
             using (Context)
             {
                 try
@@ -30,74 +36,66 @@ namespace UniversalApi
                         if (!reader.HasRows)
                             return null;
 
-                        int i = 0;
+
+                        var allTables = Context.APIRequestList.Select(i => i.Tables);
+                        List<string> allTablesName = new List<string>();
+                        foreach (var tables in allTables)
+                        {
+                            allTablesName.AddRange(tables.Split(", "));
+                        }
+
+                        
+
+                        List<string> tablesName = new List<string>();
+                        foreach (var tableName in allTablesName)
+                        {
+                            if (commandQuery.Contains(tableName))
+                            {
+                                tablesName.Add(tableName);
+                            }
+                        }
+
+
+
+                        List<PropertyInfo> properties = new List<PropertyInfo>();
+                        foreach (var name in tablesName)
+                        {
+                            Type type = Type.GetType($"Interfaces.DBModel.Models.{name}");
+                            properties.AddRange(type.GetProperties());
+                        }
+
+
+
+                        ExpandoObject expando = new ExpandoObject();
+                        Object[] values = new Object[reader.FieldCount];
                         while (reader.Read())
                         {
-                            Object[] values = new Object[reader.FieldCount];
-                            reader.GetValues(values);
-                            foreach (var value in values)
+                            for (int i = 0; i < properties.ToArray().Length; i++)
                             {
-                                table.Add(reader.GetName(i), value);
+                                DynamicPropObj.AddProperty(expando, properties[i].Name, reader.GetValue(i));
                             }
-                            i++;
+                            table.Add(expando);
                         }
                         reader.Close();
                     }
-                    return table;
+                    return table.ToArray();
                 }
                 catch (SqlException e)
                 {
                     Console.WriteLine(e.ToString());
                 }
             }
-            return table;
+            return table.ToArray();
         }
 
         public String GetTable(string data)
         {
-            string commandQuery = DataFormatter.CreateCommandQuery(data);
+            string commandQuery = DataFormatter.GetCommandQuery(data);
 
-            Json<string, dynamic> table = GetData(commandQuery);
+            object[] table = GetData(commandQuery);
+            string json = JsonConvert.SerializeObject(table);
 
-            return table.GetJsonString();
-        }
-
-        public String InnerJoinTables(string leftTableName, string rightTableName, string[] conditions)
-        {
-            if (leftTableName == null || leftTableName == string.Empty)
-                throw new ArgumentException("Value cannot be empty or null.", "string leftTableName");
-            if (rightTableName == null || rightTableName == string.Empty)
-                throw new ArgumentException("Value cannot be empty or null.", "string leftTableName");
-            if (conditions == null || conditions.Length == 0)
-                throw new ArgumentException("Value cannot be empty or null.", "string[] conditions");
-
-            var table = GetData(
-                $"SELECT * " +
-                $"FROM {leftTableName} " +
-                $"INNER JOIN {rightTableName} " +
-                $"ON {string.Join(" AND ", conditions)}");
-
-            return table.GetJsonString();
-        }
-
-        public String InnerJoinTables(string leftTableName, string rightTableName, string[] conditions, string[] selectColumns)
-        {
-            if (leftTableName == null || leftTableName == string.Empty)
-                throw new ArgumentException("Value cannot be empty or null.", "string leftTableName");
-            if (rightTableName == null || rightTableName == string.Empty)
-                throw new ArgumentException("Value cannot be empty or null.", "string leftTableName");
-            if (conditions == null || conditions.Length == 0)
-                throw new ArgumentException("Value cannot be empty or null.", "string[] conditions");
-            if (selectColumns == null || selectColumns.Length == 0)
-                throw new ArgumentException("Value cannot be empty or null.", "string[] selectColumns");
-
-            var table = GetData(
-                $"SELECT {string.Join(", ", selectColumns)} " +
-                $"FROM {leftTableName} " +
-                $"INNER JOIN {rightTableName} " +
-                $"ON {string.Join(" AND ", conditions)}");
-
-            return table.GetJsonString();
+            return json;
         }
     }
 }
