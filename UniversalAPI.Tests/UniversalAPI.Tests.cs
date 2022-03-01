@@ -58,7 +58,7 @@ namespace UniversalAPITests
             };
             var jsonString = JsonConvert.SerializeObject(inputData);
 
-            var data = DataFormatter.FormatJson(jsonString);
+            var data = QueryCreator.FormatJson(jsonString);
 
             Assert.NotNull(data);
             Assert.IsType<Dictionary<string, dynamic>>(data);

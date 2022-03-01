@@ -90,7 +90,7 @@ namespace UniversalApi
 
         public String GetTable(string data)
         {
-            string commandQuery = DataFormatter.GetCommandQuery(data);
+            string commandQuery = QueryCreator.GetCommandQuery(data);
 
             object[] table = GetData(commandQuery);
             string json = JsonConvert.SerializeObject(table);

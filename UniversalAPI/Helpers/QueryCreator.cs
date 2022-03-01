@@ -1,5 +1,4 @@
 ﻿using Interfaces.DBModel;
-using Interfaces.Helpers;
 using Nethereum.Util;
 using Newtonsoft.Json;
 using System;
@@ -8,62 +7,11 @@ using System.Linq;
 
 namespace UniversalApi.Helpers
 {
-    public static class DataFormatter
+    public static class QueryCreator
     {
-        public static Dictionary<string, dynamic> FormatJson(string json) =>
-            JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json);
-
-        private static bool HasRequest(Dictionary<string, dynamic> data, out string tables)
-        {
-            tables = string.Empty;
-            if (data.ContainsKey("Request"))
-            {
-                string requestName = data["Request"];
-                return IsValidRequestName(requestName, out tables);
-            }
-            return false;
-        }
-        private static bool IsValidRequestName(string requestName, out string tables)
-        {
-            tables = string.Empty;
-            using DynamicDBContext context = DynamicDB.ConnectToDb();
-            var request = context.APIRequestList.FirstOrDefault(p => p.Request == requestName);
-            if (request != null && request.Tables != string.Empty)
-            {
-                tables = request.Tables;
-                return true;
-            }
-            return false;
-        }
-        private static bool IsValidId(int? id)
-        {
-            if (id == null)
-                return false;
-            if (id < 0)
-                return false;
-
-            return true;
-        }
-        private static bool IsValidAddress(string address)
-        {
-            bool result = AddressExtensions.IsValidEthereumAddressHexFormat(address);
-            if (!result)
-                return false;
-
-            return true;
-        }
-
-        private static List<string> GetTablesName(string tables)
-        {
-            string[] names = tables.Split(",");
-            for (int i = 0; i < names.Count(); i++)
-                names[i].Trim();
-            return names.ToList();
-        }
-
         public static string GetCommandQuery(string json)
         {
-            Dictionary<string, dynamic> data = FormatJson(json);
+            Dictionary<string, dynamic> data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json);
             if (data == null || data.Count == 0)
                 throw new ArgumentException("An error occurred while trying to generate a query string. Missing data.");
 
@@ -112,6 +60,7 @@ namespace UniversalApi.Helpers
             string condition = string.Join(" AND ", conditions);
 
             string commandQuery = $"SELECT * FROM {tableName} WHERE {condition}";
+            Console.WriteLine(commandQuery);
             return commandQuery;
         }
 
@@ -143,6 +92,55 @@ namespace UniversalApi.Helpers
                 $"WHERE {condition}";
             Console.WriteLine(commandQuery);
             return commandQuery;
+        }
+
+
+        private static bool HasRequest(Dictionary<string, dynamic> data, out string tables)
+        {
+            tables = string.Empty;
+            if (data.ContainsKey("Request"))
+            {
+                string requestName = data["Request"];
+                return IsValidRequestName(requestName, out tables);
+            }
+            return false;
+        }
+        private static bool IsValidRequestName(string requestName, out string tables)
+        {
+            tables = string.Empty;
+            using DynamicDBContext context = DynamicDB.ConnectToDb();
+            var request = context.APIRequestList.FirstOrDefault(p => p.Request == requestName);
+            if (request != null && request.Tables != string.Empty)
+            {
+                tables = request.Tables;
+                return true;
+            }
+            return false;
+        }
+        private static bool IsValidId(int? id)
+        {
+            if (id == null)
+                return false;
+            if (id < 0)
+                return false;
+
+            return true;
+        }
+        private static bool IsValidAddress(string address)
+        {
+            bool result = AddressExtensions.IsValidEthereumAddressHexFormat(address);
+            if (!result)
+                return false;
+
+            return true;
+        }
+
+        private static List<string> GetTablesName(string tables)
+        {
+            string[] names = tables.Split(",");
+            for (int i = 0; i < names.Count(); i++)     // Remove all whitespace
+                names[i] = String.Concat(names[i].Where(c => !Char.IsWhiteSpace(c)));
+            return names.ToList();
         }
     }
 }
