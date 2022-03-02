@@ -11,18 +11,18 @@ namespace Example
     {
         static void Main(string[] args)
         {
-            Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
-            {
-                { "Request", "mysignup" },
-                { "Id", 3 },
-                { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-            };
             //Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
             //{
-            //    { "Request", "wallet" },
+            //    { "Request", "mysignup" },
             //    { "Id", 3 },
-            //    { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+            //    { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
             //};
+            Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
+            {
+                { "Request", "wallet" },
+                { "Id", 3 },
+                { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+            };
             var jsonString = JsonConvert.SerializeObject(inputData);
             Console.WriteLine("Input data");
             Console.WriteLine(jsonString);

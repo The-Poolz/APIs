@@ -111,11 +111,21 @@ namespace UniversalApi.Helpers
             List<PropertyInfo> selectedProperties = new List<PropertyInfo>();
             foreach (var name in tablesName)
             {
-                Type type = Type.GetType($"Interfaces.DBModel.Models.{name}");
+                string tableName = name;
+                if (name.LastIndexOf('s') == name.Length-1)
+                {
+                    tableName = name.TrimEnd('s');
+                }
+
+                Type type = Type.GetType($"Interfaces.DBModel.Models.{tableName}");
                 properties.AddRange(type.GetProperties());
                 foreach (var col in columns)
                 {
-                    if (selectedProperties.FirstOrDefault(p => p.Name.Equals(col)) == null)
+                    if (col == "*")
+                    {
+                        selectedProperties.AddRange(properties);
+                    }
+                    else if (selectedProperties.FirstOrDefault(p => p.Name.Equals(col)) == null)
                     {
                         selectedProperties.AddRange(properties.Where(p => p.Name.Equals(col)));
                     }
