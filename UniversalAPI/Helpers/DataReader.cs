@@ -57,6 +57,8 @@ namespace UniversalApi.Helpers
             {
                 tablesName.AddRange(table.Split(","));
             }
+            for (int i = 0; i < tablesName.Count(); i++)     // Remove all whitespace
+                tablesName[i] = String.Concat(tablesName[i].Where(c => !Char.IsWhiteSpace(c)));
             return tablesName;
         }
         private static List<string> GetCurrentTables(string commandQuery, List<string> allTablesName)
