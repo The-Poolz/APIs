@@ -41,9 +41,9 @@ namespace UniversalApi.Helpers
                     }
                     return table.ToArray();
                 }
-                catch (SqlException e)
+                catch (SqlException ex)
                 {
-                    Console.WriteLine(e.ToString());
+                    Console.WriteLine(ex.ToString());
                 }
             }
             return table.ToArray();
