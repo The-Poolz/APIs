@@ -11,44 +11,35 @@ namespace UniversalApi.Helpers
     {
         public static string GetCommandQuery(string json)
         {
-            Dictionary<string, dynamic> data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json);
-            if (data == null || data.Count == 0)
+            Dictionary<string, dynamic> Data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json);
+            if (Data == null || Data.Count == 0)
                 throw new ArgumentException("An error occurred while trying to generate a query string. Missing data.");
 
             string tables;
-            if (!HasRequest(data, out tables))
+            if (!HasRequest(Data, out tables))
                 return null;
             else
-                data.Remove("Request");
+                Data.Remove("Request");
 
-
-            if (data.ContainsKey("Id"))
-            {
-                int? id = (int?)data["Id"];
-                if (!IsValidId(id))
-                    return null;
-            }
-            if (data.ContainsKey("Address"))
-            {
-                var address = data["Address"];
-                if (!IsValidAddress(address))
-                    return null;
-            }
+            if (!CheckId(Data))
+                return null;
+            if (!CheckAddress(Data))
+                return null;
 
             List<string> tablesName = GetTablesName(tables);
             if (tablesName.Count == 1)
-                return CreateSelectQuery(tablesName.First(), data);
+                return CreateSelectQuery(tablesName.First(), Data);
             else
-                return CreateJoinQuery(tablesName, data);
+                return CreateJoinQuery(tablesName, Data);
         }
-         
-        private static string CreateSelectQuery(string tableName, Dictionary<string, dynamic> data)
+        
+        private static string CreateSelectQuery(string tableName, Dictionary<string, dynamic> Data)
         {
             List<string> conditions = new List<string>();
-            foreach (var item in data)
+            foreach (var param in Data)
             {
-                var paramName = item.Key;
-                var value = item.Value;
+                var paramName = param.Key;
+                var value = param.Value;
                 if (value == null)
                     throw new ArgumentException($"Parameter '{paramName}' cannot be null.");
 
@@ -57,23 +48,25 @@ namespace UniversalApi.Helpers
                 else
                     conditions.Add($"{tableName}.{paramName} = {value}");
             }
-            string condition = string.Join(" AND ", conditions);
 
+            string condition = string.Join(" AND ", conditions);
             string commandQuery = $"SELECT * FROM {tableName} WHERE {condition}";
+
+            #if DEBUG
             Console.WriteLine(commandQuery);
+            #endif
             return commandQuery;
         }
-
-        private static string CreateJoinQuery(List<string> tablesName, Dictionary<string, dynamic> data)
+        private static string CreateJoinQuery(List<string> tablesName, Dictionary<string, dynamic> Data)
         {
             List<string> conditions = new List<string>();
             string firstTable = tablesName.ToArray()[0];
             string secondTable = tablesName.ToArray()[1];
 
-            foreach (var item in data)
+            foreach (var param in Data)
             {
-                var paramName = item.Key;
-                var value = item.Value;
+                var paramName = param.Key;
+                var value = param.Value;
                 if (value == null)
                     throw new ArgumentException($"Parameter '{paramName}' cannot be null.");
 
@@ -82,28 +75,57 @@ namespace UniversalApi.Helpers
                 else
                     conditions.Add($"{firstTable}.{paramName} = {value}");
             }
+
             string condition = string.Join(" AND ", conditions);
-
-
-            string commandQuery = $"SELECT * " +
+            string commandQuery =
+                $"SELECT * " +
                 $"FROM {firstTable} " +
                 $"INNER JOIN {secondTable} " +
                 $"ON {firstTable}.Id = {secondTable}.Id " +
                 $"WHERE {condition}";
+
+            #if DEBUG
             Console.WriteLine(commandQuery);
+            #endif
             return commandQuery;
         }
 
-
-        private static bool HasRequest(Dictionary<string, dynamic> data, out string tables)
+        private static bool HasRequest(Dictionary<string, dynamic> Data, out string tables)
         {
             tables = string.Empty;
-            if (data.ContainsKey("Request"))
+            if (Data.ContainsKey("Request") || Data.ContainsKey("request"))
             {
-                string requestName = data["Request"];
-                return IsValidRequestName(requestName, out tables);
+                dynamic requestName;
+                if (Data.TryGetValue("Request", out requestName))
+                    return IsValidRequestName(requestName, out tables);
+                if (Data.TryGetValue("request", out requestName))
+                    return IsValidRequestName(requestName, out tables);
             }
             return false;
+        }
+        private static bool CheckId(Dictionary<string, dynamic> Data)
+        {
+            if (Data.ContainsKey("Id") || Data.ContainsKey("id"))
+            {
+                dynamic id;
+                if (Data.TryGetValue("Id", out id))
+                    return IsValidId((int?)id);
+                if (Data.TryGetValue("id", out id))
+                    return IsValidId((int?)id);
+            }
+            return true;
+        }
+        private static bool CheckAddress(Dictionary<string, dynamic> Data)
+        {
+            if (Data.ContainsKey("Address") || Data.ContainsKey("address"))
+            {
+                dynamic address;
+                if (Data.TryGetValue("Address", out address))
+                    return IsValidAddress((string)address);
+                if (Data.TryGetValue("address", out address))
+                    return IsValidAddress((string)address);
+            }
+            return true;
         }
         private static bool IsValidRequestName(string requestName, out string tables)
         {
@@ -131,7 +153,6 @@ namespace UniversalApi.Helpers
             bool result = AddressExtensions.IsValidEthereumAddressHexFormat(address);
             if (!result)
                 return false;
-
             return true;
         }
 

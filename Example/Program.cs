@@ -16,7 +16,7 @@ namespace Example
             {
                 { "Request", "mysignup" },
                 { "Id", 3 },
-                { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
             };
             //Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
             //{
