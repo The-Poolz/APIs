@@ -55,7 +55,7 @@ namespace UniversalApi.Helpers
             List<string> tablesName = new List<string>();
             foreach (var table in tables)
             {
-                tablesName.AddRange(table.Split(", "));
+                tablesName.AddRange(table.Split(","));
             }
             return tablesName;
         }

@@ -13,7 +13,7 @@ namespace UniversalApi.Helpers
         {
             Dictionary<string, dynamic> Data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json);
             if (Data == null || Data.Count == 0)
-                throw new ArgumentException("An error occurred while trying to generate a query string. Missing data.");
+                return null;
 
             string tables;
             if (!HasRequest(Data, out tables))

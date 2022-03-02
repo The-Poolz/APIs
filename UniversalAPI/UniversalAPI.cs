@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Interfaces.DBModel;
-using Microsoft.Data.SqlClient;
+﻿using Interfaces.DBModel;
 using Newtonsoft.Json;
 using UniversalApi.Helpers;
-using System.Reflection;
-using System.Dynamic;
 
 namespace UniversalApi
 {
@@ -26,9 +19,8 @@ namespace UniversalApi
             string commandQuery = QueryCreator.GetCommandQuery(data);
 
             object[] table = DataReader.GetData(commandQuery, ConnectionString, Context);
-            string json = JsonConvert.SerializeObject(table);
 
-            return json;
+            return JsonConvert.SerializeObject(table);
         }
     }
 }
