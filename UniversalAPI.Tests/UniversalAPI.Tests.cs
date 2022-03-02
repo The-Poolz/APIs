@@ -1,6 +1,6 @@
 using UniversalApi;
 using Interfaces.DBModel;
-using Interfaces.DBModel.Models;
+
 using Interfaces.Helpers;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +12,7 @@ using System;
 using Newtonsoft.Json;
 using UniversalApi.Helpers;
 using System.Data;
+using Interfaces.DBModel.Models;
 
 namespace UniversalAPITests
 {
@@ -42,29 +43,6 @@ namespace UniversalAPITests
             Assert.IsType<SqlDataReader>(reader);
             Assert.True(reader.HasRows);
             connection.Close();
-        }
-    }
-
-    public class DataFormatterTests
-    {
-        [Fact]
-        public void FormatJson()
-        {
-            Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
-            {
-                { "Tables", "SignUp" },
-                { "Id", 3 },
-                { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-            };
-            var jsonString = JsonConvert.SerializeObject(inputData);
-
-            var data = QueryCreator.FormatJson(jsonString);
-
-            Assert.NotNull(data);
-            Assert.IsType<Dictionary<string, dynamic>>(data);
-            Assert.True(data["Id"] == 3 &&
-                data["Tables"] == "SignUp" &&
-                data["Address"] == "0x3a31ee5557c9369c35573496555b1bc93553b553");
         }
     }
 
@@ -158,8 +136,14 @@ namespace UniversalAPITests
             /* Initialize APIRequestList table */
             var APIRequestList = new List<APIRequestList>
             {
-                new APIRequestList { Id = 1, Request = "mysignup", Tables = "SignUp, LeaderBoard"},
-                new APIRequestList { Id = 2, Request = "wallet", Tables = "Wallets"},
+                new APIRequestList { Id = 1,
+                    Request = "mysignup",
+                    Tables = "SignUp, LeaderBoard",
+                    Columns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount"},
+                new APIRequestList { Id = 2,
+                    Request = "wallet",
+                    Tables = "Wallets",
+                    Columns = "*"}
             }.AsQueryable();
 
             var mockSetAPIRequestList = new Mock<DbSet<APIRequestList>>();
