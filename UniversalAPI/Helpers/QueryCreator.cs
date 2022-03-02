@@ -27,12 +27,19 @@ namespace UniversalApi.Helpers
                 return null;
 
             List<string> tablesName = GetTablesName(tables);
+            string commandQuery = string.Empty;
             if (tablesName.Count == 1)
-                return CreateSelectQuery(tablesName.First(), Data);
+                commandQuery = CreateSelectQuery(tablesName.First(), Data);
             else
-                return CreateJoinQuery(tablesName, Data);
+                commandQuery = CreateJoinQuery(tablesName, Data);
+
+            #if DEBUG
+            Console.WriteLine(commandQuery);
+            #endif
+
+            return commandQuery;
         }
-        
+
         private static string CreateSelectQuery(string tableName, Dictionary<string, dynamic> Data)
         {
             List<string> conditions = new List<string>();
@@ -52,9 +59,6 @@ namespace UniversalApi.Helpers
             string condition = string.Join(" AND ", conditions);
             string commandQuery = $"SELECT * FROM {tableName} WHERE {condition}";
 
-            #if DEBUG
-            Console.WriteLine(commandQuery);
-            #endif
             return commandQuery;
         }
         private static string CreateJoinQuery(List<string> tablesName, Dictionary<string, dynamic> Data)
@@ -84,9 +88,6 @@ namespace UniversalApi.Helpers
                 $"ON {firstTable}.Id = {secondTable}.Id " +
                 $"WHERE {condition}";
 
-            #if DEBUG
-            Console.WriteLine(commandQuery);
-            #endif
             return commandQuery;
         }
 

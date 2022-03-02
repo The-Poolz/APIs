@@ -24,12 +24,16 @@ namespace Example
             //    { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
             //};
             var jsonString = JsonConvert.SerializeObject(inputData);
+            Console.WriteLine("Input data");
             Console.WriteLine(jsonString);
+            Console.WriteLine();
 
             UniversalAPI UniversalAPI = new UniversalAPI(ConnectionString.connectionString, DynamicDB.ConnectToDb());
 
             string jsonTable = UniversalAPI.GetTable(jsonString);
+            Console.WriteLine("Find result");
             Console.WriteLine(jsonTable);
+            Console.WriteLine();
 
             Console.ReadLine();
         }
