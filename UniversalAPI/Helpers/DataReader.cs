@@ -73,17 +73,55 @@ namespace UniversalApi.Helpers
             }
             return tablesName;
         }
+        private static List<string> GetColumns(string commandQuery, DynamicDBContext context)
+        {
+            var allTablesName = GetTables(context);
+            var tablesName = GetCurrentTables(commandQuery, allTablesName);
+            string tables = string.Join(", ", tablesName);
+
+            var columns = context.APIRequestList.Where(i => i.Tables.Equals(tables)).Select(i => i.Columns);
+            List<string> columnsName = new List<string>();
+            foreach (var columnName in columns)
+            {
+                if (commandQuery.Contains(columnName))
+                {
+                    columnsName.Add(columnName);
+                }
+            }
+            return columnsName;
+        }
         private static List<PropertyInfo> GetPropertyInfos(string commandQuery, DynamicDBContext context)
         {
             var allTablesName = GetTables(context);
             var tablesName = GetCurrentTables(commandQuery, allTablesName);
+
+            var columns = GetColumns(commandQuery, context);
+            List<string> _columns = new List<string>();
+            for (int i = 0; i < columns.Count; i++)
+            {
+                _columns.AddRange(columns[i].Split(", "));
+            }
+            columns.Clear();
+            for (int i = 0; i < _columns.Count; i++)
+            {
+                columns.AddRange(_columns[i].Split('.'));
+            }
+
             List<PropertyInfo> properties = new List<PropertyInfo>();
+            List<PropertyInfo> selectedProperties = new List<PropertyInfo>();
             foreach (var name in tablesName)
             {
                 Type type = Type.GetType($"Interfaces.DBModel.Models.{name}");
                 properties.AddRange(type.GetProperties());
+                foreach (var col in columns)
+                {
+                    if (selectedProperties.FirstOrDefault(p => p.Name.Equals(col)) == null)
+                    {
+                        selectedProperties.AddRange(properties.Where(p => p.Name.Equals(col)));
+                    }
+                }
             }
-            return properties;
+            return selectedProperties;
         }
 
 

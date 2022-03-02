@@ -16,10 +16,16 @@ namespace UniversalApi.Helpers
                 return null;
 
             string tables;
-            if (!HasRequest(Data, out tables))
-                return null;
-            else
+            string columns;
+            if (HasRequest(Data, out tables))
+            {
+                var request = Data["Request"];
+                columns = GetColumns(request);
                 Data.Remove("Request");
+            }
+            else
+                return null;
+            
 
             if (!CheckId(Data))
                 return null;
@@ -29,18 +35,19 @@ namespace UniversalApi.Helpers
             List<string> tablesName = GetTablesName(tables);
             string commandQuery = string.Empty;
             if (tablesName.Count == 1)
-                commandQuery = CreateSelectQuery(tablesName.First(), Data);
+                commandQuery = CreateSelectQuery(tablesName.First(), columns, Data);
             else
-                commandQuery = CreateJoinQuery(tablesName, Data);
+                commandQuery = CreateJoinQuery(tablesName, columns, Data);
 
             #if DEBUG
             Console.WriteLine(commandQuery);
+            Console.WriteLine();
             #endif
 
             return commandQuery;
         }
 
-        private static string CreateSelectQuery(string tableName, Dictionary<string, dynamic> Data)
+        private static string CreateSelectQuery(string tableName, string columns, Dictionary<string, dynamic> Data)
         {
             List<string> conditions = new List<string>();
             foreach (var param in Data)
@@ -57,11 +64,11 @@ namespace UniversalApi.Helpers
             }
 
             string condition = string.Join(" AND ", conditions);
-            string commandQuery = $"SELECT * FROM {tableName} WHERE {condition}";
+            string commandQuery = $"SELECT {columns} FROM {tableName} WHERE {condition}";
 
             return commandQuery;
         }
-        private static string CreateJoinQuery(List<string> tablesName, Dictionary<string, dynamic> Data)
+        private static string CreateJoinQuery(List<string> tablesName, string columns, Dictionary<string, dynamic> Data)
         {
             List<string> conditions = new List<string>();
             string firstTable = tablesName.ToArray()[0];
@@ -82,7 +89,7 @@ namespace UniversalApi.Helpers
 
             string condition = string.Join(" AND ", conditions);
             string commandQuery =
-                $"SELECT * " +
+                $"SELECT {columns} " +
                 $"FROM {firstTable} " +
                 $"INNER JOIN {secondTable} " +
                 $"ON {firstTable}.Id = {secondTable}.Id " +
@@ -163,6 +170,14 @@ namespace UniversalApi.Helpers
             for (int i = 0; i < names.Count(); i++)     // Remove all whitespace
                 names[i] = String.Concat(names[i].Where(c => !Char.IsWhiteSpace(c)));
             return names.ToList();
+        }
+        private static string GetColumns(string request)
+        {
+            using (var context = DynamicDB.ConnectToDb())
+            {
+                var columns = context.APIRequestList.FirstOrDefault(i => i.Request == request).Columns;
+                return columns;
+            }
         }
     }
 }
