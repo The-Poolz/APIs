@@ -1,5 +1,6 @@
 ﻿using Interfaces.DBModel;
 using Microsoft.Data.SqlClient;
+using Pluralize.NET.Core;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -90,14 +91,7 @@ namespace UniversalApi.Helpers
             List<PropertyInfo> properties = new List<PropertyInfo>();
             foreach (var name in tablesName)
             {
-                // If 
-                string tableName = name;
-                if (name.IsSingular())
-                {
-
-                }
-                if (name.LastIndexOf('s') == name.Length-1)
-                    tableName = name.TrimEnd('s');
+                string tableName = new Pluralizer().Singularize(name);
 
                 Type type = Type.GetType($"UniversalApi.Models.{tableName}");
                 foreach (var col in columns)
