@@ -44,67 +44,72 @@ namespace UniversalApi.Helpers
             return data.ToArray();
         }
 
-        private static List<string> GetTables(DynamicDBContext context)
+
+        private static List<string> GetTables(string commandQuery, DynamicDBContext context)
         {
+            // Get all Tables name
             var tables = context.APIRequestList.Select(i => i.Tables);
+            // Format string tablesName to List<string>
             List<string> tablesName = new List<string>();
             foreach (var table in tables)
                 tablesName.AddRange(table.Split(","));
 
+            // Remove all whitespase
             tablesName = tablesName.Select(tableName => tableName.Replace(" ", string.Empty)).ToList();
 
-            return tablesName;
+            // Search current tables by query string and return List<string> current tables name
+            return tablesName.Where(tableName => commandQuery.Contains(tableName)).ToList();
         }
-        private static List<string> GetCurrentTables(string commandQuery, List<string> allTablesName) =>
-            allTablesName.Where(tableName => commandQuery.Contains(tableName)).ToList();
         private static List<string> GetColumns(string commandQuery, DynamicDBContext context, List<string> tablesName)
         {
+            // Format List<string> tablesName to string
             string tables = string.Join(", ", tablesName);
 
+            // Search selected columns by Tables parameter
             var columns = context.APIRequestList.Where(i => i.Tables.Equals(tables)).Select(i => i.Columns);
 
-            return columns.Where(columnName => commandQuery.Contains(columnName)).ToList();
+            // Make a list of strings containing column and table names
+            // In GetPropertyInfos compare model fields and selected fields
+            List<string> currentColumns = columns.Where(columnName => commandQuery.Contains(columnName)).ToList();
+            List<string> _columns = new List<string>();
+            var count = currentColumns.Count();
+            for (int i = 0; i < count; i++)
+                _columns.AddRange(currentColumns[i].Split(", "));
+            currentColumns.Clear();
+            var _count = _columns.Count;
+            for (int i = 0; i < _count; i++)
+                currentColumns.AddRange(_columns[i].Split('.'));
+
+            return currentColumns;
         }
         private static List<PropertyInfo> GetPropertyInfos(string commandQuery, DynamicDBContext context)
         {
-            var allTablesName = GetTables(context);
-            var tablesName = GetCurrentTables(commandQuery, allTablesName);
-
+            var tablesName = GetTables(commandQuery, context);
             var columns = GetColumns(commandQuery, context, tablesName);
-            List<string> _columns = new List<string>();
-            var count = columns.Count;
-            for (int i = 0; i < count; i++)
-                _columns.AddRange(columns[i].Split(", "));
-            columns.Clear();
-            var _count = _columns.Count;
-            for (int i = 0; i < _count; i++)
-                columns.AddRange(_columns[i].Split('.'));
 
             List<PropertyInfo> properties = new List<PropertyInfo>();
-            List<PropertyInfo> selectedProperties = new List<PropertyInfo>();
             foreach (var name in tablesName)
             {
+                // If 
                 string tableName = name;
+                if (name.IsSingular())
+                {
+
+                }
                 if (name.LastIndexOf('s') == name.Length-1)
                     tableName = name.TrimEnd('s');
 
                 Type type = Type.GetType($"UniversalApi.Models.{tableName}");
-                properties.AddRange(type.GetProperties());
                 foreach (var col in columns)
                 {
                     if (col == "*")
-                    {
-                        selectedProperties.AddRange(properties);
-                    }
-                    else if (selectedProperties.FirstOrDefault(p => p.Name.Equals(col)) == null)
-                    {
-                        selectedProperties.AddRange(properties.Where(p => p.Name.Equals(col)));
-                    }
+                        properties.AddRange(type.GetProperties());
+                    else if (properties.FirstOrDefault(p => p.Name.Equals(col)) == null)
+                        properties.AddRange(type.GetProperties().Where(p => p.Name.Equals(col)));
                 }
             }
-            return selectedProperties;
+            return properties;
         }
-
 
         private static void AddProperty(ExpandoObject expando, string propertyName, object propertyValue)
         {
