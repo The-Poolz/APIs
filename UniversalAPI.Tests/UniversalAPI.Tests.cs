@@ -15,7 +15,7 @@ using Interfaces.DBModel.Models;
 
 namespace UniversalAPITests
 {
-    public class SqlHelpersTests
+    public class SqlUtilTests
     {
         [Fact]
         public void GetConnection()
@@ -41,7 +41,33 @@ namespace UniversalAPITests
             Assert.NotNull(reader);
             Assert.IsType<SqlDataReader>(reader);
             Assert.True(reader.HasRows);
+            Assert.Equal(4, reader.FieldCount);
             connection.Close();
+        }
+    }
+
+    public class QueryCreatorTests
+    {
+        [Fact]
+        public void GetCommandQuery()
+        {
+            // Arrange
+            Dictionary<string, dynamic> dataObj = new Dictionary<string, dynamic>
+            {
+                { "Request", "mysignup" },
+                { "Id", 3 },
+                { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+            };
+            var jsonString = JsonConvert.SerializeObject(dataObj);
+
+            // Act
+            var result = QueryCreator.GetCommandQuery(jsonString);
+
+            // Assert
+            Assert.NotNull(result);
+            var resultType = Assert.IsType<string>(result);
+            var json = Assert.IsAssignableFrom<string>(resultType);
+            Assert.NotEqual(string.Empty, json);
         }
     }
 

@@ -88,7 +88,7 @@ namespace UniversalApi.Helpers
                 if (name.LastIndexOf('s') == name.Length-1)
                     tableName = name.TrimEnd('s');
 
-                Type type = Type.GetType($"Interfaces.DBModel.Models.{tableName}");
+                Type type = Type.GetType($"UniversalApi.Models.{tableName}");
                 properties.AddRange(type.GetProperties());
                 foreach (var col in columns)
                 {
