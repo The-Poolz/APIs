@@ -68,6 +68,11 @@ namespace UniversalAPITests
             var resultType = Assert.IsType<string>(result);
             var json = Assert.IsAssignableFrom<string>(resultType);
             Assert.NotEqual(string.Empty, json);
+            Assert.Equal(
+                "SELECT SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount " +
+                "FROM SignUp INNER JOIN LeaderBoard " +
+                "ON SignUp.Address = LeaderBoard.Owner" +
+                " WHERE SignUp.Id = 3 AND SignUp.address = '0x3a31ee5557c9369c35573496555b1bc93553b553'", json);
         }
     }
 
@@ -161,14 +166,19 @@ namespace UniversalAPITests
             /* Initialize APIRequestList table */
             var APIRequestList = new List<APIRequestList>
             {
-                new APIRequestList { Id = 1,
+                new APIRequestList {
+                    Id = 1,
                     Request = "mysignup",
                     Tables = "SignUp, LeaderBoard",
-                    Columns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount"},
-                new APIRequestList { Id = 2,
+                    Columns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
+                    JoinCondition = "SignUp.Address = LeaderBoard.Owner"
+                },
+                new APIRequestList {
+                    Id = 2,
                     Request = "wallet",
                     Tables = "Wallets",
-                    Columns = "*"}
+                    Columns = "*"
+                }
             }.AsQueryable();
 
             var mockSetAPIRequestList = new Mock<DbSet<APIRequestList>>();
@@ -190,6 +200,9 @@ namespace UniversalAPITests
 
             mockContext.Setup(t => t.SignUp).Returns(mockSetSignUp.Object);
             mockContext.Setup(t => t.Set<SignUp>()).Returns(mockSetSignUp.Object);
+
+            mockContext.Setup(t => t.APIRequestList).Returns(mockSetAPIRequestList.Object);
+            mockContext.Setup(t => t.Set<APIRequestList>()).Returns(mockSetAPIRequestList.Object);
 
             return mockContext.Object;
         }

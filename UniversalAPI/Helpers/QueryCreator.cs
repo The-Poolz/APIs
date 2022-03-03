@@ -11,43 +11,45 @@ namespace UniversalApi.Helpers
     {
         public static string GetCommandQuery(string json)
         {
-            Dictionary<string, dynamic> Data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json);
-            if (Data == null || Data.Count == 0)
+            Dictionary<string, dynamic> data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json);
+            if (data == null || data.Count == 0)
                 return null;
 
             string tables;
             string columns;
             string joinCondition;
-            if (HasRequest(Data, out tables))
+            if (HasRequest(data, out tables))
             {
-                var request = Data["Request"];
+                var request = data["Request"];
                 columns = GetColumns(request);
                 joinCondition = GetJoinCondition(request);
-                Data.Remove("Request");
+                data.Remove("Request");
             }
             else
+            {
                 return null;
+            }
             
 
-            if (!CheckId(Data))
+            if (!CheckId(data))
                 return null;
-            if (!CheckAddress(Data))
+            if (!CheckAddress(data))
                 return null;
 
             List<string> tablesName = GetTablesName(tables);
             string commandQuery = null;
             if (tablesName.Count == 1)
-                commandQuery = CreateSelectQuery(tablesName.First(), columns, Data);
+                commandQuery = CreateSelectQuery(tablesName.First(), columns, data);
             else
-                commandQuery = CreateJoinQuery(tablesName, columns, joinCondition, Data);
+                commandQuery = CreateJoinQuery(tablesName, columns, joinCondition, data);
 
             return commandQuery;
         }
 
-        private static string CreateSelectQuery(string tableName, string columns, Dictionary<string, dynamic> Data)
+        private static string CreateSelectQuery(string tableName, string columns, Dictionary<string, dynamic> data)
         {
             List<string> conditions = new List<string>();
-            foreach (var param in Data)
+            foreach (var param in data)
             {
                 var paramName = param.Key;
                 var value = param.Value;
@@ -65,13 +67,13 @@ namespace UniversalApi.Helpers
 
             return commandQuery;
         }
-        private static string CreateJoinQuery(List<string> tablesName, string columns, string joinCondition, Dictionary<string, dynamic> Data)
+        private static string CreateJoinQuery(List<string> tablesName, string columns, string joinCondition, Dictionary<string, dynamic> data)
         {
             List<string> conditions = new List<string>();
             string firstTable = tablesName.ToArray()[0];
             string secondTable = tablesName.ToArray()[1];
 
-            foreach (var param in Data)
+            foreach (var param in data)
             {
                 var paramName = param.Key;
                 var value = param.Value;
@@ -95,39 +97,39 @@ namespace UniversalApi.Helpers
             return commandQuery;
         }
 
-        private static bool HasRequest(Dictionary<string, dynamic> Data, out string tables)
+        private static bool HasRequest(Dictionary<string, dynamic> data, out string tables)
         {
             tables = string.Empty;
-            if (Data.ContainsKey("Request") || Data.ContainsKey("request"))
+            if (data.ContainsKey("Request") || data.ContainsKey("request"))
             {
                 dynamic requestName;
-                if (Data.TryGetValue("Request", out requestName))
+                if (data.TryGetValue("Request", out requestName))
                     return IsValidRequestName(requestName, out tables);
-                if (Data.TryGetValue("request", out requestName))
+                if (data.TryGetValue("request", out requestName))
                     return IsValidRequestName(requestName, out tables);
             }
             return false;
         }
-        private static bool CheckId(Dictionary<string, dynamic> Data)
+        private static bool CheckId(Dictionary<string, dynamic> data)
         {
-            if (Data.ContainsKey("Id") || Data.ContainsKey("id"))
+            if (data.ContainsKey("Id") || data.ContainsKey("id"))
             {
                 dynamic id;
-                if (Data.TryGetValue("Id", out id))
+                if (data.TryGetValue("Id", out id))
                     return IsValidId((int?)id);
-                if (Data.TryGetValue("id", out id))
+                if (data.TryGetValue("id", out id))
                     return IsValidId((int?)id);
             }
             return true;
         }
-        private static bool CheckAddress(Dictionary<string, dynamic> Data)
+        private static bool CheckAddress(Dictionary<string, dynamic> data)
         {
-            if (Data.ContainsKey("Address") || Data.ContainsKey("address"))
+            if (data.ContainsKey("Address") || data.ContainsKey("address"))
             {
                 dynamic address;
-                if (Data.TryGetValue("Address", out address))
+                if (data.TryGetValue("Address", out address))
                     return IsValidAddress((string)address);
-                if (Data.TryGetValue("address", out address))
+                if (data.TryGetValue("address", out address))
                     return IsValidAddress((string)address);
             }
             return true;
