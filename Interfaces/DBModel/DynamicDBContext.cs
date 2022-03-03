@@ -16,8 +16,8 @@ namespace Interfaces.DBModel
         public DynamicDBContext(DbContextOptions options) { }
         public DynamicDBContext(DbContextOptions<DynamicDBContext> options) : base(options)
         {
-            //Database.EnsureDeleted();
-            //Database.EnsureCreated();
+            Database.EnsureDeleted();
+            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -68,6 +68,11 @@ namespace Interfaces.DBModel
                 new APIRequestList { Id = 2,
                     Request = "wallet",
                     Tables = "Wallets",
+                    Columns = "*"
+                },
+                new APIRequestList { Id = 3,
+                    Request = "leaderboard",
+                    Tables = "LeaderBoard",
                     Columns = "*"
                 }
             });

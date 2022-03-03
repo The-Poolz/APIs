@@ -24,6 +24,12 @@ namespace Example
                     { "Request", "wallet" },
                     { "Id", 3 },
                     { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                },
+                new Dictionary<string, dynamic>
+                {
+                    { "Request", "leaderboard" },
+                    { "Id", 1 },
+                    { "Owner", "0x1a01ee5577c9d69c35a77496565b1bc95588b521" }
                 }
             };
             foreach (var data in listData)

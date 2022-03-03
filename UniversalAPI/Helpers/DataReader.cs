@@ -19,19 +19,23 @@ namespace UniversalApi.Helpers
                 using (var connection = SqlUtil.GetConnection(connectionString))
                 {
                     connection.Open();
-
                     var reader = SqlUtil.GetReader(commandQuery, connection);
                     if (!reader.HasRows)
                         return null;
 
                     var properties = GetPropertyInfos(commandQuery, context);
                     ExpandoObject dataObj = new ExpandoObject();
+                    /* How it work */
+                    // Function get properties count for table obj and make this obj with value
+                    // We need this in order to correctly deserialize the created table object in JSON
                     while (reader.Read())
                     {
+                        // Create dynamic obj with selected properties
                         var propCount = properties.Count;
                         for (int i = 0; i < propCount; i++)
                             AddProperty(dataObj, properties[i].Name, reader.GetValue(i));
 
+                        // Adding obj to result list
                         data.Add(dataObj);
                     }
                     reader.Close();
@@ -59,7 +63,11 @@ namespace UniversalApi.Helpers
             tablesName = tablesName.Select(tableName => tableName.Replace(" ", string.Empty)).ToList();
 
             // Search current tables by query string and return List<string> current tables name
-            return tablesName.Where(tableName => commandQuery.Contains(tableName)).ToList();
+            // Use Distinct() as there may be matches in table names
+            tablesName = tablesName.Where(
+                tableName => commandQuery.Contains(tableName)).Distinct().ToList();
+
+            return tablesName;
         }
         private static List<string> GetColumns(string commandQuery, DynamicDBContext context, List<string> tablesName)
         {
@@ -67,10 +75,10 @@ namespace UniversalApi.Helpers
             string tables = string.Join(", ", tablesName);
 
             // Search selected columns by Tables parameter
-            var columns = context.APIRequestList.Where(i => i.Tables.Equals(tables)).Select(i => i.Columns);
+            var columns = context.APIRequestList.Where(i => i.Tables.Equals(tables)).Select(i => i.Columns).ToList();
 
             // Make a list of strings containing column and table names
-            // In GetPropertyInfos compare model fields and selected fields
+            // In GetPropertyInfos() compare model fields and selected fields
             List<string> currentColumns = columns.Where(columnName => commandQuery.Contains(columnName)).ToList();
             List<string> _columns = new List<string>();
             var count = currentColumns.Count();
@@ -91,15 +99,24 @@ namespace UniversalApi.Helpers
             List<PropertyInfo> properties = new List<PropertyInfo>();
             foreach (var name in tablesName)
             {
+                // Singularize table name, model has singular name but tablename in DB has pluar name
                 string tableName = new Pluralizer().Singularize(name);
 
+                // Get models type
                 Type type = Type.GetType($"UniversalApi.Models.{tableName}");
                 foreach (var col in columns)
                 {
-                    if (col == "*")
+                    if (col == "*") 
+                    {
+                        // add all model properties
                         properties.AddRange(type.GetProperties());
-                    else if (properties.FirstOrDefault(p => p.Name.Equals(col)) == null)
+                        break;
+                    }
+                    else if (properties.FirstOrDefault(p => p.Name.Equals(col)) == null) 
+                    {
+                        // add selected properties
                         properties.AddRange(type.GetProperties().Where(p => p.Name.Equals(col)));
+                    }
                 }
             }
             return properties;
