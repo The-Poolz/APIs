@@ -33,16 +33,11 @@ namespace UniversalApi.Helpers
                 return null;
 
             List<string> tablesName = GetTablesName(tables);
-            string commandQuery = string.Empty;
+            string commandQuery = null;
             if (tablesName.Count == 1)
                 commandQuery = CreateSelectQuery(tablesName.First(), columns, Data);
             else
                 commandQuery = CreateJoinQuery(tablesName, columns, Data);
-
-            #if DEBUG
-            Console.WriteLine(commandQuery);
-            Console.WriteLine();
-            #endif
 
             return commandQuery;
         }
@@ -167,7 +162,8 @@ namespace UniversalApi.Helpers
         private static List<string> GetTablesName(string tables)
         {
             string[] names = tables.Split(",");
-            for (int i = 0; i < names.Count(); i++)     // Remove all whitespace
+            var namesCount = names.Count();
+            for (int i = 0; i < namesCount; i++)     // Remove all whitespace
                 names[i] = String.Concat(names[i].Where(c => !Char.IsWhiteSpace(c)));
             return names.ToList();
         }

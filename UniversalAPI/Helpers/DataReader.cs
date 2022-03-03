@@ -12,41 +12,36 @@ namespace UniversalApi.Helpers
     {
         public static object[] GetData(string commandQuery, string connectionString, DynamicDBContext context)
         {
-            List<object> table = new List<object>();
-            using (context)
+            List<object> data = new List<object>();
+            try
             {
-                try
+                using (var connection = SqlUtil.GetConnection(connectionString))
                 {
-                    var connection = SqlUtil.GetConnection(connectionString);
-                    using (connection)
+                    connection.Open();
+
+                    var reader = SqlUtil.GetReader(commandQuery, connection);
+                    if (!reader.HasRows)
+                        return null;
+
+                    var properties = GetPropertyInfos(commandQuery, context);
+                    ExpandoObject dataObj = new ExpandoObject();
+                    while (reader.Read())
                     {
-                        connection.Open();
-                        var reader = SqlUtil.GetReader(commandQuery, connection);
-                        if (!reader.HasRows)
-                            return null;
+                        var propCount = properties.Count;
+                        for (int i = 0; i < propCount; i++)
+                            AddProperty(dataObj, properties[i].Name, reader.GetValue(i));
 
-                        var properties = GetPropertyInfos(commandQuery, context);
-
-                        ExpandoObject DataObj = new ExpandoObject();
-                        Object[] values = new Object[reader.FieldCount];
-                        while (reader.Read())
-                        {
-                            for (int i = 0; i < properties.ToArray().Length; i++)
-                            {
-                                AddProperty(DataObj, properties[i].Name, reader.GetValue(i));
-                            }
-                            table.Add(DataObj);
-                        }
-                        reader.Close();
+                        data.Add(dataObj);
                     }
-                    return table.ToArray();
+                    reader.Close();
                 }
-                catch (SqlException ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
+                return data.ToArray();
             }
-            return table.ToArray();
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return data.ToArray();
         }
 
         private static List<string> GetTables(DynamicDBContext context)
@@ -54,58 +49,36 @@ namespace UniversalApi.Helpers
             var tables = context.APIRequestList.Select(i => i.Tables);
             List<string> tablesName = new List<string>();
             foreach (var table in tables)
-            {
                 tablesName.AddRange(table.Split(","));
-            }
-            for (int i = 0; i < tablesName.Count(); i++)     // Remove all whitespace
-                tablesName[i] = String.Concat(tablesName[i].Where(c => !Char.IsWhiteSpace(c)));
+
+            tablesName = tablesName.Select(tableName => tableName.Replace(" ", string.Empty)).ToList();
+
             return tablesName;
         }
-        private static List<string> GetCurrentTables(string commandQuery, List<string> allTablesName)
+        private static List<string> GetCurrentTables(string commandQuery, List<string> allTablesName) =>
+            allTablesName.Where(tableName => commandQuery.Contains(tableName)).ToList();
+        private static List<string> GetColumns(string commandQuery, DynamicDBContext context, List<string> tablesName)
         {
-            List<string> tablesName = new List<string>();
-            foreach (var tableName in allTablesName)
-            {
-                if (commandQuery.Contains(tableName))
-                {
-                    tablesName.Add(tableName);
-                }
-            }
-            return tablesName;
-        }
-        private static List<string> GetColumns(string commandQuery, DynamicDBContext context)
-        {
-            var allTablesName = GetTables(context);
-            var tablesName = GetCurrentTables(commandQuery, allTablesName);
             string tables = string.Join(", ", tablesName);
 
             var columns = context.APIRequestList.Where(i => i.Tables.Equals(tables)).Select(i => i.Columns);
-            List<string> columnsName = new List<string>();
-            foreach (var columnName in columns)
-            {
-                if (commandQuery.Contains(columnName))
-                {
-                    columnsName.Add(columnName);
-                }
-            }
-            return columnsName;
+
+            return columns.Where(columnName => commandQuery.Contains(columnName)).ToList();
         }
         private static List<PropertyInfo> GetPropertyInfos(string commandQuery, DynamicDBContext context)
         {
             var allTablesName = GetTables(context);
             var tablesName = GetCurrentTables(commandQuery, allTablesName);
 
-            var columns = GetColumns(commandQuery, context);
+            var columns = GetColumns(commandQuery, context, tablesName);
             List<string> _columns = new List<string>();
-            for (int i = 0; i < columns.Count; i++)
-            {
+            var count = columns.Count;
+            for (int i = 0; i < count; i++)
                 _columns.AddRange(columns[i].Split(", "));
-            }
             columns.Clear();
-            for (int i = 0; i < _columns.Count; i++)
-            {
+            var _count = _columns.Count;
+            for (int i = 0; i < _count; i++)
                 columns.AddRange(_columns[i].Split('.'));
-            }
 
             List<PropertyInfo> properties = new List<PropertyInfo>();
             List<PropertyInfo> selectedProperties = new List<PropertyInfo>();
@@ -113,9 +86,7 @@ namespace UniversalApi.Helpers
             {
                 string tableName = name;
                 if (name.LastIndexOf('s') == name.Length-1)
-                {
                     tableName = name.TrimEnd('s');
-                }
 
                 Type type = Type.GetType($"Interfaces.DBModel.Models.{tableName}");
                 properties.AddRange(type.GetProperties());
