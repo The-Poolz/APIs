@@ -62,11 +62,14 @@ namespace Interfaces.DBModel
                 new APIRequestList { Id = 1,
                     Request = "mysignup",
                     Tables = "SignUp, LeaderBoard",
-                    Columns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount"},
+                    Columns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
+                    JoinCondition = "SignUp.Address = LeaderBoard.Owner"
+                },
                 new APIRequestList { Id = 2,
                     Request = "wallet",
                     Tables = "Wallets",
-                    Columns = "*"}
+                    Columns = "*"
+                }
             });
         }
     }

@@ -17,10 +17,12 @@ namespace UniversalApi.Helpers
 
             string tables;
             string columns;
+            string joinCondition;
             if (HasRequest(Data, out tables))
             {
                 var request = Data["Request"];
                 columns = GetColumns(request);
+                joinCondition = GetJoinCondition(request);
                 Data.Remove("Request");
             }
             else
@@ -37,7 +39,7 @@ namespace UniversalApi.Helpers
             if (tablesName.Count == 1)
                 commandQuery = CreateSelectQuery(tablesName.First(), columns, Data);
             else
-                commandQuery = CreateJoinQuery(tablesName, columns, Data);
+                commandQuery = CreateJoinQuery(tablesName, columns, joinCondition, Data);
 
             return commandQuery;
         }
@@ -63,7 +65,7 @@ namespace UniversalApi.Helpers
 
             return commandQuery;
         }
-        private static string CreateJoinQuery(List<string> tablesName, string columns, Dictionary<string, dynamic> Data)
+        private static string CreateJoinQuery(List<string> tablesName, string columns, string joinCondition, Dictionary<string, dynamic> Data)
         {
             List<string> conditions = new List<string>();
             string firstTable = tablesName.ToArray()[0];
@@ -87,7 +89,7 @@ namespace UniversalApi.Helpers
                 $"SELECT {columns} " +
                 $"FROM {firstTable} " +
                 $"INNER JOIN {secondTable} " +
-                $"ON {firstTable}.Id = {secondTable}.Id " +
+                $"ON {joinCondition} " +
                 $"WHERE {condition}";
 
             return commandQuery;
@@ -173,6 +175,14 @@ namespace UniversalApi.Helpers
             {
                 var columns = context.APIRequestList.FirstOrDefault(i => i.Request == request).Columns;
                 return columns;
+            }
+        }
+        private static string GetJoinCondition(string request)
+        {
+            using (var context = DynamicDB.ConnectToDb())
+            {
+                var condition = context.APIRequestList.FirstOrDefault(i => i.Request == request).JoinCondition;
+                return condition;
             }
         }
     }
