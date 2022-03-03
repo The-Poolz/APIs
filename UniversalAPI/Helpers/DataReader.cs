@@ -49,7 +49,6 @@ namespace UniversalApi.Helpers
             return data.ToArray();
         }
 
-
         private static List<string> GetTables(string commandQuery, DynamicDBContext context)
         {
             // Get all Tables name

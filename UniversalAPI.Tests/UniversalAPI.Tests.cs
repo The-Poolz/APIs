@@ -103,7 +103,7 @@ namespace UniversalAPITests
     public class UniversalAPITests
     {
         [Theory, MemberData(nameof(GetTableData))]
-        public void GetTable(Dictionary<string, dynamic> data)
+        public void GetTable(Dictionary<string, dynamic> data, string expected)
         {
             // Arrange
             var jsonString = JsonConvert.SerializeObject(data);
@@ -118,23 +118,34 @@ namespace UniversalAPITests
             var resultType = Assert.IsType<string>(result);
             var json = Assert.IsAssignableFrom<string>(resultType);
             Assert.NotEqual(string.Empty, json);
+            Assert.Equal(expected, json);
         }
-        public static IEnumerable<object[]> GetTableData =>
-            new List<object[]>
+        public static IEnumerable<object[]> GetTableData()
+        {
+            var mysignupExpected = "[{\"PoolId\":3,\"Rank\":3,\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\",\"Amount\":250.02}]";
+            var walletExpected = "[{\"Id\":3,\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\"}]";
+            return new List<object[]>
             {
-                new object[] { new Dictionary<string, dynamic>
-                {
-                    { "Request", "mysignup" },
-                    { "Id", 3 },
-                    { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-                }},
-                new object[] { new Dictionary<string, dynamic>
-                {
-                    { "Request", "wallet" },
-                    { "Id", 3 },
-                    { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-                }}
+                new object[] {
+                    new Dictionary<string, dynamic>
+                    {
+                        { "Request", "mysignup" },
+                        { "Id", 3 },
+                        { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                    },
+                    mysignupExpected
+                },
+                new object[] {
+                    new Dictionary<string, dynamic>
+                    {
+                        { "Request", "wallet" },
+                        { "Id", 3 },
+                        { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                    },
+                    walletExpected
+                }
             };
+        }
     }
 
     public static class MockContext
