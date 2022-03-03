@@ -76,6 +76,30 @@ namespace UniversalAPITests
         }
     }
 
+    public class DataReaderTests
+    {
+        [Fact]
+        public void GetData()
+        {
+            Dictionary<string, dynamic> dataObj = new Dictionary<string, dynamic>
+            {
+                { "Request", "mysignup" },
+                { "Id", 3 },
+                { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+            };
+            var jsonString = JsonConvert.SerializeObject(dataObj);
+            var commandQuery = QueryCreator.GetCommandQuery(jsonString);
+            var context = MockContext.GetTestContext();
+
+            var result = DataReader.GetData(commandQuery, ConnectionString.connectionString, context);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+            var resultType = Assert.IsType<object[]>(result);
+            Assert.IsAssignableFrom<object[]>(resultType);
+        }
+    }
+
     public class UniversalAPITests
     {
         [Theory, MemberData(nameof(GetTableData))]
@@ -83,7 +107,7 @@ namespace UniversalAPITests
         {
             // Arrange
             var jsonString = JsonConvert.SerializeObject(data);
-            var context = GetTestContext();
+            var context = MockContext.GetTestContext();
             var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, context);
             
             // Act
@@ -111,9 +135,12 @@ namespace UniversalAPITests
                     { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
                 }}
             };
+    }
 
+    public static class MockContext
+    {
         /* Emulate DB with data */
-        private DynamicDBContext GetTestContext()
+        public static DynamicDBContext GetTestContext()
         {
             /* Initialize Wallet table */
             var wallets = new List<Wallet>
