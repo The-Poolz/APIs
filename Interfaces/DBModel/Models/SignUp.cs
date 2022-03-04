@@ -1,4 +1,6 @@
-﻿namespace Interfaces.DBModel.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Interfaces.DBModel.Models
 {
     public class SignUp
     {

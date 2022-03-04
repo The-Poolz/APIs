@@ -27,7 +27,7 @@ namespace Example
                 },
                 new Dictionary<string, dynamic>
                 {
-                    { "Request", "leaderboard" },
+                    { "Request", "tokenbalanse" },
                     { "Id", 1 },
                     { "Owner", "0x1a01ee5577c9d69c35a77496565b1bc95588b521" }
                 }

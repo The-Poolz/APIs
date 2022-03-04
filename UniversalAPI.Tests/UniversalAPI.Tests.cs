@@ -7,7 +7,6 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-using System;
 using Newtonsoft.Json;
 using UniversalApi.Helpers;
 using System.Data;
@@ -76,20 +75,14 @@ namespace UniversalAPITests
         }
     }
 
-    public class DataReaderTests
+    public class DataReaderTests : Mock
     {
-        [Fact]
-        public void GetData()
+        [Theory, MemberData(nameof(GetTestData))]
+        public void GetData(Dictionary<string, dynamic> data, string expected)
         {
-            Dictionary<string, dynamic> dataObj = new Dictionary<string, dynamic>
-            {
-                { "Request", "mysignup" },
-                { "Id", 3 },
-                { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-            };
-            var jsonString = JsonConvert.SerializeObject(dataObj);
+            var jsonString = JsonConvert.SerializeObject(data);
             var commandQuery = QueryCreator.GetCommandQuery(jsonString);
-            var context = MockContext.GetTestContext();
+            var context = GetTestContext();
 
             var result = DataReader.GetData(commandQuery, ConnectionString.connectionString, context);
 
@@ -97,17 +90,19 @@ namespace UniversalAPITests
             Assert.NotEmpty(result);
             var resultType = Assert.IsType<object[]>(result);
             Assert.IsAssignableFrom<object[]>(resultType);
+            var resultJson = JsonConvert.SerializeObject(result);
+            Assert.Equal(expected, resultJson);
         }
     }
 
-    public class UniversalAPITests
+    public class UniversalAPITests : Mock
     {
-        [Theory, MemberData(nameof(GetTableData))]
+        [Theory, MemberData(nameof(GetTestData))]
         public void GetTable(Dictionary<string, dynamic> data, string expected)
         {
             // Arrange
             var jsonString = JsonConvert.SerializeObject(data);
-            var context = MockContext.GetTestContext();
+            var context = GetTestContext();
             var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, context);
             
             // Act
@@ -120,39 +115,29 @@ namespace UniversalAPITests
             Assert.NotEqual(string.Empty, json);
             Assert.Equal(expected, json);
         }
-        public static IEnumerable<object[]> GetTableData()
-        {
-            var mysignupExpected = "[{\"PoolId\":3,\"Rank\":3,\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\",\"Amount\":250.02}]";
-            var walletExpected = "[{\"Id\":3,\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\"}]";
-            return new List<object[]>
-            {
-                new object[] {
-                    new Dictionary<string, dynamic>
-                    {
-                        { "Request", "mysignup" },
-                        { "Id", 3 },
-                        { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-                    },
-                    mysignupExpected
-                },
-                new object[] {
-                    new Dictionary<string, dynamic>
-                    {
-                        { "Request", "wallet" },
-                        { "Id", 3 },
-                        { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-                    },
-                    walletExpected
-                }
-            };
-        }
     }
 
-    public static class MockContext
+    public class Mock
     {
         /* Emulate DB with data */
-        public static DynamicDBContext GetTestContext()
+        public DynamicDBContext GetTestContext()
         {
+            /* Initialize TokenBalance table */
+            var tokenBalance = new List<TokenBalance>
+            {
+                new TokenBalance { Id = 1, Token = "ADH", Amount = "400", Owner = "0x1a01ee5577c9d69c35a77496565b1bc95588b521" },
+                new TokenBalance { Id = 2, Token = "Poolz", Amount = "300", Owner = "0x2a01ee5557c9d69c35577496555b1bc95558b552" },
+                new TokenBalance { Id = 3, Token = "ETH", Amount = "200", Owner = "0x3a31ee5557c9369c35573496555b1bc93553b553" },
+                new TokenBalance { Id = 4, Token = "BTH", Amount = "100", Owner = "0x4a71ee5577c9d79c37577496555b1bc95558b554" }
+            }.AsQueryable();
+
+            var mockSetTokenBalance = new Mock<DbSet<TokenBalance>>();
+
+            mockSetTokenBalance.As<IQueryable<TokenBalance>>().Setup(m => m.Provider).Returns(tokenBalance.Provider);
+            mockSetTokenBalance.As<IQueryable<TokenBalance>>().Setup(m => m.Expression).Returns(tokenBalance.Expression);
+            mockSetTokenBalance.As<IQueryable<TokenBalance>>().Setup(m => m.ElementType).Returns(tokenBalance.ElementType);
+            mockSetTokenBalance.As<IQueryable<TokenBalance>>().Setup(m => m.GetEnumerator()).Returns(tokenBalance.GetEnumerator);
+
             /* Initialize Wallet table */
             var wallets = new List<Wallet>
             {
@@ -172,10 +157,10 @@ namespace UniversalAPITests
             /* Initialize LeaderBoard table */
             var leaderBoards = new List<LeaderBoard>
             {
-                new LeaderBoard { Id = 1, Rank = 1, Owner = "0x1a01ee5577c9d69c35a77496565b1bc95588b521", Amount = Convert.ToDecimal(750.505823765680934368)},
-                new LeaderBoard { Id = 2, Rank = 2, Owner = "0x2a01ee5557c9d69c35577496555b1bc95558b552", Amount = Convert.ToDecimal(251.795264077704686136)},
-                new LeaderBoard { Id = 3, Rank = 3, Owner = "0x3a31ee5557c9369c35573496555b1bc93553b553", Amount = Convert.ToDecimal(250.02109769151781894)},
-                new LeaderBoard { Id = 4, Rank = 4, Owner = "0x4a71ee5577c9d79c37577496555b1bc95558b554", Amount = Convert.ToDecimal(233.279855562249360519)}
+                new LeaderBoard { Id = 1, Rank = "1", Owner = "0x1a01ee5577c9d69c35a77496565b1bc95588b521", Amount = "750.505823765680934368"},
+                new LeaderBoard { Id = 2, Rank = "2", Owner = "0x2a01ee5557c9d69c35577496555b1bc95558b552", Amount = "251.795264077704686136"},
+                new LeaderBoard { Id = 3, Rank = "3", Owner = "0x3a31ee5557c9369c35573496555b1bc93553b553", Amount = "250.02109769151781894"},
+                new LeaderBoard { Id = 4, Rank = "4", Owner = "0x4a71ee5577c9d79c37577496555b1bc95558b554", Amount = "233.279855562249360519"}
             }.AsQueryable();
 
             var mockSetLeaderBoards = new Mock<DbSet<LeaderBoard>>();
@@ -216,6 +201,12 @@ namespace UniversalAPITests
                     Request = "wallet",
                     Tables = "Wallets",
                     Columns = "*"
+                },
+                new APIRequestList {
+                    Id = 3,
+                    Request = "tokenbalanse",
+                    Tables = "TokenBalances",
+                    Columns = "Token, Owner, Amount"
                 }
             }.AsQueryable();
 
@@ -230,6 +221,9 @@ namespace UniversalAPITests
             /* Create and setting context */
             var mockContext = new Mock<DynamicDBContext>();
 
+            mockContext.Setup(t => t.TokenBalances).Returns(mockSetTokenBalance.Object);
+            mockContext.Setup(t => t.Set<TokenBalance>()).Returns(mockSetTokenBalance.Object);
+
             mockContext.Setup(t => t.Wallets).Returns(mockSetWallet.Object);
             mockContext.Setup(t => t.Set<Wallet>()).Returns(mockSetWallet.Object);
 
@@ -243,6 +237,33 @@ namespace UniversalAPITests
             mockContext.Setup(t => t.Set<APIRequestList>()).Returns(mockSetAPIRequestList.Object);
 
             return mockContext.Object;
+        }
+
+        public static IEnumerable<object[]> GetTestData()
+        {
+            var mysignupExpected = "[{\"PoolId\":3,\"Rank\":3,\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\",\"Amount\":250.02}]";
+            var walletExpected = "[{\"Id\":3,\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\"}]";
+            return new List<object[]>
+            {
+                new object[] {
+                    new Dictionary<string, dynamic>
+                    {
+                        { "Request", "mysignup" },
+                        { "Id", 3 },
+                        { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                    },
+                    mysignupExpected
+                },
+                new object[] {
+                    new Dictionary<string, dynamic>
+                    {
+                        { "Request", "wallet" },
+                        { "Id", 3 },
+                        { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                    },
+                    walletExpected
+                }
+            };
         }
     }
 }
