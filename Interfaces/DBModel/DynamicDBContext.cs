@@ -17,8 +17,8 @@ namespace Interfaces.DBModel
         public DynamicDBContext(DbContextOptions options) { }
         public DynamicDBContext(DbContextOptions<DynamicDBContext> options) : base(options)
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
+            //Database.EnsureDeleted();
+            //Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -90,7 +90,11 @@ namespace UniversalAPITests
             Assert.NotEmpty(result);
             var resultType = Assert.IsType<object[]>(result);
             Assert.IsAssignableFrom<object[]>(resultType);
-            var resultJson = JsonConvert.SerializeObject(result);
+            string resultJson = null;
+            if (result.Length == 1)
+                resultJson = JsonConvert.SerializeObject(result.ToList().First());
+            else
+                resultJson = JsonConvert.SerializeObject(result);
             Assert.Equal(expected, resultJson);
         }
     }
@@ -241,8 +245,8 @@ namespace UniversalAPITests
 
         public static IEnumerable<object[]> GetTestData()
         {
-            var mysignupExpected = "[{\"PoolId\":3,\"Rank\":3,\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\",\"Amount\":250.02}]";
-            var walletExpected = "[{\"Id\":3,\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\"}]";
+            var mysignupExpected = "{\"PoolId\":3,\"Rank\":\"3\",\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\",\"Amount\":\"250.02109769151781894\"}";
+            var walletExpected = "{\"Id\":3,\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\"}";
             return new List<object[]>
             {
                 new object[] {
