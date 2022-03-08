@@ -73,8 +73,14 @@ namespace UniversalApi.Helpers
             return false;
         }
 
-        public static bool CheckId(Dictionary<string, dynamic> data) =>
-            IsValidId((int?)GetId(data));
+        public static bool CheckId(Dictionary<string, dynamic> data)
+        {
+            var id = GetId(data);
+            if (id == null)
+                return true;
+
+            return IsValidId((int?)GetId(data));
+        }
         public static bool IsValidId(int? id)
         {
             if (id == null)
