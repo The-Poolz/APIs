@@ -35,6 +35,8 @@ namespace UniversalApi.Helpers
                 return null;
             if (!DataValidator.CheckAddress(data))
                 return null;
+            if (!DataValidator.CheckOwner(data))
+                return null;
 
             List<string> tablesName = GetTablesName(tables);
             string commandQuery = null;

@@ -85,8 +85,14 @@ namespace UniversalApi.Helpers
             return true;
         }
 
-        public static bool CheckAddress(Dictionary<string, dynamic> data) =>
-            IsValidAddress(GetAddress(data));
+        public static bool CheckAddress(Dictionary<string, dynamic> data)
+        {
+            var address = GetAddress(data);
+            if (address == null)
+                return true;
+
+            return IsValidAddress(address);
+        }
         public static bool IsValidAddress(string address)
         {
             bool result = AddressExtensions.IsValidEthereumAddressHexFormat(address);
@@ -95,7 +101,13 @@ namespace UniversalApi.Helpers
             return true;
         }
 
-        public static bool CheckOwner(Dictionary<string, dynamic> data) =>
-            IsValidAddress(GetOwner(data));
+        public static bool CheckOwner(Dictionary<string, dynamic> data)
+        {
+            var owner = GetOwner(data);
+            if (owner == null)
+                return true;
+
+            return IsValidAddress(owner);
+        }
     }
 }
