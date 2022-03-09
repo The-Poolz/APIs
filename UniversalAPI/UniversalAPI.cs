@@ -35,7 +35,7 @@ namespace UniversalApi
                 Console.WriteLine("==== Error ====");
                 Console.WriteLine("An error occurred while creating the query string.");
                 Console.WriteLine();
-
+                return null;
             }
 
             Console.WriteLine("==== Start receiving data ====");

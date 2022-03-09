@@ -49,6 +49,7 @@ namespace Example
                 for (int i = 0; i < jsonTable.Length; i++)
                     Console.Write('=');
                 Console.WriteLine();
+                Console.WriteLine();
             }
 
             Console.ReadLine();
