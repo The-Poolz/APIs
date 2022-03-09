@@ -1,4 +1,4 @@
-﻿using Interfaces.DBModel;
+using Interfaces.DBModel;
 using Newtonsoft.Json;
 using System;
 using System.Linq;

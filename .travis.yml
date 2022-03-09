@@ -6,3 +6,8 @@ install:
 
 script:
  - dotnet build
+ - dotnet test
+ - dotnet tool install --global coveralls.net --version 2.0.0
+ - export PATH="$PATH:/home/travis/.dotnet/tools"
+ - dotnet test --collect:"XPlat Code Coverage"
+ - bash <(curl -s https://codecov.io/bash) -t b15b632a-483f-4088-aa4b-aaf7413481d4
