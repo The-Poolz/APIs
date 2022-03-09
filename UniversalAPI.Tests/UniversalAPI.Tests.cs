@@ -45,7 +45,7 @@ namespace UniversalAPITests
         }
     }
 
-    public class QueryCreatorTests
+    public class QueryCreatorTests : Mock
     {
         [Fact]
         public void GetCommandQuery()
@@ -58,9 +58,10 @@ namespace UniversalAPITests
                 { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
             };
             var jsonString = JsonConvert.SerializeObject(dataObj);
+            var context = GetTestContext();
 
             // Act
-            var result = QueryCreator.GetCommandQuery(jsonString);
+            var result = QueryCreator.GetCommandQuery(jsonString, context);
 
             // Assert
             Assert.NotNull(result);
@@ -71,7 +72,7 @@ namespace UniversalAPITests
                 "SELECT SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount " +
                 "FROM SignUp INNER JOIN LeaderBoard " +
                 "ON SignUp.Address = LeaderBoard.Owner" +
-                " WHERE SignUp.Id = 3 AND SignUp.address = '0x3a31ee5557c9369c35573496555b1bc93553b553'", json);
+                " WHERE SignUp.id = 3 AND SignUp.address = '0x3a31ee5557c9369c35573496555b1bc93553b553'", json);
         }
     }
 
@@ -81,8 +82,8 @@ namespace UniversalAPITests
         public void GetData(Dictionary<string, dynamic> data, string expected)
         {
             var jsonString = JsonConvert.SerializeObject(data);
-            var commandQuery = QueryCreator.GetCommandQuery(jsonString);
             var context = GetTestContext();
+            var commandQuery = QueryCreator.GetCommandQuery(jsonString, context);
 
             var result = DataReader.GetData(commandQuery, ConnectionString.connectionString, context);
 
