@@ -9,21 +9,16 @@ namespace UniversalApi
     public class UniversalAPI
     {
         private readonly string ConnectionString;
-        private readonly DynamicDBContext Context;
-        public UniversalAPI(string connectionString, DynamicDBContext context)
+        public UniversalAPI(string connectionString)
         {
             ConnectionString = connectionString;
-            Context = context;
         }
 
-        public string GetTable(string data)
+        public string GetTable(string data, DynamicDBContext context)
         {
-            #if DEBUG
             var start = DateTime.UtcNow;
-            #endif
-
             Console.WriteLine("==== Start create query ====");
-            string commandQuery = QueryCreator.GetCommandQuery(data);
+            string commandQuery = QueryCreator.GetCommandQuery(data.ToLower());
             if (commandQuery != null)
             {
                 Console.WriteLine(commandQuery);
@@ -39,7 +34,7 @@ namespace UniversalApi
             }
 
             Console.WriteLine("==== Start receiving data ====");
-            object[] table = DataReader.GetData(commandQuery, ConnectionString, Context);
+            object[] table = DataReader.GetData(commandQuery, ConnectionString, context);
             if (table != null || table.Count() != 0)
             {
                 Console.WriteLine("==== Receiving data done ====");
@@ -52,14 +47,14 @@ namespace UniversalApi
                 Console.WriteLine();
             }
 
-            #if DEBUG
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine($"Program execution time: {DateTime.UtcNow - start}");
-            #endif
+            Console.ResetColor();
 
             if (table.Length == 1)
                 return JsonConvert.SerializeObject(table.ToList().First());
-            else
-                return JsonConvert.SerializeObject(table);
+
+            return JsonConvert.SerializeObject(table);
         }
     }
 }

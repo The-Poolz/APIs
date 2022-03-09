@@ -14,25 +14,22 @@ namespace UniversalApi.Helpers
             if (data == null || data.Count == 0)
                 return null;
 
-            string tables, columns, joinCondition;
-            if (DataValidator.HasRequest(data, out tables))
-            {
-                var request = DataValidator.GetRequest(data);
-                columns = GetColumns(request);
-                joinCondition = GetJoinCondition(request);
-                data.Remove("Request");
-            }
-            else
-            {
+            string tables;
+            if (DataChecker.HasRequest(data, out tables) == false)
                 return null;
-            }
-            
 
-            if (!DataValidator.CheckId(data))
+            var requestItem = DataChecker.GetDataItem(data, "request");
+            var request = requestItem.Value.Value;
+            string columns, joinCondition;
+            columns = GetColumns(request);
+            joinCondition = GetJoinCondition(request);
+            DataChecker.RemoveRequest(data);
+
+            if (!DataChecker.CheckId(data))
                 return null;
-            if (!DataValidator.CheckAddress(data))
+            if (!DataChecker.CheckAddress(data))
                 return null;
-            if (!DataValidator.CheckOwner(data))
+            if (!DataChecker.CheckOwner(data))
                 return null;
 
             List<string> tablesName = GetTablesName(tables);
@@ -86,6 +83,7 @@ namespace UniversalApi.Helpers
             }
 
             string condition = string.Join(" AND ", conditions);
+
             string commandQuery =
                 $"SELECT {columns} " +
                 $"FROM {firstTable} " +
@@ -98,11 +96,12 @@ namespace UniversalApi.Helpers
 
         private static List<string> GetTablesName(string tables)
         {
-            string[] names = tables.Split(",");
-            var namesCount = names.Count();
-            for (int i = 0; i < namesCount; i++)     // Remove all whitespace
-                names[i] = String.Concat(names[i].Where(c => !Char.IsWhiteSpace(c)));
-            return names.ToList();
+            List<string> names = tables.Split(",").ToList();
+
+            // Remove all whitespace
+            names = names.Select(name => name.Replace(" ", string.Empty)).ToList();
+
+            return names;
         }
         private static string GetColumns(string request)
         {

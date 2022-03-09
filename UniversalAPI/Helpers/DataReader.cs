@@ -79,6 +79,7 @@ namespace UniversalApi.Helpers
             // Make a list of strings containing column and table names
             // In GetPropertyInfos() compare model fields and selected fields
             List<string> currentColumns = columns.Where(columnName => commandQuery.Contains(columnName)).ToList();
+
             List<string> _columns = new List<string>();
             var count = currentColumns.Count();
             for (int i = 0; i < count; i++)

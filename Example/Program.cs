@@ -15,15 +15,15 @@ namespace Example
             {
                 new Dictionary<string, dynamic>
                 {
-                    { "Request", "mysignup" },
-                    { "Id", 3 },
-                    { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-                },
-                new Dictionary<string, dynamic>
-                {
                     { "Request", "wallet" },
                     { "Id", 3 },
                     { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                },
+                new Dictionary<string, dynamic>
+                {
+                    { "Request", "mysignup" },
+                    { "Id", 3 },
+                    { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
                 },
                 new Dictionary<string, dynamic>
                 {
@@ -32,26 +32,19 @@ namespace Example
                     { "Owner", "0x1a01ee5577c9d69c35a77496565b1bc95588b521" }
                 }
             };
-            foreach (var data in listData)
+            using (var context = DynamicDB.ConnectToDb())
             {
-                var jsonString = JsonConvert.SerializeObject(data);
-                Console.WriteLine("==== Input data ====");
-                Console.WriteLine(jsonString);
-                Console.WriteLine();
+                foreach (var data in listData)
+                {
+                    var inputData = JsonConvert.SerializeObject(data);
+                    Draw.DrawInputData(inputData);
 
-                UniversalAPI UniversalAPI = new UniversalAPI(ConnectionString.connectionString, DynamicDB.ConnectToDb());
+                    UniversalAPI UniversalAPI = new UniversalAPI(ConnectionString.connectionString);
 
-                string jsonTable = UniversalAPI.GetTable(jsonString);
-                Console.WriteLine("==== Find result ====");
-                Console.WriteLine(jsonTable);
-                Console.WriteLine();
-
-                for (int i = 0; i < jsonTable.Length; i++)
-                    Console.Write('=');
-                Console.WriteLine();
-                Console.WriteLine();
+                    string jsonTable = UniversalAPI.GetTable(inputData, context);
+                    Draw.DrawResult(jsonTable);
+                }
             }
-
             Console.ReadLine();
         }
     }
