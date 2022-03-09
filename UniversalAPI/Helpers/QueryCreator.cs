@@ -1,5 +1,4 @@
 ﻿using Interfaces.DBModel;
-using Nethereum.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,13 +10,11 @@ namespace UniversalApi.Helpers
     {
         public static string GetCommandQuery(string json)
         {
-            Dictionary<string, dynamic> data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json);
+            var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json);
             if (data == null || data.Count == 0)
                 return null;
 
-            string tables;
-            string columns;
-            string joinCondition;
+            string tables, columns, joinCondition;
             if (DataValidator.HasRequest(data, out tables))
             {
                 var request = DataValidator.GetRequest(data);

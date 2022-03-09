@@ -9,7 +9,7 @@ namespace Example
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             List<Dictionary<string, dynamic>> listData = new List<Dictionary<string, dynamic>>
             {
@@ -34,21 +34,20 @@ namespace Example
             };
             foreach (var data in listData)
             {
-                for (int i = 0; i < 64; i++)
-                    Console.Write('=');
-                Console.WriteLine();
-
-
                 var jsonString = JsonConvert.SerializeObject(data);
-                Console.WriteLine("Input data");
+                Console.WriteLine("==== Input data ====");
                 Console.WriteLine(jsonString);
                 Console.WriteLine();
 
                 UniversalAPI UniversalAPI = new UniversalAPI(ConnectionString.connectionString, DynamicDB.ConnectToDb());
 
                 string jsonTable = UniversalAPI.GetTable(jsonString);
-                Console.WriteLine("Find result");
+                Console.WriteLine("==== Find result ====");
                 Console.WriteLine(jsonTable);
+                Console.WriteLine();
+
+                for (int i = 0; i < jsonTable.Length; i++)
+                    Console.Write('=');
                 Console.WriteLine();
             }
 

@@ -60,7 +60,32 @@ namespace UniversalApi.Helpers
         {
             return IsValidRequestName(GetRequest(data), out tables);
         }
-        public static bool IsValidRequestName(string requestName, out string tables)
+        public static bool CheckId(Dictionary<string, dynamic> data)
+        {
+            var id = GetId(data);
+            if (id == null)
+                return true;
+
+            return IsValidId((int?)GetId(data));
+        }
+        public static bool CheckAddress(Dictionary<string, dynamic> data)
+        {
+            var address = GetAddress(data);
+            if (address == null)
+                return true;
+
+            return IsValidAddress(address);
+        }
+        public static bool CheckOwner(Dictionary<string, dynamic> data)
+        {
+            var owner = GetOwner(data);
+            if (owner == null)
+                return true;
+
+            return IsValidAddress(owner);
+        }
+
+        private static bool IsValidRequestName(string requestName, out string tables)
         {
             tables = string.Empty;
             using DynamicDBContext context = DynamicDB.ConnectToDb();
@@ -72,16 +97,7 @@ namespace UniversalApi.Helpers
             }
             return false;
         }
-
-        public static bool CheckId(Dictionary<string, dynamic> data)
-        {
-            var id = GetId(data);
-            if (id == null)
-                return true;
-
-            return IsValidId((int?)GetId(data));
-        }
-        public static bool IsValidId(int? id)
+        private static bool IsValidId(int? id)
         {
             if (id == null)
                 return false;
@@ -90,30 +106,12 @@ namespace UniversalApi.Helpers
 
             return true;
         }
-
-        public static bool CheckAddress(Dictionary<string, dynamic> data)
-        {
-            var address = GetAddress(data);
-            if (address == null)
-                return true;
-
-            return IsValidAddress(address);
-        }
-        public static bool IsValidAddress(string address)
+        private static bool IsValidAddress(string address)
         {
             bool result = AddressExtensions.IsValidEthereumAddressHexFormat(address);
             if (!result)
                 return false;
             return true;
-        }
-
-        public static bool CheckOwner(Dictionary<string, dynamic> data)
-        {
-            var owner = GetOwner(data);
-            if (owner == null)
-                return true;
-
-            return IsValidAddress(owner);
         }
     }
 }
