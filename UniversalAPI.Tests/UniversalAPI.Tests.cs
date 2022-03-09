@@ -107,10 +107,10 @@ namespace UniversalAPITests
             // Arrange
             var jsonString = JsonConvert.SerializeObject(data);
             var context = GetTestContext();
-            var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, context);
+            var UniversalAPI = new UniversalAPI(ConnectionString.connectionString);
             
             // Act
-            var result = UniversalAPI.GetTable(jsonString);
+            var result = UniversalAPI.GetTable(jsonString, context);
 
             // Assert
             Assert.NotNull(result);
