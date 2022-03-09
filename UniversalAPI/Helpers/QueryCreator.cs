@@ -8,9 +8,9 @@ namespace UniversalApi.Helpers
 {
     public static class QueryCreator
     {
-        public static string GetCommandQuery(string json)
+        public static string GetCommandQuery(string json, DynamicDBContext context)
         {
-            var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json);
+            var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json.ToLower());
             if (data == null || data.Count == 0)
                 return null;
 
@@ -21,8 +21,8 @@ namespace UniversalApi.Helpers
             var requestItem = DataChecker.GetDataItem(data, "request");
             var request = requestItem.Value.Value;
             string columns, joinCondition;
-            columns = GetColumns(request);
-            joinCondition = GetJoinCondition(request);
+            columns = GetColumns(request, context);
+            joinCondition = GetJoinCondition(request, context);
             DataChecker.RemoveRequest(data);
 
             if (!DataChecker.CheckId(data))
@@ -103,21 +103,21 @@ namespace UniversalApi.Helpers
 
             return names;
         }
-        private static string GetColumns(string request)
+        private static string GetColumns(string requestName, DynamicDBContext context)
         {
-            using (var context = DynamicDB.ConnectToDb())
-            {
-                var columns = context.APIRequestList.FirstOrDefault(i => i.Request == request).Columns;
-                return columns;
-            }
+            var request = context.APIRequestList.FirstOrDefault(i => i.Request == requestName);
+            if (request == null)
+                return null;
+
+            return request.Columns;
         }
-        private static string GetJoinCondition(string request)
+        private static string GetJoinCondition(string requestName, DynamicDBContext context)
         {
-            using (var context = DynamicDB.ConnectToDb())
-            {
-                var condition = context.APIRequestList.FirstOrDefault(i => i.Request == request).JoinCondition;
-                return condition;
-            }
+            var request = context.APIRequestList.FirstOrDefault(i => i.Request == requestName);
+            if (request == null)
+                return null;
+
+            return request.JoinCondition;
         }
     }
 }
