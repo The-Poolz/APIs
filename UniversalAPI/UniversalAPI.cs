@@ -18,7 +18,7 @@ namespace UniversalApi
         {
             var start = DateTime.UtcNow;
             Console.WriteLine("==== Start create query ====");
-            string commandQuery = QueryCreator.GetCommandQuery(data.ToLower(), context);
+            string commandQuery = QueryCreator.GetCommandQuery(data.ToLower());
             if (commandQuery != null)
             {
                 Console.WriteLine(commandQuery);
