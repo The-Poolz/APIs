@@ -1,4 +1,4 @@
-﻿using Interfaces.DBModel;
+using Interfaces.DBModel;
 using Interfaces.Helpers;
 using System;
 using System.Collections.Generic;
