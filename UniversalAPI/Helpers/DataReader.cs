@@ -11,7 +11,7 @@ namespace UniversalApi.Helpers
 {
     public static class DataReader
     {
-        public static object[] GetData(string commandQuery, string connectionString, DynamicDBContext context)
+        public static object[] GetData(string commandQuery, string connectionString, IUniversalContext context)
         {
             List<object> data = new List<object>();
             try
@@ -49,7 +49,7 @@ namespace UniversalApi.Helpers
             return data.ToArray();
         }
 
-        private static List<string> GetTables(string commandQuery, DynamicDBContext context)
+        private static List<string> GetTables(string commandQuery, IUniversalContext context)
         {
             // Get all Tables name
             var tables = context.APIRequestList.Select(i => i.Tables);
@@ -68,7 +68,7 @@ namespace UniversalApi.Helpers
 
             return tablesName;
         }
-        private static List<string> GetColumns(string commandQuery, DynamicDBContext context, List<string> tablesName)
+        private static List<string> GetColumns(string commandQuery, IUniversalContext context, List<string> tablesName)
         {
             // Format List<string> tablesName to string
             string tables = string.Join(", ", tablesName);
@@ -91,7 +91,7 @@ namespace UniversalApi.Helpers
 
             return currentColumns;
         }
-        private static List<PropertyInfo> GetPropertyInfos(string commandQuery, DynamicDBContext context)
+        private static List<PropertyInfo> GetPropertyInfos(string commandQuery, IUniversalContext context)
         {
             var tablesName = GetTables(commandQuery, context);
             var columns = GetColumns(commandQuery, context, tablesName);

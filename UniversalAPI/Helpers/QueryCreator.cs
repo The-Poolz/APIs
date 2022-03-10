@@ -1,4 +1,5 @@
 ﻿using Interfaces.DBModel;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace UniversalApi.Helpers
 {
     public static class QueryCreator
     {
-        public static string GetCommandQuery(string json, DynamicDBContext context)
+        public static string GetCommandQuery(string json, IUniversalContext context)
         {
             var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json.ToLower());
             if (data == null || data.Count == 0)
@@ -103,7 +104,7 @@ namespace UniversalApi.Helpers
 
             return names;
         }
-        private static string GetColumns(string requestName, DynamicDBContext context)
+        private static string GetColumns(string requestName, IUniversalContext context)
         {
             var request = context.APIRequestList.FirstOrDefault(i => i.Request == requestName);
             if (request == null)
@@ -111,7 +112,7 @@ namespace UniversalApi.Helpers
 
             return request.Columns;
         }
-        private static string GetJoinCondition(string requestName, DynamicDBContext context)
+        private static string GetJoinCondition(string requestName, IUniversalContext context)
         {
             var request = context.APIRequestList.FirstOrDefault(i => i.Request == requestName);
             if (request == null)

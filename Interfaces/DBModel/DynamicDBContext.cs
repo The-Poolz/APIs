@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interfaces.DBModel
 {
-    public partial class DynamicDBContext : DbContext
+    public partial class DynamicDBContext : DbContext, IUniversalContext
     {
         public virtual DbSet<Wallet> Wallets { get; set; }
         public virtual DbSet<TokenBalance> TokenBalances { get; set; }
