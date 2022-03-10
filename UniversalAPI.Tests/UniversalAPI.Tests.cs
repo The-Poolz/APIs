@@ -1,6 +1,5 @@
 using UniversalApi;
 using Interfaces.DBModel;
-using Interfaces.DBModel.Models;
 using Interfaces.Helpers;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -8,85 +7,142 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-using System;
 using Newtonsoft.Json;
 using UniversalApi.Helpers;
 using System.Data;
+using Interfaces.DBModel.Models;
 
 namespace UniversalAPITests
 {
-    public class UniversalAPITests
+    public class SqlUtilTests
     {
         [Fact]
-        public void GetTable()
+        public void GetConnection()
+        {
+            var connection = SqlUtil.GetConnection(ConnectionString.connectionString);
+            connection.Open();
+
+            Assert.NotNull(connection);
+            Assert.IsType<SqlConnection>(connection);
+            Assert.True(connection.State == ConnectionState.Open);
+
+            connection.Close();
+        }
+
+        [Fact]
+        public void GetReader()
+        {
+            var connection = SqlUtil.GetConnection(ConnectionString.connectionString);
+            connection.Open();
+
+            var reader = SqlUtil.GetReader("SELECT * FROM LeaderBoard", connection);
+
+            Assert.NotNull(reader);
+            Assert.IsType<SqlDataReader>(reader);
+            Assert.True(reader.HasRows);
+            Assert.Equal(4, reader.FieldCount);
+            connection.Close();
+        }
+    }
+
+    public class QueryCreatorTests : Mock
+    {
+        [Fact]
+        public void GetCommandQuery()
         {
             // Arrange
-            Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
+            Dictionary<string, dynamic> dataObj = new Dictionary<string, dynamic>
             {
-                { "TableName", "SignUp" },
+                { "Request", "mysignup" },
                 { "Id", 3 },
-                { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
             };
-            var jsonString = JsonConvert.SerializeObject(inputData);
+            var jsonString = JsonConvert.SerializeObject(dataObj);
             var context = GetTestContext();
-            var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, context);
-            
+
             // Act
-            var result = UniversalAPI.GetTable(jsonString);
+            var result = QueryCreator.GetCommandQuery(jsonString, context);
 
             // Assert
             Assert.NotNull(result);
             var resultType = Assert.IsType<string>(result);
             var json = Assert.IsAssignableFrom<string>(resultType);
-            Assert.Equal("[{\"Id\":\"3\"},{\"Id\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\"}]", json);
+            Assert.NotEqual(string.Empty, json);
+            Assert.Equal(
+                "SELECT SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount " +
+                "FROM SignUp INNER JOIN LeaderBoard " +
+                "ON SignUp.Address = LeaderBoard.Owner" +
+                " WHERE SignUp.id = 3 AND SignUp.address = '0x3a31ee5557c9369c35573496555b1bc93553b553'", json);
         }
+    }
 
-        [Fact]
-        public void InnerJoinTables()
+    public class DataReaderTests : Mock
+    {
+        [Theory, MemberData(nameof(GetTestData))]
+        public void GetData(Dictionary<string, dynamic> data, string expected)
         {
+            var jsonString = JsonConvert.SerializeObject(data);
             var context = GetTestContext();
-            var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, context);
+            var commandQuery = QueryCreator.GetCommandQuery(jsonString, context);
 
-            var result = UniversalAPI.InnerJoinTables(
-                leftTableName: "LeaderBoard",
-                rightTableName: "Wallets",
-                conditions: new string[] {
-                    "LeaderBoard.rank = Wallets.id",
-                    "LeaderBoard.walletId = Wallets.id"
-                });
+            var result = DataReader.GetData(commandQuery, ConnectionString.connectionString, context);
 
             Assert.NotNull(result);
-            //var resultType = Assert.IsType<List<object[]>>(result);
-            //var table = Assert.IsAssignableFrom<List<object[]>>(resultType);
-            //Assert.Single(table);
-            //Assert.Equal(7, table[0].Length);
+            Assert.NotEmpty(result);
+            var resultType = Assert.IsType<object[]>(result);
+            Assert.IsAssignableFrom<object[]>(resultType);
+            string resultJson = null;
+            if (result.Length == 1)
+                resultJson = JsonConvert.SerializeObject(result.ToList().First());
+            else
+                resultJson = JsonConvert.SerializeObject(result);
+            Assert.Equal(expected, resultJson);
         }
+    }
 
-        [Fact]
-        public void InnerJoinTablesWithSelectedColumns()
+    public class UniversalAPITests : Mock
+    {
+        [Theory, MemberData(nameof(GetTestData))]
+        public void GetTable(Dictionary<string, dynamic> data, string expected)
         {
+            // Arrange
+            var jsonString = JsonConvert.SerializeObject(data);
             var context = GetTestContext();
-            var UniversalAPI = new UniversalAPI(ConnectionString.connectionString, context);
+            var UniversalAPI = new UniversalAPI(ConnectionString.connectionString);
+            
+            // Act
+            var result = UniversalAPI.GetTable(jsonString, context);
 
-            var result = UniversalAPI.InnerJoinTables(
-                leftTableName: "LeaderBoard",
-                rightTableName: "Wallets",
-                conditions: new string[] { "LeaderBoard.rank = Wallets.id" },
-                selectColumns: new string[] {
-                    "LeaderBoard.rank",
-                    "Wallets.amount"
-                });
-
+            // Assert
             Assert.NotNull(result);
-            //var resultType = Assert.IsType<List<object[]>>(result);
-            //var table = Assert.IsAssignableFrom<List<object[]>>(resultType);
-            //Assert.Equal(2, table.Count);
-            //Assert.Equal(2, table[0].Length);
+            var resultType = Assert.IsType<string>(result);
+            var json = Assert.IsAssignableFrom<string>(resultType);
+            Assert.NotEqual(string.Empty, json);
+            Assert.Equal(expected, json);
         }
+    }
 
+    public class Mock
+    {
         /* Emulate DB with data */
-        private DynamicDBContext GetTestContext()
+        public DynamicDBContext GetTestContext()
         {
+            /* Initialize TokenBalance table */
+            var tokenBalance = new List<TokenBalance>
+            {
+                new TokenBalance { Id = 1, Token = "ADH", Amount = "400", Owner = "0x1a01ee5577c9d69c35a77496565b1bc95588b521" },
+                new TokenBalance { Id = 2, Token = "Poolz", Amount = "300", Owner = "0x2a01ee5557c9d69c35577496555b1bc95558b552" },
+                new TokenBalance { Id = 3, Token = "ETH", Amount = "200", Owner = "0x3a31ee5557c9369c35573496555b1bc93553b553" },
+                new TokenBalance { Id = 4, Token = "BTH", Amount = "100", Owner = "0x4a71ee5577c9d79c37577496555b1bc95558b554" }
+            }.AsQueryable();
+
+            var mockSetTokenBalance = new Mock<DbSet<TokenBalance>>();
+
+            mockSetTokenBalance.As<IQueryable<TokenBalance>>().Setup(m => m.Provider).Returns(tokenBalance.Provider);
+            mockSetTokenBalance.As<IQueryable<TokenBalance>>().Setup(m => m.Expression).Returns(tokenBalance.Expression);
+            mockSetTokenBalance.As<IQueryable<TokenBalance>>().Setup(m => m.ElementType).Returns(tokenBalance.ElementType);
+            mockSetTokenBalance.As<IQueryable<TokenBalance>>().Setup(m => m.GetEnumerator()).Returns(tokenBalance.GetEnumerator);
+
             /* Initialize Wallet table */
             var wallets = new List<Wallet>
             {
@@ -106,10 +162,10 @@ namespace UniversalAPITests
             /* Initialize LeaderBoard table */
             var leaderBoards = new List<LeaderBoard>
             {
-                new LeaderBoard { Id = 1, Rank = 1, Owner = "0x1a01ee5577c9d69c35a77496565b1bc95588b521", Amount = Convert.ToDecimal(750.505823765680934368)},
-                new LeaderBoard { Id = 2, Rank = 2, Owner = "0x2a01ee5557c9d69c35577496555b1bc95558b552", Amount = Convert.ToDecimal(251.795264077704686136)},
-                new LeaderBoard { Id = 3, Rank = 3, Owner = "0x3a31ee5557c9369c35573496555b1bc93553b553", Amount = Convert.ToDecimal(250.02109769151781894)},
-                new LeaderBoard { Id = 4, Rank = 4, Owner = "0x4a71ee5577c9d79c37577496555b1bc95558b554", Amount = Convert.ToDecimal(233.279855562249360519)}
+                new LeaderBoard { Id = 1, Rank = "1", Owner = "0x1a01ee5577c9d69c35a77496565b1bc95588b521", Amount = "750.505823765680934368"},
+                new LeaderBoard { Id = 2, Rank = "2", Owner = "0x2a01ee5557c9d69c35577496555b1bc95558b552", Amount = "251.795264077704686136"},
+                new LeaderBoard { Id = 3, Rank = "3", Owner = "0x3a31ee5557c9369c35573496555b1bc93553b553", Amount = "250.02109769151781894"},
+                new LeaderBoard { Id = 4, Rank = "4", Owner = "0x4a71ee5577c9d79c37577496555b1bc95558b554", Amount = "233.279855562249360519"}
             }.AsQueryable();
 
             var mockSetLeaderBoards = new Mock<DbSet<LeaderBoard>>();
@@ -135,9 +191,43 @@ namespace UniversalAPITests
             mockSetSignUp.As<IQueryable<SignUp>>().Setup(m => m.ElementType).Returns(signUp.ElementType);
             mockSetSignUp.As<IQueryable<SignUp>>().Setup(m => m.GetEnumerator()).Returns(signUp.GetEnumerator);
 
+            /* Initialize APIRequestList table */
+            var APIRequestList = new List<APIRequestList>
+            {
+                new APIRequestList {
+                    Id = 1,
+                    Request = "mysignup",
+                    Tables = "SignUp, LeaderBoard",
+                    Columns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
+                    JoinCondition = "SignUp.Address = LeaderBoard.Owner"
+                },
+                new APIRequestList {
+                    Id = 2,
+                    Request = "wallet",
+                    Tables = "Wallets",
+                    Columns = "*"
+                },
+                new APIRequestList {
+                    Id = 3,
+                    Request = "tokenbalanse",
+                    Tables = "TokenBalances",
+                    Columns = "Token, Owner, Amount"
+                }
+            }.AsQueryable();
+
+            var mockSetAPIRequestList = new Mock<DbSet<APIRequestList>>();
+
+            mockSetAPIRequestList.As<IQueryable<APIRequestList>>().Setup(m => m.Provider).Returns(APIRequestList.Provider);
+            mockSetAPIRequestList.As<IQueryable<APIRequestList>>().Setup(m => m.Expression).Returns(APIRequestList.Expression);
+            mockSetAPIRequestList.As<IQueryable<APIRequestList>>().Setup(m => m.ElementType).Returns(APIRequestList.ElementType);
+            mockSetAPIRequestList.As<IQueryable<APIRequestList>>().Setup(m => m.GetEnumerator()).Returns(APIRequestList.GetEnumerator);
+
 
             /* Create and setting context */
             var mockContext = new Mock<DynamicDBContext>();
+
+            mockContext.Setup(t => t.TokenBalances).Returns(mockSetTokenBalance.Object);
+            mockContext.Setup(t => t.Set<TokenBalance>()).Returns(mockSetTokenBalance.Object);
 
             mockContext.Setup(t => t.Wallets).Returns(mockSetWallet.Object);
             mockContext.Setup(t => t.Set<Wallet>()).Returns(mockSetWallet.Object);
@@ -148,58 +238,37 @@ namespace UniversalAPITests
             mockContext.Setup(t => t.SignUp).Returns(mockSetSignUp.Object);
             mockContext.Setup(t => t.Set<SignUp>()).Returns(mockSetSignUp.Object);
 
+            mockContext.Setup(t => t.APIRequestList).Returns(mockSetAPIRequestList.Object);
+            mockContext.Setup(t => t.Set<APIRequestList>()).Returns(mockSetAPIRequestList.Object);
+
             return mockContext.Object;
         }
-    }
-    public class SqlHelpersTests
-    {
-        [Fact]
-        public void GetConnection()
+
+        public static IEnumerable<object[]> GetTestData()
         {
-            var connection = SqlHelpers.GetConnection(ConnectionString.connectionString);
-            connection.Open();
-
-            Assert.NotNull(connection);
-            Assert.IsType<SqlConnection>(connection);
-            Assert.True(connection.State == ConnectionState.Open);
-
-            connection.Close();
-        }
-
-        [Fact]
-        public void GetReader()
-        {
-            var connection = SqlHelpers.GetConnection(ConnectionString.connectionString);
-            connection.Open();
-
-            var reader = SqlHelpers.GetReader("SELECT * FROM LeaderBoard", connection);
-
-            Assert.NotNull(reader);
-            Assert.IsType<SqlDataReader>(reader);
-            Assert.True(reader.HasRows);
-            connection.Close();
-        }
-    }
-    public class DataFormatterTests
-    {
-        [Fact]
-        public void FormatJson()
-        {
-            Dictionary<string, dynamic> inputData = new Dictionary<string, dynamic>
+            var mysignupExpected = "{\"PoolId\":3,\"Rank\":\"3\",\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\",\"Amount\":\"250.02109769151781894\"}";
+            var walletExpected = "{\"Id\":3,\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\"}";
+            return new List<object[]>
             {
-                { "TableName", "SignUp" },
-                { "Id", 3 },
-                { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                new object[] {
+                    new Dictionary<string, dynamic>
+                    {
+                        { "Request", "mysignup" },
+                        { "Id", 3 },
+                        { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                    },
+                    mysignupExpected
+                },
+                new object[] {
+                    new Dictionary<string, dynamic>
+                    {
+                        { "Request", "wallet" },
+                        { "Id", 3 },
+                        { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                    },
+                    walletExpected
+                }
             };
-            var jsonString = JsonConvert.SerializeObject(inputData);
-
-            var data = DataFormatter.FormatJson(jsonString);
-
-            Assert.NotNull(data);
-            Assert.IsType<Dictionary<string, dynamic>>(data);
-            Assert.True(data["Id"] == 3 &&
-                data["TableName"] == "SignUp" &&
-                data["Address"] == "0x3a31ee5557c9369c35573496555b1bc93553b553");
         }
     }
 }

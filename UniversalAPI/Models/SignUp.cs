@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Interfaces.DBModel.Models
+﻿namespace UniversalApi.Models
 {
     public class SignUp
     {

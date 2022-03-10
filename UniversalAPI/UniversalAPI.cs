@@ -1,6 +1,7 @@
-﻿using System;
 using Interfaces.DBModel;
-using Microsoft.Data.SqlClient;
+using Newtonsoft.Json;
+using System;
+using System.Linq;
 using UniversalApi.Helpers;
 
 namespace UniversalApi
@@ -8,96 +9,52 @@ namespace UniversalApi
     public class UniversalAPI
     {
         private readonly string ConnectionString;
-        private readonly DynamicDBContext Context;
-        public UniversalAPI(string connectionString, DynamicDBContext context)
+        public UniversalAPI(string connectionString)
         {
             ConnectionString = connectionString;
-            Context = context;
         }
 
-        private Json<string, dynamic> GetData(string commandQuery)
+        public string GetTable(string data, DynamicDBContext context)
         {
-            Json<string, dynamic> table = new Json<string, dynamic>();
-            using (Context)
+            var start = DateTime.UtcNow;
+            Console.WriteLine("==== Start create query ====");
+            string commandQuery = QueryCreator.GetCommandQuery(data.ToLower(), context);
+            if (commandQuery != null)
             {
-                try
-                {
-                    var connection = SqlHelpers.GetConnection(ConnectionString);
-                    using (connection)
-                    {
-                        connection.Open();
-                        var reader = SqlHelpers.GetReader(commandQuery, connection);
-                        if (!reader.HasRows)
-                            return null;
-
-                        int i = 0;
-                        while (reader.Read())
-                        {
-                            Object[] values = new Object[reader.FieldCount];
-                            reader.GetValues(values);
-                            foreach (var value in values)
-                            {
-                                table.Add(reader.GetName(i), value);
-                            }
-                            i++;
-                        }
-                        reader.Close();
-                    }
-                    return table;
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
+                Console.WriteLine(commandQuery);
+                Console.WriteLine("==== Create query done ====");
+                Console.WriteLine();
             }
-            return table;
-        }
+            else
+            {
+                Console.WriteLine("==== Error ====");
+                Console.WriteLine("An error occurred while creating the query string.");
+                Console.WriteLine();
+                return null;
+            }
 
-        public String GetTable(string data)
-        {
-            string commandQuery = DataFormatter.CreateCommandQuery(data);
+            Console.WriteLine("==== Start receiving data ====");
+            object[] table = DataReader.GetData(commandQuery, ConnectionString, context);
+            if (table != null || table.Count() != 0)
+            {
+                Console.WriteLine("==== Receiving data done ====");
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.WriteLine("==== Error ====");
+                Console.WriteLine("An error occurred while receiving data.");
+                Console.WriteLine();
+            }
 
-            Json<string, dynamic> table = GetData(commandQuery);
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine($"Program execution time: {DateTime.UtcNow - start}");
+            Console.ResetColor();
 
-            return table.GetJsonString();
-        }
+            if (table.Length == 1)
+                return JsonConvert.SerializeObject(table.ToList().First());
 
-        public String InnerJoinTables(string leftTableName, string rightTableName, string[] conditions)
-        {
-            if (leftTableName == null || leftTableName == string.Empty)
-                throw new ArgumentException("Value cannot be empty or null.", "string leftTableName");
-            if (rightTableName == null || rightTableName == string.Empty)
-                throw new ArgumentException("Value cannot be empty or null.", "string leftTableName");
-            if (conditions == null || conditions.Length == 0)
-                throw new ArgumentException("Value cannot be empty or null.", "string[] conditions");
-
-            var table = GetData(
-                $"SELECT * " +
-                $"FROM {leftTableName} " +
-                $"INNER JOIN {rightTableName} " +
-                $"ON {string.Join(" AND ", conditions)}");
-
-            return table.GetJsonString();
-        }
-
-        public String InnerJoinTables(string leftTableName, string rightTableName, string[] conditions, string[] selectColumns)
-        {
-            if (leftTableName == null || leftTableName == string.Empty)
-                throw new ArgumentException("Value cannot be empty or null.", "string leftTableName");
-            if (rightTableName == null || rightTableName == string.Empty)
-                throw new ArgumentException("Value cannot be empty or null.", "string leftTableName");
-            if (conditions == null || conditions.Length == 0)
-                throw new ArgumentException("Value cannot be empty or null.", "string[] conditions");
-            if (selectColumns == null || selectColumns.Length == 0)
-                throw new ArgumentException("Value cannot be empty or null.", "string[] selectColumns");
-
-            var table = GetData(
-                $"SELECT {string.Join(", ", selectColumns)} " +
-                $"FROM {leftTableName} " +
-                $"INNER JOIN {rightTableName} " +
-                $"ON {string.Join(" AND ", conditions)}");
-
-            return table.GetJsonString();
+            return JsonConvert.SerializeObject(table);
         }
     }
 }

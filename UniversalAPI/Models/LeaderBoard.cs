@@ -1,4 +1,4 @@
-﻿namespace Interfaces.DBModel.Models
+﻿namespace UniversalApi.Models
 {
     public class LeaderBoard
     {
