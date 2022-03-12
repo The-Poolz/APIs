@@ -61,7 +61,7 @@ namespace UniversalAPITests
             var context = GetTestContext();
 
             // Act
-            var result = QueryCreator.GetCommandQuery(jsonString, context);
+            var result = QueryCreator.CreateCommandQuery(jsonString, context);
 
             // Assert
             Assert.NotNull(result);
@@ -83,7 +83,7 @@ namespace UniversalAPITests
         {
             var jsonString = JsonConvert.SerializeObject(data);
             var context = GetTestContext();
-            var commandQuery = QueryCreator.GetCommandQuery(jsonString, context);
+            var commandQuery = QueryCreator.CreateCommandQuery(jsonString, context);
 
             var result = DataReader.GetData(commandQuery, ConnectionString.connectionString, context);
 
