@@ -1,30 +1,37 @@
-﻿using Interfaces.DBModel;
+using Interfaces.DBModel;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace UniversalApi.Helpers
 {
+    /// <summary>
+    /// Provides methods for creating SQL query string
+    /// </summary>
     public static class QueryCreator
     {
-        public static string GetCommandQuery(string json, DynamicDBContext context)
+        /// <summary>
+        /// Creates an SQL query string. Validity checks for id, address, owner parameters.
+        /// </summary>
+        /// <param name="json">JSON data string with the name of the request, conditions optional.</param>
+        /// <param name="context">Сontext that implements the IUniversalContext interface.</param>
+        /// <returns>Returns a SQL query string.</returns>
+        public static string CreateCommandQuery(string json, IUniversalContext context)
         {
             var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json.ToLower());
             if (data == null || data.Count == 0)
                 return null;
 
+            // Check has request name, get tables name
             string tables;
             if (DataChecker.HasRequest(data, out tables) == false)
                 return null;
 
+            // Get request name
             var requestItem = DataChecker.GetDataItem(data, "request");
             var request = requestItem.Value.Value;
-            string columns, joinCondition;
-            columns = GetColumns(request, context);
-            joinCondition = GetJoinCondition(request, context);
-            DataChecker.RemoveRequest(data);
 
+            // Check data for specific parameters and validation
             if (!DataChecker.CheckId(data))
                 return null;
             if (!DataChecker.CheckAddress(data))
@@ -32,8 +39,14 @@ namespace UniversalApi.Helpers
             if (!DataChecker.CheckOwner(data))
                 return null;
 
+            // Removing the request name from the data to form a query string
+            DataChecker.RemoveRequest(data);
+
+            string columns = GetColumns(request, context);
+            string joinCondition = GetJoinCondition(request, context);
             List<string> tablesName = GetTablesName(tables);
-            string commandQuery = null;
+
+            string commandQuery;
             if (tablesName.Count == 1)
                 commandQuery = CreateSelectQuery(tablesName.First(), columns, data);
             else
@@ -50,7 +63,7 @@ namespace UniversalApi.Helpers
                 var paramName = param.Key;
                 var value = param.Value;
                 if (value == null)
-                    throw new ArgumentException($"Parameter '{paramName}' cannot be null.");
+                    return null;
 
                 if (value.GetType() == typeof(string))
                     conditions.Add($"{tableName}.{paramName} = '{value}'");
@@ -74,7 +87,7 @@ namespace UniversalApi.Helpers
                 var paramName = param.Key;
                 var value = param.Value;
                 if (value == null)
-                    throw new ArgumentException($"Parameter '{paramName}' cannot be null.");
+                    return null;
 
                 if (value.GetType() == typeof(string))
                     conditions.Add($"{firstTable}.{paramName} = '{value}'");
@@ -103,7 +116,7 @@ namespace UniversalApi.Helpers
 
             return names;
         }
-        private static string GetColumns(string requestName, DynamicDBContext context)
+        private static string GetColumns(string requestName, IUniversalContext context)
         {
             var request = context.APIRequestList.FirstOrDefault(i => i.Request == requestName);
             if (request == null)
@@ -111,7 +124,7 @@ namespace UniversalApi.Helpers
 
             return request.Columns;
         }
-        private static string GetJoinCondition(string requestName, DynamicDBContext context)
+        private static string GetJoinCondition(string requestName, IUniversalContext context)
         {
             var request = context.APIRequestList.FirstOrDefault(i => i.Request == requestName);
             if (request == null)

@@ -37,12 +37,10 @@ namespace Example
                 foreach (var data in listData)
                 {
                     var inputData = JsonConvert.SerializeObject(data);
-                    Draw.DrawInputData(inputData);
 
                     UniversalAPI UniversalAPI = new UniversalAPI(ConnectionString.connectionString);
 
                     string jsonTable = UniversalAPI.GetTable(inputData, context);
-                    Draw.DrawResult(jsonTable);
                 }
             }
             Console.ReadLine();
