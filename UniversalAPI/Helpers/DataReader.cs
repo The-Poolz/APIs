@@ -1,4 +1,4 @@
-﻿using Interfaces.DBModel;
+using Interfaces.DBModel;
 using Microsoft.Data.SqlClient;
 using Pluralize.NET.Core;
 using System;
