@@ -1,5 +1,4 @@
-﻿using Interfaces.DBModel;
-using Nethereum.Util;
+﻿using Nethereum.Util;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,14 +23,14 @@ namespace UniversalApi.Helpers
             return new KeyValuePair<string, dynamic>(key, value);
         }
 
-        public static bool HasRequest(Dictionary<string, dynamic> data, out string tables)
+        public static bool HasRequest(Dictionary<string, dynamic> data, IUniversalContext context, out string tables)
         {
             tables = string.Empty;
             var request = GetDataItem(data, "request");
             if (request == null)
                 return false;
 
-            return IsValidRequestName(request.Value.Value, out tables);
+            return IsValidRequestName(request.Value.Value, context, out tables);
         }
             
         public static bool CheckId(Dictionary<string, dynamic> data)
@@ -69,10 +68,9 @@ namespace UniversalApi.Helpers
                 data.Remove("request");
         }
 
-        private static bool IsValidRequestName(string requestName, out string tables)
+        private static bool IsValidRequestName(string requestName, IUniversalContext context, out string tables)
         {
             tables = string.Empty;
-            using DynamicDBContext context = DynamicDB.ConnectToDb();
             var request = context.APIRequestList.FirstOrDefault(p => p.Request == requestName);
             if (request != null && request.Tables != string.Empty)
             {

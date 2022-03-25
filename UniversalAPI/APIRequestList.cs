@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Interfaces.DBModel.Models
+namespace UniversalApi
 {
     public class APIRequestList
     {
@@ -11,7 +11,7 @@ namespace Interfaces.DBModel.Models
         [Required]
         public string Tables { get; set; }
         [Required]
-        public string Columns { get; set; } = "*";
+        public string Columns { get; set; }
         public string JoinCondition { get; set; }
     }
 }

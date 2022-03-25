@@ -1,6 +1,7 @@
 ﻿using Interfaces.DBModel.Models;
 using Interfaces.Helpers;
 using Microsoft.EntityFrameworkCore;
+using UniversalApi;
 
 namespace Interfaces.DBModel
 {
@@ -13,7 +14,6 @@ namespace Interfaces.DBModel
         public virtual DbSet<APIRequestList> APIRequestList { get; set; }
 
         public DynamicDBContext() { }
-        public DynamicDBContext(DbContextOptions options) { }
         public DynamicDBContext(DbContextOptions<DynamicDBContext> options) : base(options)
         {
             //Database.EnsureDeleted();

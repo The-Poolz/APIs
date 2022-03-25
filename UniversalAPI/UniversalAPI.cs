@@ -1,4 +1,3 @@
-using Interfaces.DBModel;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -9,7 +8,6 @@ namespace UniversalApi
     /// <summary>
     /// Provides a method for working flexibly with EntityFramework Core.
     /// Forces you to implement IUniversalContext for your context.
-    /// Stores a database connection string.
     /// </summary>
     public sealed class UniversalAPI
     {
@@ -47,7 +45,8 @@ namespace UniversalApi
 
 
             // Reading data with SqlDataReader
-            object[] table = DataReader.GetData(commandQuery, ConnectionString, context);
+            object[] table = DataReader.GetData(commandQuery, ConnectionString, context);   
+
             if (table == null || table.Count() == 0)
                 return null;
 
@@ -63,6 +62,21 @@ namespace UniversalApi
                 LogGetData(result, startTime);
 
             return result;
+        }
+
+
+        // Почему именно такой подход, а не приватные ридонли поля которые мы инициализируем через конструктор
+        // Плюсы полей: modelsNamespace + modelsAssembly нам нужны в обязательном порядке. А так пользователи может пропустить вызов функции SetModels()
+        // Опционо: поместить SetModels в функцию GetTable, что бы у пользоааетля не было шансов не передать зависимости и пространства имен.
+        public void SetModels(string modelsNamespace, string modelsAssembly)
+        {
+            if (modelsNamespace == null || modelsNamespace == string.Empty)
+                throw new ArgumentNullException(modelsNamespace);
+            if (modelsAssembly == null || modelsAssembly == string.Empty)
+                throw new ArgumentNullException(modelsAssembly);
+
+            Environment.SetEnvironmentVariable("modelsNamespace", modelsNamespace);
+            Environment.SetEnvironmentVariable("modelsAssembly", modelsAssembly);
         }
 
         private void LogGetCommandQuery(string commandQuery)

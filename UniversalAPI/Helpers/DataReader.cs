@@ -1,4 +1,3 @@
-using Interfaces.DBModel;
 using Microsoft.Data.SqlClient;
 using Pluralize.NET.Core;
 using System;
@@ -102,8 +101,13 @@ namespace UniversalApi.Helpers
                 // Singularize table name, model has singular name but tablename in DB has pluar name
                 string tableName = new Pluralizer().Singularize(name);
 
+
+                var modelsNamespace = Environment.GetEnvironmentVariable("modelsNamespace");
+                var modelsAssembly = Environment.GetEnvironmentVariable("modelsAssembly");
+
+
                 // Get models type
-                Type type = Type.GetType($"UniversalApi.Models.{tableName}");
+                Type type = Type.GetType($"{modelsNamespace}.{tableName}, {modelsAssembly}");
                 foreach (var col in columns)
                 {
                     if (col == "*") 

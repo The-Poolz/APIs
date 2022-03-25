@@ -1,4 +1,3 @@
-using Interfaces.DBModel;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +23,7 @@ namespace UniversalApi.Helpers
 
             // Check has request name, get tables name
             string tables;
-            if (DataChecker.HasRequest(data, out tables) == false)
+            if (DataChecker.HasRequest(data, context, out tables) == false)
                 return null;
 
             // Get request name

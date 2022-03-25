@@ -91,7 +91,7 @@ namespace UniversalAPITests
             Assert.NotEmpty(result);
             var resultType = Assert.IsType<object[]>(result);
             Assert.IsAssignableFrom<object[]>(resultType);
-            string resultJson = null;
+            string resultJson;
             if (result.Length == 1)
                 resultJson = JsonConvert.SerializeObject(result.ToList().First());
             else

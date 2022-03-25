@@ -1,7 +1,6 @@
-﻿using Interfaces.DBModel.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace Interfaces.DBModel
+namespace UniversalApi
 {
     /// <summary>
     /// Implement the interface in your context for the UniversalAPI to work.
