@@ -11,7 +11,7 @@ namespace UniversalApi
         [Required]
         public string Tables { get; set; }
         [Required]
-        public string Columns { get; set; }
+        public string Columns { get; set; } = "*";
         public string JoinCondition { get; set; }
     }
 }

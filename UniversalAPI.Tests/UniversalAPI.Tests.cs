@@ -111,7 +111,7 @@ namespace UniversalAPITests
             var UniversalAPI = new UniversalAPI(ConnectionString.connectionString);
             
             // Act
-            var result = UniversalAPI.GetTable(jsonString, context);
+            var result = UniversalAPI.InvokeRequest(jsonString, context);
 
             // Assert
             Assert.NotNull(result);

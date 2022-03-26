@@ -22,8 +22,7 @@ namespace UniversalApi.Helpers
                 return null;
 
             // Check has request name, get tables name
-            string tables;
-            if (DataChecker.HasRequest(data, context, out tables) == false)
+            if (DataChecker.HasRequest(data, context, out string tables) == false)
                 return null;
 
             // Get request name
@@ -71,7 +70,7 @@ namespace UniversalApi.Helpers
             }
 
             string condition = string.Join(" AND ", conditions);
-            string commandQuery = $"SELECT {columns} FROM {tableName} WHERE {condition}";
+            string commandQuery = $"SELECT {columns} FROM {tableName} WHERE {condition} FOR JSON PATH;";
 
             return commandQuery;
         }
@@ -101,7 +100,7 @@ namespace UniversalApi.Helpers
                 $"FROM {firstTable} " +
                 $"INNER JOIN {secondTable} " +
                 $"ON {joinCondition} " +
-                $"WHERE {condition}";
+                $"WHERE {condition} FOR JSON PATH;";
 
             return commandQuery;
         }

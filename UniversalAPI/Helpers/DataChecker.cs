@@ -18,8 +18,7 @@ namespace UniversalApi.Helpers
             if (!data.ContainsKey(key.ToLower()))
                 return null;
 
-            dynamic value;
-            data.TryGetValue(key.ToLower(), out value);
+            data.TryGetValue(key.ToLower(), out dynamic value);
             return new KeyValuePair<string, dynamic>(key, value);
         }
 

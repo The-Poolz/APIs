@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 using UniversalApi.Helpers;
@@ -6,77 +5,52 @@ using UniversalApi.Helpers;
 namespace UniversalApi
 {
     /// <summary>
-    /// Provides a method for working flexibly with EntityFramework Core.
-    /// Forces you to implement IUniversalContext for your context.
+    /// Provides a method for working like API with EntityFramework Core.
+    /// Forces you to implement <see cref="IUniversalContext"/> for your context.
     /// </summary>
     public sealed class UniversalAPI
     {
         private readonly string ConnectionString;
-        /// <summary>
-        /// By default, the logging option is enabled.
-        /// </summary>
-        public bool ConsoleLogEnabled = true;
 
         public UniversalAPI(string connectionString)
         {
             ConnectionString = connectionString;
         }
 
+        /// <summary>
+        /// By default, the logging option is enabled.
+        /// </summary>
+        public bool ConsoleLogEnabled = true;
+
         /// <summary>Method getting data for the passed request.</summary>
-        /// <param name="data">JSON string data containing the name of the request.</param>
-        /// <param name="context">Pass an EntityFramework context implementing an interface IUniversalContext.</param>
+        /// <param name="request">JSON string data containing the name of the request.</param>
+        /// <param name="context">Pass an EntityFramework context implementing an interface <see cref="IUniversalContext"/>.</param>
         /// <returns>Returns JSON string data if data read is success, or return null if operation failed.</returns>
-        public string GetTable(string data, IUniversalContext context)
+        public string InvokeRequest(string request, IUniversalContext context)
         {
             // Create start program time
-            // Log received data
             var startTime = DateTime.UtcNow;
+            // Log received request
             if (ConsoleLogEnabled)
-                Console.WriteLine($"Received data: {data}");
+                Console.WriteLine($"Received request data: {request}");
             
 
-            // Create SQL query
-            string commandQuery = QueryCreator.CreateCommandQuery(data.ToLower(), context);
+            //== Create SQL query ==//
+            string commandQuery = QueryCreator.CreateCommandQuery(request.ToLower(), context);
             // Log received SQL query string
             if (ConsoleLogEnabled)
                 LogGetCommandQuery(commandQuery);
             if (commandQuery == null)
                 return null;
 
-
-            // Reading data with SqlDataReader
-            object[] table = DataReader.GetData(commandQuery, ConnectionString, context);   
-
-            if (table == null || table.Count() == 0)
-                return null;
-
-            // If result single row, serialize like obj. Else serialize like array
-            string result;
-            if (table.Count() == 1)
-                result = JsonConvert.SerializeObject(table.ToList().First());
-            else
-                result = JsonConvert.SerializeObject(table);
+            //== Reading data with SqlDataReader ==//
+            string result = DataReader.GetJsonData(commandQuery, ConnectionString);
 
             // Log result data and execution time
             if (ConsoleLogEnabled)
                 LogGetData(result, startTime);
 
             return result;
-        }
-
-
-        // Почему именно такой подход, а не приватные ридонли поля которые мы инициализируем через конструктор
-        // Плюсы полей: modelsNamespace + modelsAssembly нам нужны в обязательном порядке. А так пользователи может пропустить вызов функции SetModels()
-        // Опционо: поместить SetModels в функцию GetTable, что бы у пользоааетля не было шансов не передать зависимости и пространства имен.
-        public void SetModels(string modelsNamespace, string modelsAssembly)
-        {
-            if (modelsNamespace == null || modelsNamespace == string.Empty)
-                throw new ArgumentNullException(modelsNamespace);
-            if (modelsAssembly == null || modelsAssembly == string.Empty)
-                throw new ArgumentNullException(modelsAssembly);
-
-            Environment.SetEnvironmentVariable("modelsNamespace", modelsNamespace);
-            Environment.SetEnvironmentVariable("modelsAssembly", modelsAssembly);
         }
 
         private void LogGetCommandQuery(string commandQuery)
