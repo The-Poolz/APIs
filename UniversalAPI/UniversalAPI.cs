@@ -18,7 +18,7 @@ namespace UniversalApi
         }
 
         /// <summary>
-        /// By default, the logging option is enabled.
+        /// By default, the console logging option is enabled.
         /// </summary>
         public bool ConsoleLogEnabled = true;
 

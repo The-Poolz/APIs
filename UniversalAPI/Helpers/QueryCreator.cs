@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -55,22 +56,28 @@ namespace UniversalApi.Helpers
 
         private static string CreateSelectQuery(string tableName, string columns, Dictionary<string, dynamic> data)
         {
-            List<string> conditions = new List<string>();
-            foreach (var param in data)
+            string commandQuery = $"SELECT {columns} FROM {tableName} ";
+
+            if (data.Count != 0)
             {
-                var paramName = param.Key;
-                var value = param.Value;
-                if (value == null)
-                    return null;
+                List<string> conditions = new List<string>();
+                foreach (var param in data)
+                {
+                    var paramName = param.Key;
+                    var value = param.Value;
+                    if (value == null)
+                        return null;
 
-                if (value.GetType() == typeof(string))
-                    conditions.Add($"{tableName}.{paramName} = '{value}'");
-                else
-                    conditions.Add($"{tableName}.{paramName} = {value}");
+                    if (value.GetType() == typeof(string))
+                        conditions.Add($"{tableName}.{paramName} = '{value}'");
+                    else
+                        conditions.Add($"{tableName}.{paramName} = {value}");
+                }
+                string condition = string.Join(" AND ", conditions);
+                commandQuery += ($"WHERE {condition} ");
             }
-
-            string condition = string.Join(" AND ", conditions);
-            string commandQuery = $"SELECT {columns} FROM {tableName} WHERE {condition} FOR JSON PATH";
+            
+            commandQuery += "FOR JSON PATH";
 
             return commandQuery;
         }
