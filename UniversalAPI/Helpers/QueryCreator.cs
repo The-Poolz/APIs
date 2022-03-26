@@ -70,7 +70,7 @@ namespace UniversalApi.Helpers
             }
 
             string condition = string.Join(" AND ", conditions);
-            string commandQuery = $"SELECT {columns} FROM {tableName} WHERE {condition} FOR JSON PATH;";
+            string commandQuery = $"SELECT {columns} FROM {tableName} WHERE {condition} FOR JSON PATH";
 
             return commandQuery;
         }
@@ -100,7 +100,7 @@ namespace UniversalApi.Helpers
                 $"FROM {firstTable} " +
                 $"INNER JOIN {secondTable} " +
                 $"ON {joinCondition} " +
-                $"WHERE {condition} FOR JSON PATH;";
+                $"WHERE {condition} FOR JSON PATH";
 
             return commandQuery;
         }

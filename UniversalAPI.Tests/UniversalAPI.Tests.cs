@@ -72,7 +72,7 @@ namespace UniversalAPITests
                 "SELECT SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount " +
                 "FROM SignUp INNER JOIN LeaderBoard " +
                 "ON SignUp.Address = LeaderBoard.Owner" +
-                " WHERE SignUp.id = 3 AND SignUp.address = '0x3a31ee5557c9369c35573496555b1bc93553b553'", json);
+                " WHERE SignUp.id = 3 AND SignUp.address = '0x3a31ee5557c9369c35573496555b1bc93553b553' FOR JSON PATH", json);
         }
     }
 
@@ -85,17 +85,12 @@ namespace UniversalAPITests
             var context = GetTestContext();
             var commandQuery = QueryCreator.CreateCommandQuery(jsonString, context);
 
-            var result = DataReader.GetData(commandQuery, ConnectionString.connectionString, context);
+            var result = DataReader.GetJsonData(commandQuery, ConnectionString.connectionString);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
-            var resultType = Assert.IsType<object[]>(result);
-            Assert.IsAssignableFrom<object[]>(resultType);
-            string resultJson;
-            if (result.Length == 1)
-                resultJson = JsonConvert.SerializeObject(result.ToList().First());
-            else
-                resultJson = JsonConvert.SerializeObject(result);
+            var resultType = Assert.IsType<string>(result);
+            string resultJson = Assert.IsAssignableFrom<string>(resultType);
             Assert.Equal(expected, resultJson);
         }
     }
@@ -246,8 +241,8 @@ namespace UniversalAPITests
 
         public static IEnumerable<object[]> GetTestData()
         {
-            var mysignupExpected = "{\"PoolId\":3,\"Rank\":\"3\",\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\",\"Amount\":\"250.02109769151781894\"}";
-            var walletExpected = "{\"Id\":3,\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\"}";
+            var mysignupExpected = "[{\"PoolId\":3,\"Rank\":\"3\",\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\",\"Amount\":\"250.02109769151781894\"}]";
+            var walletExpected = "[{\"Id\":3,\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\"}]";
             return new List<object[]>
             {
                 new object[] {
