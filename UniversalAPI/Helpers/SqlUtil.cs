@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace UniversalApi.Helpers
+namespace UniversalAPI.Helpers
 {
     public static class SqlUtil
     {
