@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UniversalApi.Helpers
+namespace UniversalAPI.Helpers
 {
     public static class DataChecker
     {
@@ -22,7 +22,7 @@ namespace UniversalApi.Helpers
             return new KeyValuePair<string, dynamic>(key, value);
         }
 
-        public static bool HasRequest(Dictionary<string, dynamic> data, IUniversalContext context, out string tables)
+        public static bool HasRequest(Dictionary<string, dynamic> data, APIContext context, out string tables)
         {
             tables = string.Empty;
             var request = GetDataItem(data, "request");
@@ -67,13 +67,13 @@ namespace UniversalApi.Helpers
                 data.Remove("request");
         }
 
-        private static bool IsValidRequestName(string requestName, IUniversalContext context, out string tables)
+        private static bool IsValidRequestName(string requestName, APIContext context, out string tables)
         {
             tables = string.Empty;
-            var request = context.APIRequestList.FirstOrDefault(p => p.Request == requestName);
-            if (request != null && request.Tables != string.Empty)
+            var request = context.APIRequests.FirstOrDefault(p => p.Name == requestName);
+            if (request != null && request.SelectedTables != string.Empty)
             {
-                tables = request.Tables;
+                tables = request.SelectedTables;
                 return true;
             }
             return false;

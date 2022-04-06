@@ -1,6 +1,6 @@
-using UniversalApi;
+using UniversalAPI;
 using Interfaces.DBModel;
-using Interfaces.Helpers;
+using Interfaces;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Newtonsoft.Json;
-using UniversalApi.Helpers;
+using UniversalAPI.Helpers;
 using System.Data;
 using Interfaces.DBModel.Models;
 
@@ -19,7 +19,7 @@ namespace UniversalAPITests
         [Fact]
         public void GetConnection()
         {
-            var connection = SqlUtil.GetConnection(ConnectionString.connectionString);
+            var connection = SqlUtil.GetConnection(ConnectionString.ConnectionToData);
             connection.Open();
 
             Assert.NotNull(connection);
@@ -32,7 +32,7 @@ namespace UniversalAPITests
         [Fact]
         public void GetReader()
         {
-            var connection = SqlUtil.GetConnection(ConnectionString.connectionString);
+            var connection = SqlUtil.GetConnection(ConnectionString.ConnectionToData);
             connection.Open();
 
             var reader = SqlUtil.GetReader("SELECT * FROM LeaderBoard", connection);
@@ -58,7 +58,7 @@ namespace UniversalAPITests
                 { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
             };
             var jsonString = JsonConvert.SerializeObject(dataObj);
-            var context = GetTestContext();
+            var context = GetTestAPIContext();
 
             // Act
             var result = QueryCreator.CreateCommandQuery(jsonString, context);
@@ -82,10 +82,10 @@ namespace UniversalAPITests
         public void GetJsonData(Dictionary<string, dynamic> data, string expected)
         {
             var jsonString = JsonConvert.SerializeObject(data);
-            var context = GetTestContext();
+            var context = GetTestAPIContext();
             var commandQuery = QueryCreator.CreateCommandQuery(jsonString, context);
 
-            var result = DataReader.GetJsonData(commandQuery, ConnectionString.connectionString);
+            var result = DataReader.GetJsonData(commandQuery, ConnectionString.ConnectionToData);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -102,9 +102,9 @@ namespace UniversalAPITests
         {
             // Arrange
             var jsonString = JsonConvert.SerializeObject(data);
-            var context = GetTestContext();
-            var UniversalAPI = new UniversalAPI(ConnectionString.connectionString);
-            
+            var context = GetTestAPIContext();
+            var UniversalAPI = new APIClient(ConnectionString.ConnectionToData);
+
             // Act
             var result = UniversalAPI.InvokeRequest(jsonString, context);
 
@@ -119,8 +119,52 @@ namespace UniversalAPITests
 
     public class Mock
     {
-        /* Emulate DB with data */
-        public DynamicDBContext GetTestContext()
+        /* Emulate API DB with data */
+        public UniversalAPI.APIContext GetTestAPIContext()
+        {
+            /* Initialize APIRequestList table */
+            var Requests = new List<Request>
+            {
+                new Request {
+                    Id = 1,
+                    Name = "mysignup",
+                    SelectedTables = "SignUp, LeaderBoard",
+                    SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
+                    JoinCondition = "SignUp.Address = LeaderBoard.Owner"
+                },
+                new Request {
+                    Id = 2,
+                    Name = "wallet",
+                    SelectedTables = "Wallets",
+                    SelectedColumns = "*"
+                },
+                new Request {
+                    Id = 3,
+                    Name = "tokenbalanse",
+                    SelectedTables = "TokenBalances",
+                    SelectedColumns = "Token, Owner, Amount"
+                }
+            }.AsQueryable();
+
+            var mockSetRequests = new Mock<DbSet<Request>>();
+
+            mockSetRequests.As<IQueryable<Request>>().Setup(m => m.Provider).Returns(Requests.Provider);
+            mockSetRequests.As<IQueryable<Request>>().Setup(m => m.Expression).Returns(Requests.Expression);
+            mockSetRequests.As<IQueryable<Request>>().Setup(m => m.ElementType).Returns(Requests.ElementType);
+            mockSetRequests.As<IQueryable<Request>>().Setup(m => m.GetEnumerator()).Returns(Requests.GetEnumerator);
+
+
+            /* Create and setting context */
+            var mockContext = new Mock<UniversalAPI.APIContext>();
+
+            mockContext.Setup(t => t.APIRequests).Returns(mockSetRequests.Object);
+            mockContext.Setup(t => t.Set<Request>()).Returns(mockSetRequests.Object);
+
+            return mockContext.Object;
+        }
+
+        /* Emulate Data DB with data */
+        public DataContext GetTestDataContext()
         {
             /* Initialize TokenBalance table */
             var tokenBalance = new List<TokenBalance>
@@ -186,40 +230,9 @@ namespace UniversalAPITests
             mockSetSignUp.As<IQueryable<SignUp>>().Setup(m => m.ElementType).Returns(signUp.ElementType);
             mockSetSignUp.As<IQueryable<SignUp>>().Setup(m => m.GetEnumerator()).Returns(signUp.GetEnumerator);
 
-            /* Initialize APIRequestList table */
-            var APIRequestList = new List<APIRequestList>
-            {
-                new APIRequestList {
-                    Id = 1,
-                    Request = "mysignup",
-                    Tables = "SignUp, LeaderBoard",
-                    Columns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
-                    JoinCondition = "SignUp.Address = LeaderBoard.Owner"
-                },
-                new APIRequestList {
-                    Id = 2,
-                    Request = "wallet",
-                    Tables = "Wallets",
-                    Columns = "*"
-                },
-                new APIRequestList {
-                    Id = 3,
-                    Request = "tokenbalanse",
-                    Tables = "TokenBalances",
-                    Columns = "Token, Owner, Amount"
-                }
-            }.AsQueryable();
-
-            var mockSetAPIRequestList = new Mock<DbSet<APIRequestList>>();
-
-            mockSetAPIRequestList.As<IQueryable<APIRequestList>>().Setup(m => m.Provider).Returns(APIRequestList.Provider);
-            mockSetAPIRequestList.As<IQueryable<APIRequestList>>().Setup(m => m.Expression).Returns(APIRequestList.Expression);
-            mockSetAPIRequestList.As<IQueryable<APIRequestList>>().Setup(m => m.ElementType).Returns(APIRequestList.ElementType);
-            mockSetAPIRequestList.As<IQueryable<APIRequestList>>().Setup(m => m.GetEnumerator()).Returns(APIRequestList.GetEnumerator);
-
 
             /* Create and setting context */
-            var mockContext = new Mock<DynamicDBContext>();
+            var mockContext = new Mock<DataContext>();
 
             mockContext.Setup(t => t.TokenBalances).Returns(mockSetTokenBalance.Object);
             mockContext.Setup(t => t.Set<TokenBalance>()).Returns(mockSetTokenBalance.Object);
@@ -232,9 +245,6 @@ namespace UniversalAPITests
 
             mockContext.Setup(t => t.SignUp).Returns(mockSetSignUp.Object);
             mockContext.Setup(t => t.Set<SignUp>()).Returns(mockSetSignUp.Object);
-
-            mockContext.Setup(t => t.APIRequestList).Returns(mockSetAPIRequestList.Object);
-            mockContext.Setup(t => t.Set<APIRequestList>()).Returns(mockSetAPIRequestList.Object);
 
             return mockContext.Object;
         }

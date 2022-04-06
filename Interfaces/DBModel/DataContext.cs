@@ -1,20 +1,17 @@
 ﻿using Interfaces.DBModel.Models;
-using Interfaces.Helpers;
 using Microsoft.EntityFrameworkCore;
-using UniversalApi;
 
 namespace Interfaces.DBModel
 {
-    public partial class DynamicDBContext : DbContext, IUniversalContext
+    public class DataContext : DbContext
     {
-        public virtual DbSet<Wallet> Wallets { get; set; }
-        public virtual DbSet<TokenBalance> TokenBalances { get; set; }
-        public virtual DbSet<LeaderBoard> LeaderBoard { get; set; }
-        public virtual DbSet<SignUp> SignUp { get; set; }
-        public virtual DbSet<APIRequestList> APIRequestList { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<TokenBalance> TokenBalances { get; set; }
+        public DbSet<LeaderBoard> LeaderBoard { get; set; }
+        public DbSet<SignUp> SignUp { get; set; }
 
-        public DynamicDBContext() { }
-        public DynamicDBContext(DbContextOptions<DynamicDBContext> options) : base(options)
+        public DataContext() { }
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
             //Database.EnsureDeleted();
             //Database.EnsureCreated();
@@ -24,14 +21,11 @@ namespace Interfaces.DBModel
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(ConnectionString.connectionString);
+                optionsBuilder.UseSqlServer(ConnectionString.ConnectionToData);
             }
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder) =>
-            OnModelCreatingPartial(modelBuilder);
-
-        public void OnModelCreatingPartial(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TokenBalance>().HasData(new TokenBalance[]
             {
@@ -60,29 +54,6 @@ namespace Interfaces.DBModel
                 new SignUp { Id = 2, Address = "0x2a01ee5557c9d69c35577496555b1bc95558b552", PoolId = 2},
                 new SignUp { Id = 3, Address = "0x3a31ee5557c9369c35573496555b1bc93553b553", PoolId = 3},
                 new SignUp { Id = 4, Address = "0x4a71ee5577c9d79c37577496555b1bc95558b554", PoolId = 4}
-            });
-
-            modelBuilder.Entity<APIRequestList>().HasData(new APIRequestList[]
-            {
-                new APIRequestList {
-                    Id = 1,
-                    Request = "mysignup",
-                    Tables = "SignUp, LeaderBoard",
-                    Columns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
-                    JoinCondition = "SignUp.Address = LeaderBoard.Owner"
-                },
-                new APIRequestList {
-                    Id = 2,
-                    Request = "wallet",
-                    Tables = "Wallets",
-                    Columns = "*"
-                },
-                new APIRequestList {
-                    Id = 3,
-                    Request = "tokenbalanse",
-                    Tables = "TokenBalances",
-                    Columns = "Token, Owner, Amount"
-                }
             });
         }
     }

@@ -2,7 +2,7 @@ using Microsoft.Data.SqlClient;
 using System;
 using System.Text;
 
-namespace UniversalApi.Helpers
+namespace UniversalAPI.Helpers
 {
     public static class DataReader
     {

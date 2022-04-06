@@ -1,9 +1,8 @@
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UniversalApi.Helpers
+namespace UniversalAPI.Helpers
 {
     /// <summary>
     /// Provides methods for creating SQL query string
@@ -16,7 +15,7 @@ namespace UniversalApi.Helpers
         /// <param name="json">JSON data string with the name of the request, conditions optional.</param>
         /// <param name="context">Сontext that implements the IUniversalContext interface.</param>
         /// <returns>Returns a SQL query string.</returns>
-        public static string CreateCommandQuery(string json, IUniversalContext context)
+        public static string CreateCommandQuery(string json, APIContext context)
         {
             var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json.ToLower());
             if (data == null || data.Count == 0)
@@ -121,17 +120,17 @@ namespace UniversalApi.Helpers
 
             return names;
         }
-        private static string GetColumns(string requestName, IUniversalContext context)
+        private static string GetColumns(string requestName, APIContext context)
         {
-            var request = context.APIRequestList.FirstOrDefault(i => i.Request == requestName);
+            var request = context.APIRequests.FirstOrDefault(i => i.Name == requestName);
             if (request == null)
                 return null;
 
-            return request.Columns;
+            return request.SelectedColumns;
         }
-        private static string GetJoinCondition(string requestName, IUniversalContext context)
+        private static string GetJoinCondition(string requestName, APIContext context)
         {
-            var request = context.APIRequestList.FirstOrDefault(i => i.Request == requestName);
+            var request = context.APIRequests.FirstOrDefault(i => i.Name == requestName);
             if (request == null)
                 return null;
 
