@@ -18,7 +18,6 @@ namespace UniversalAPI.Helpers
                     if (!reader.HasRows)
                         jsonResult.Append("[]");
 
-
                     while (reader.Read())
                     {
                         jsonResult.Append(reader.GetValue(0).ToString());

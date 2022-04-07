@@ -1,10 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using UniversalAPI;
 
 namespace Interfaces.DBModel
 {
-    public class APIContext : UniversalAPI.APIContext
+    public class APIRequestContext : APIContext
     {
+        public APIRequestContext() : base()
+        {
+            var connectionString = Environment.GetEnvironmentVariable("UniversalAPI.ConnectionString");
+            if (connectionString == null)
+            {
+                Environment.SetEnvironmentVariable("UniversalAPI.ConnectionString", ConnectionString.ConnectionToApi);
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Request>().HasData(new Request[]

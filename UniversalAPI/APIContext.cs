@@ -22,6 +22,6 @@ namespace UniversalAPI
             }
         }
 
-        public DbSet<Request> APIRequests { get; set; }
+        public virtual DbSet<Request> APIRequests { get; set; }
     }
 }

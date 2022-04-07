@@ -3,7 +3,7 @@
 namespace UniversalAPI
 {
     /// <summary>
-    /// API request model.
+    /// APIRequest table model.
     /// </summary>
     public class Request
     {

@@ -49,7 +49,6 @@ namespace UniversalAPI.Helpers
             return IsValidAddress(address.Value.Value);
         }
         public static bool CheckOwner(Dictionary<string, dynamic> data)
-
         {
             var owner = GetDataItem(data, "owner");
             if (owner == null)

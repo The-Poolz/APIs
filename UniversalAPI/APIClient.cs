@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using UniversalAPI.Helpers;
@@ -6,13 +5,12 @@ using UniversalAPI.Helpers;
 namespace UniversalAPI
 {
     /// <summary>
-    /// Provides a method for working like API with EntityFramework Core.
+    /// Provides a method for working like API with EntityFramework Core.<br/>
     /// Makes you aware of the new context and inherit <see cref="APIContext"/> for it.
     /// </summary>
     public partial class APIClient
     {
         private readonly string ConnectionString;
-
         /// <summary>
         /// Create <see cref="APIClient"/> obj.
         /// </summary>
@@ -28,13 +26,13 @@ namespace UniversalAPI
         public bool ConsoleLogEnabled = true;
 
         /// <summary>Method getting JSON string data for the passed request.</summary>
-        /// <param name="request">JSON string data/</param>
-        /// <param name="apiContext">Pass an EntityFramework context implementing an interface <see cref="APIContext"/>.</param>
+        /// <param name="request">JSON string data./</param>
+        /// <param name="apiContext">Pass <see cref="APIContext"/> or a context that inherits from <see cref="APIContext"/>.</param>
         /// <returns>Returns JSON string data if data read is success, or return null if operation failed.</returns>
         public string InvokeRequest(string request, APIContext apiContext)
         {
             // Check if context has APIRequests table
-            if (!CheckTableExists(apiContext))
+            if (!CheckTableAPIRequestsExists(apiContext))
                 return null;
 
             // Create start program time
@@ -61,7 +59,7 @@ namespace UniversalAPI
             return result;
         }
 
-        private bool CheckTableExists(DbContext db)
+        private bool CheckTableAPIRequestsExists(APIContext db)
         {
             try
             {

@@ -5,17 +5,13 @@ namespace Interfaces.DBModel
 {
     public class DataContext : DbContext
     {
-        public DbSet<Wallet> Wallets { get; set; }
-        public DbSet<TokenBalance> TokenBalances { get; set; }
-        public DbSet<LeaderBoard> LeaderBoard { get; set; }
-        public DbSet<SignUp> SignUp { get; set; }
+        public virtual DbSet<Wallet> Wallets { get; set; }
+        public virtual DbSet<TokenBalance> TokenBalances { get; set; }
+        public virtual DbSet<LeaderBoard> LeaderBoard { get; set; }
+        public virtual DbSet<SignUp> SignUp { get; set; }
 
-        public DataContext() { }
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
-        {
-            //Database.EnsureDeleted();
-            //Database.EnsureCreated();
-        }
+        public DataContext() : base() { }
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
