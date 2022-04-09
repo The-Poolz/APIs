@@ -5,7 +5,7 @@ namespace UniversalAPI
 {
     public partial class APIClient
     {
-        private void LogGetCommandQuery(string commandQuery)
+        private static void LogGetCommandQuery(string commandQuery)
         {
             if (commandQuery == null)
             {
@@ -20,7 +20,7 @@ namespace UniversalAPI
             Console.WriteLine($"Query: {commandQuery}");
             Console.WriteLine();
         }
-        private void LogGetData(string data, DateTime startTime)
+        private static void LogGetData(string data, DateTime startTime)
         {
             if (data == null || data.Count() == 0)
             {
@@ -37,7 +37,7 @@ namespace UniversalAPI
 
             LogExecutionTime(startTime);
         }
-        private void LogExecutionTime(DateTime startTime)
+        private static void LogExecutionTime(DateTime startTime)
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine($"Program execution time: {DateTime.UtcNow - startTime}");

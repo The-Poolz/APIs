@@ -21,16 +21,6 @@ namespace UniversalAPI.Helpers
             data.TryGetValue(key.ToLower(), out dynamic value);
             return new KeyValuePair<string, dynamic>(key, value);
         }
-
-        public static bool HasRequest(Dictionary<string, dynamic> data, APIContext context, out string tables)
-        {
-            tables = string.Empty;
-            var request = GetDataItem(data, "request");
-            if (request == null)
-                return false;
-
-            return IsValidRequestName(request.Value.Value, context, out tables);
-        }
             
         public static bool CheckId(Dictionary<string, dynamic> data)
         {
@@ -57,26 +47,6 @@ namespace UniversalAPI.Helpers
             return IsValidAddress(owner.Value.Value);
         }
 
-        public static void RemoveRequest(Dictionary<string, dynamic> data)
-        {
-            if (data.ContainsKey("Request"))
-                data.Remove("Request");
-
-            if (data.ContainsKey("request"))
-                data.Remove("request");
-        }
-
-        private static bool IsValidRequestName(string requestName, APIContext context, out string tables)
-        {
-            tables = string.Empty;
-            var request = context.APIRequests.FirstOrDefault(p => p.Name == requestName);
-            if (request != null && request.SelectedTables != string.Empty)
-            {
-                tables = request.SelectedTables;
-                return true;
-            }
-            return false;
-        }
         private static bool IsValidId(int? id)
         {
             if (id == null)

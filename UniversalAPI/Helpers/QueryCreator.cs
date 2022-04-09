@@ -12,22 +12,14 @@ namespace UniversalAPI.Helpers
         /// <summary>
         /// Creates an SQL query string. Validity checks for id, address, owner parameters.
         /// </summary>
-        /// <param name="json">JSON data string with the name of the request, conditions optional.</param>
-        /// <param name="context">Сontext that implements the IUniversalContext interface.</param>
+        /// <param name="jsonRequest">JSON data string with the name of the request, conditions optional.</param>
+        /// <param name="requestSettings">Pass <see cref="APIRequestSettings"/> object with request settings.</param>
         /// <returns>Returns a SQL query string.</returns>
-        public static string CreateCommandQuery(string json, APIContext context)
+        public static string CreateCommandQuery(string jsonRequest, APIRequestSettings requestSettings)
         {
-            var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(json.ToLower());
+            var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(jsonRequest.ToLower());
             if (data == null || data.Count == 0)
                 return null;
-
-            // Check has request name, get tables name
-            if (DataChecker.HasRequest(data, context, out string tables) == false)
-                return null;
-
-            // Get request name
-            var requestItem = DataChecker.GetDataItem(data, "request");
-            var request = requestItem.Value.Value;
 
             // Check data for specific parameters and validation
             if (!DataChecker.CheckId(data))
@@ -37,14 +29,11 @@ namespace UniversalAPI.Helpers
             if (!DataChecker.CheckOwner(data))
                 return null;
 
-            // Removing the request name from the data to form a query string
-            DataChecker.RemoveRequest(data);
-
-            string columns = GetColumns(request, context);
-            string joinCondition = GetJoinCondition(request, context);
-            List<string> tablesName = GetTablesName(tables);
-
+            string columns = requestSettings.SelectedColumns;
+            string joinCondition = requestSettings.JoinCondition;
+            List<string> tablesName = GetTablesName(requestSettings.SelectedTables);
             string commandQuery;
+
             if (tablesName.Count == 1)
                 commandQuery = CreateSelectQuery(tablesName.First(), columns, data);
             else
@@ -119,22 +108,6 @@ namespace UniversalAPI.Helpers
             names = names.Select(name => name.Replace(" ", string.Empty)).ToList();
 
             return names;
-        }
-        private static string GetColumns(string requestName, APIContext context)
-        {
-            var request = context.APIRequests.FirstOrDefault(i => i.Name == requestName);
-            if (request == null)
-                return null;
-
-            return request.SelectedColumns;
-        }
-        private static string GetJoinCondition(string requestName, APIContext context)
-        {
-            var request = context.APIRequests.FirstOrDefault(i => i.Name == requestName);
-            if (request == null)
-                return null;
-
-            return request.JoinCondition;
         }
     }
 }

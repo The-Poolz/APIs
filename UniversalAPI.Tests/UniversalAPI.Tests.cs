@@ -41,6 +41,28 @@ namespace UniversalAPITests
         }
     }
 
+    public class DataCheckerTests
+    {
+        [Fact]
+        public void GetDataItem()
+        {
+            Dictionary<string, dynamic> dataObj = new Dictionary<string, dynamic>
+            {
+                { "Request", "mysignup" },
+                { "Id", 3 },
+                { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+            };
+            string key = "Address";
+
+            var result = DataChecker.GetDataItem(dataObj, key);
+
+            Assert.NotNull(result);
+            var resultType = Assert.IsType<KeyValuePair<string, dynamic>>(result);
+            Assert.IsAssignableFrom<KeyValuePair<string, dynamic>>(resultType);
+            Assert.Equal(result.Value.Value, dataObj["address"]);
+        }
+    }
+
     public class QueryCreatorTests
     {
         [Fact]
@@ -49,15 +71,19 @@ namespace UniversalAPITests
             // Arrange
             Dictionary<string, dynamic> dataObj = new Dictionary<string, dynamic>
             {
-                { "Request", "mysignup" },
                 { "Id", 3 },
                 { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
             };
-            var jsonString = JsonConvert.SerializeObject(dataObj);
-            var context = MockContext.GetTestAPIContext();
+            var jsonRequest = JsonConvert.SerializeObject(dataObj);
+            var requestSEttings = new APIRequestSettings
+            {
+                SelectedTables = "SignUp, LeaderBoard",
+                SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
+                JoinCondition = "SignUp.Address = LeaderBoard.Owner"
+            };
 
             // Act
-            var result = QueryCreator.CreateCommandQuery(jsonString, context);
+            var result = QueryCreator.CreateCommandQuery(jsonRequest, requestSEttings);
 
             // Assert
             Assert.NotNull(result);
@@ -78,7 +104,6 @@ namespace UniversalAPITests
         public void GetJsonData(Dictionary<string, dynamic> data, string expected)
         {
             var jsonString = JsonConvert.SerializeObject(data);
-            var context = MockContext.GetTestAPIContext();
             var commandQuery = QueryCreator.CreateCommandQuery(jsonString, context);
 
             var result = DataReader.GetJsonData(commandQuery, ConnectionString.ConnectionToData);
@@ -91,7 +116,7 @@ namespace UniversalAPITests
         }
     }
 
-    public class UniversalAPITests : TestData
+    public class APIClientTests : TestData
     {
         [Theory, MemberData(nameof(GetTestData))]
         public void InvokeRequest(Dictionary<string, dynamic> data, string expected)
@@ -99,10 +124,10 @@ namespace UniversalAPITests
             // Arrange
             var jsonString = JsonConvert.SerializeObject(data);
             var context = MockContext.GetTestAPIContext();
-            var UniversalAPI = new APIClient(ConnectionString.ConnectionToData);
+            var api = new APIClient(ConnectionString.ConnectionToData);
 
             // Act
-            var result = UniversalAPI.InvokeRequest(jsonString, context);
+            var result = api.InvokeRequest(jsonString, context);
 
             // Assert
             Assert.NotNull(result);
