@@ -18,8 +18,6 @@ namespace UniversalAPI.Helpers
         public static string CreateCommandQuery(string jsonRequest, APIRequestSettings requestSettings)
         {
             var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(jsonRequest.ToLower());
-            if (data == null || data.Count == 0)
-                return null;
 
             // Check data for specific parameters and validation
             if (!DataChecker.CheckId(data))
@@ -31,7 +29,12 @@ namespace UniversalAPI.Helpers
 
             string columns = requestSettings.SelectedColumns;
             string joinCondition = requestSettings.JoinCondition;
-            List<string> tablesName = GetTablesName(requestSettings.SelectedTables);
+
+            // Convert SelectedTables string to List<string>
+            List<string> names = requestSettings.SelectedTables.Split(",").ToList();
+            names = names.Select(name => name.Replace(" ", string.Empty)).ToList();     // Remove all whitespace
+            List<string> tablesName = names;
+
             string commandQuery;
 
             if (tablesName.Count == 1)
@@ -74,40 +77,32 @@ namespace UniversalAPI.Helpers
             List<string> conditions = new List<string>();
             string firstTable = tablesName.ToArray()[0];
             string secondTable = tablesName.ToArray()[1];
-
-            foreach (var param in data)
-            {
-                var paramName = param.Key;
-                var value = param.Value;
-                if (value == null)
-                    return null;
-
-                if (value.GetType() == typeof(string))
-                    conditions.Add($"{firstTable}.{paramName} = '{value}'");
-                else
-                    conditions.Add($"{firstTable}.{paramName} = {value}");
-            }
-
-            string condition = string.Join(" AND ", conditions);
-
             string commandQuery =
                 $"SELECT {columns} " +
                 $"FROM {firstTable} " +
                 $"INNER JOIN {secondTable} " +
-                $"ON {joinCondition} " +
-                $"WHERE {condition} FOR JSON PATH";
+                $"ON {joinCondition} ";
+
+            if (data.Count != 0)
+            {
+                foreach (var param in data)
+                {
+                    var paramName = param.Key;
+                    var value = param.Value;
+                    if (value == null)
+                        return null;
+
+                    if (value.GetType() == typeof(string))
+                        conditions.Add($"{firstTable}.{paramName} = '{value}'");
+                    else
+                        conditions.Add($"{firstTable}.{paramName} = {value}");
+                }
+                string condition = string.Join(" AND ", conditions);
+                commandQuery += $"WHERE {condition} ";
+            }
+            commandQuery += "FOR JSON PATH";
 
             return commandQuery;
-        }
-
-        private static List<string> GetTablesName(string tables)
-        {
-            List<string> names = tables.Split(",").ToList();
-
-            // Remove all whitespace
-            names = names.Select(name => name.Replace(" ", string.Empty)).ToList();
-
-            return names;
         }
     }
 }

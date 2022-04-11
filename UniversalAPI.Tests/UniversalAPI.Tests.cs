@@ -101,10 +101,10 @@ namespace UniversalAPITests
     public class DataReaderTests : TestData
     {
         [Theory, MemberData(nameof(GetTestData))]
-        public void GetJsonData(Dictionary<string, dynamic> data, string expected)
+        public void GetJsonData(Dictionary<string, dynamic> data, APIRequestSettings requestSettings, string expected)
         {
             var jsonString = JsonConvert.SerializeObject(data);
-            var commandQuery = QueryCreator.CreateCommandQuery(jsonString, context);
+            var commandQuery = QueryCreator.CreateCommandQuery(jsonString, requestSettings);
 
             var result = DataReader.GetJsonData(commandQuery, ConnectionString.ConnectionToData);
 
@@ -119,15 +119,13 @@ namespace UniversalAPITests
     public class APIClientTests : TestData
     {
         [Theory, MemberData(nameof(GetTestData))]
-        public void InvokeRequest(Dictionary<string, dynamic> data, string expected)
+        public void InvokeRequest(Dictionary<string, dynamic> data, APIRequestSettings requestSettings, string expected)
         {
             // Arrange
             var jsonString = JsonConvert.SerializeObject(data);
-            var context = MockContext.GetTestAPIContext();
-            var api = new APIClient(ConnectionString.ConnectionToData);
 
             // Act
-            var result = api.InvokeRequest(jsonString, context);
+            var result = APIClient.InvokeRequest(jsonString, requestSettings, ConnectionString.ConnectionToData);
 
             // Assert
             Assert.NotNull(result);
