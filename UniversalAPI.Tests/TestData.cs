@@ -14,26 +14,34 @@ namespace UniversalAPI.Tests
                 new object[] {
                     new Dictionary<string, dynamic>
                     {
-                        { "Request", "mysignup" },
                         { "Id", 3 },
                         { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                    },
+                    new APIRequestSettings {
+                        SelectedTables = "SignUp, LeaderBoard",
+                        SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
+                        JoinCondition = "SignUp.Address = LeaderBoard.Owner"
                     },
                     mysignupExpected
                 },
                 new object[] {
                     new Dictionary<string, dynamic>
                     {
-                        { "Request", "wallet" },
                         { "Id", 3 },
                         { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
+                    },
+                    new APIRequestSettings {
+                        SelectedTables = "Wallets",
+                        SelectedColumns = "*"
                     },
                     walletExpected
                 }
                 ,
                 new object[] {
-                    new Dictionary<string, dynamic>
-                    {
-                        { "Request", "tokenbalanse" }
+                    new Dictionary<string, dynamic> { },
+                    new APIRequestSettings {
+                        SelectedTables = "TokenBalances",
+                        SelectedColumns = "Token, Owner, Amount"
                     },
                     tokenBalanceExpected
                 }

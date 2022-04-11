@@ -8,33 +8,20 @@ namespace UniversalAPI
     /// Provides a method for working like API with EntityFramework Core.<br/>
     /// Makes you aware of the new context and inherit <see cref="APIContext"/> for it.
     /// </summary>
-    public partial class APIClient
+    public static partial class APIClient
     {
-        private readonly string ConnectionString;
-        /// <summary>
-        /// Create <see cref="APIClient"/> obj.
-        /// </summary>
-        /// <param name="connectionString">Database connection string, storing tables for data fetching.</param>
-        public APIClient(string connectionString)
-        {
-            ConnectionString = connectionString;
-        }
-
         /// <summary>
         /// By default, the console logging option is enabled.
         /// </summary>
-        public bool ConsoleLogEnabled = true;
+        public static bool ConsoleLogEnabled = true;
 
         /// <summary>Method getting JSON string data for the passed request.</summary>
         /// <param name="request">JSON string data./</param>
-        /// <param name="apiContext">Pass <see cref="APIContext"/> or a context that inherits from <see cref="APIContext"/>.</param>
+        /// <param name="requestSettings">Pass <see cref="APIRequestSettings"/> object with request settings.</param>
+        /// <param name="connectionString">Database connection string, storing tables for data fetching.</param>
         /// <returns>Returns JSON string data if data read is success, or return null if operation failed.</returns>
-        public string InvokeRequest(string request, APIContext apiContext)
+        public static string InvokeRequest(string request, APIRequestSettings requestSettings, string connectionString)
         {
-            // Check if context has APIRequests table
-            if (!CheckTableAPIRequestsExists(apiContext))
-                return null;
-
             // Create start program time
             var startTime = DateTime.UtcNow;
             // Log received request
@@ -42,7 +29,7 @@ namespace UniversalAPI
                 Console.WriteLine($"Received request data: {request}");
 
             //== Create SQL query ==//
-            string commandQuery = QueryCreator.CreateCommandQuery(request.ToLower(), apiContext);
+            string commandQuery = QueryCreator.CreateCommandQuery(request.ToLower(), requestSettings);
             // Log received SQL query string
             if (ConsoleLogEnabled)
                 LogGetCommandQuery(commandQuery);
@@ -50,26 +37,13 @@ namespace UniversalAPI
                 return null;
 
             //== Reading data with SqlDataReader ==//
-            string result = DataReader.GetJsonData(commandQuery, ConnectionString);
+            string result = DataReader.GetJsonData(commandQuery, connectionString);
 
             // Log result data and execution time
             if (ConsoleLogEnabled)
                 LogGetData(result, startTime);
 
             return result;
-        }
-
-        private bool CheckTableAPIRequestsExists(APIContext db)
-        {
-            try
-            {
-                db.Set<Request>().Count();
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
     }
 }

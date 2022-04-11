@@ -9,49 +9,6 @@ namespace UniversalAPI.Tests
 {
     public static class MockContext
     {
-        /* Emulate API DB with data */
-        public static APIRequestContext GetTestAPIContext()
-        {
-            /* Initialize APIRequestList table */
-            var Requests = new List<Request>
-            {
-                new Request {
-                    Id = 1,
-                    Name = "mysignup",
-                    SelectedTables = "SignUp, LeaderBoard",
-                    SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
-                    JoinCondition = "SignUp.Address = LeaderBoard.Owner"
-                },
-                new Request {
-                    Id = 2,
-                    Name = "wallet",
-                    SelectedTables = "Wallets",
-                    SelectedColumns = "*"
-                },
-                new Request {
-                    Id = 3,
-                    Name = "tokenbalanse",
-                    SelectedTables = "TokenBalances",
-                    SelectedColumns = "Token, Owner, Amount"
-                }
-            }.AsQueryable();
-
-            var mockSetRequests = new Mock<DbSet<Request>>();
-
-            mockSetRequests.As<IQueryable<Request>>().Setup(m => m.Provider).Returns(Requests.Provider);
-            mockSetRequests.As<IQueryable<Request>>().Setup(m => m.Expression).Returns(Requests.Expression);
-            mockSetRequests.As<IQueryable<Request>>().Setup(m => m.ElementType).Returns(Requests.ElementType);
-            mockSetRequests.As<IQueryable<Request>>().Setup(m => m.GetEnumerator()).Returns(Requests.GetEnumerator);
-
-            /* Create and setting context */
-            var mockContext = new Mock<APIRequestContext>();
-
-            mockContext.Setup(t => t.APIRequests).Returns(mockSetRequests.Object);
-            mockContext.Setup(t => t.Set<Request>()).Returns(mockSetRequests.Object);
-
-            return mockContext.Object;
-        }
-
         /* Emulate Data DB with data */
         public static DataContext GetTestDataContext()
         {
