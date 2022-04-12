@@ -17,7 +17,7 @@ namespace UniversalAPI.Tests.Helpers
                 { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
             };
             var jsonRequest = JsonConvert.SerializeObject(dataObj);
-            var requestSEttings = new APIRequestSettings
+            var requestSEttings = new APIRequest
             {
                 SelectedTables = "SignUp, LeaderBoard",
                 SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
@@ -25,7 +25,7 @@ namespace UniversalAPI.Tests.Helpers
             };
 
             // Act
-            var result = QueryCreator.CreateCommandQuery(jsonRequest, requestSEttings);
+            var result = QueryCreator.CreateCommandQuery(requestSEttings);
 
             // Assert
             Assert.NotNull(result);

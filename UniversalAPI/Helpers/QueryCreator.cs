@@ -12,12 +12,11 @@ namespace UniversalAPI.Helpers
         /// <summary>
         /// Creates an SQL query string. Validity checks for id, address, owner parameters.
         /// </summary>
-        /// <param name="jsonRequest">JSON data string with the name of the request, conditions optional.</param>
-        /// <param name="requestSettings">Pass <see cref="APIRequestSettings"/> object with request settings.</param>
+        /// <param name="requestSettings">Pass <see cref="APIRequest"/> object with request settings.</param>
         /// <returns>Returns a SQL query string.</returns>
-        public static string CreateCommandQuery(string jsonRequest, APIRequestSettings requestSettings)
+        public static string CreateCommandQuery(APIRequest requestSettings)
         {
-            var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(jsonRequest.ToLower());
+            var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(requestSettings.WhereCondition.ToLower());
 
             // Check data for specific parameters and validation
             if (!DataChecker.CheckId(data))

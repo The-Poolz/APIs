@@ -17,9 +17,10 @@ namespace UniversalAPI.Tests
                         { "Id", 3 },
                         { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
                     },
-                    new APIRequestSettings {
+                    new APIRequest {
                         SelectedTables = "SignUp, LeaderBoard",
                         SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
+                        WhereCondition = "SignUp.Id = 3",
                         JoinCondition = "SignUp.Address = LeaderBoard.Owner"
                     },
                     mysignupExpected
@@ -30,16 +31,16 @@ namespace UniversalAPI.Tests
                         { "Id", 3 },
                         { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
                     },
-                    new APIRequestSettings {
+                    new APIRequest {
                         SelectedTables = "Wallets",
-                        SelectedColumns = "*"
+                        SelectedColumns = "*",
+                        WhereCondition = "Id = 3"
                     },
                     walletExpected
-                }
-                ,
+                },
                 new object[] {
                     new Dictionary<string, dynamic> { },
-                    new APIRequestSettings {
+                    new APIRequest {
                         SelectedTables = "TokenBalances",
                         SelectedColumns = "Token, Owner, Amount"
                     },

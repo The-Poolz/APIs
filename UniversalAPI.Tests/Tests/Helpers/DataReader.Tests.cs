@@ -9,12 +9,13 @@ namespace UniversalAPI.Tests.Helpers
     public class DataReaderTests : TestData
     {
         [Theory, MemberData(nameof(GetTestData))]
-        public void GetJsonData(Dictionary<string, dynamic> data, APIRequestSettings requestSettings, string expected)
+        public void GetJsonData(Dictionary<string, dynamic> data, APIRequest requestSettings, string expected)
         {
             var jsonString = JsonConvert.SerializeObject(data);
-            var commandQuery = QueryCreator.CreateCommandQuery(jsonString, requestSettings);
+            var commandQuery = QueryCreator.CreateCommandQuery(requestSettings);
+            var context = MockContext.GetTestDataContext();
 
-            var result = DataReader.GetJsonData(commandQuery, ConnectionString.ConnectionToData);
+            var result = DataReader.GetJsonData(commandQuery, context);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
