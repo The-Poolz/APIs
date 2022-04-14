@@ -11,16 +11,11 @@ namespace UniversalAPI.Tests.Helpers
         public void GetCommandQuery()
         {
             // Arrange
-            Dictionary<string, dynamic> dataObj = new Dictionary<string, dynamic>
-            {
-                { "Id", 3 },
-                { "address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-            };
-            var jsonRequest = JsonConvert.SerializeObject(dataObj);
             var requestSEttings = new APIRequest
             {
                 SelectedTables = "SignUp, LeaderBoard",
                 SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
+                WhereCondition = "SignUp.Id = 3, SignUp.address = '0x3a31ee5557c9369c35573496555b1bc93553b553'",
                 JoinCondition = "SignUp.Address = LeaderBoard.Owner"
             };
 

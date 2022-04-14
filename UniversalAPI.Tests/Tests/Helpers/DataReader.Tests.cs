@@ -1,7 +1,4 @@
-﻿using Interfaces;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using UniversalAPI.Helpers;
+﻿using UniversalAPI.Helpers;
 using Xunit;
 
 namespace UniversalAPI.Tests.Helpers
@@ -9,9 +6,8 @@ namespace UniversalAPI.Tests.Helpers
     public class DataReaderTests : TestData
     {
         [Theory, MemberData(nameof(GetTestData))]
-        public void GetJsonData(Dictionary<string, dynamic> data, APIRequest requestSettings, string expected)
+        public void GetJsonData(APIRequest requestSettings, string expected)
         {
-            var jsonString = JsonConvert.SerializeObject(data);
             var commandQuery = QueryCreator.CreateCommandQuery(requestSettings);
             var context = MockContext.GetTestDataContext();
 

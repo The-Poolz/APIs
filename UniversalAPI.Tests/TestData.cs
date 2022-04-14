@@ -12,34 +12,23 @@ namespace UniversalAPI.Tests
             return new List<object[]>
             {
                 new object[] {
-                    new Dictionary<string, dynamic>
-                    {
-                        { "Id", 3 },
-                        { "Address", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-                    },
                     new APIRequest {
                         SelectedTables = "SignUp, LeaderBoard",
                         SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
-                        WhereCondition = "SignUp.Id = 3",
+                        WhereCondition = "SignUp.Id = 3, SignUp.Address = '0x3a31ee5557c9369c35573496555b1bc93553b553'",
                         JoinCondition = "SignUp.Address = LeaderBoard.Owner"
                     },
                     mysignupExpected
                 },
                 new object[] {
-                    new Dictionary<string, dynamic>
-                    {
-                        { "Id", 3 },
-                        { "Owner", "0x3a31ee5557c9369c35573496555b1bc93553b553" }
-                    },
                     new APIRequest {
                         SelectedTables = "Wallets",
                         SelectedColumns = "*",
-                        WhereCondition = "Id = 3"
+                        WhereCondition = "Id = 3, Owner = '0x3a31ee5557c9369c35573496555b1bc93553b553'"
                     },
                     walletExpected
                 },
                 new object[] {
-                    new Dictionary<string, dynamic> { },
                     new APIRequest {
                         SelectedTables = "TokenBalances",
                         SelectedColumns = "Token, Owner, Amount"

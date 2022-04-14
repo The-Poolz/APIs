@@ -34,7 +34,6 @@ namespace UniversalAPI
                 return null;
 
             //== Reading data with SqlDataReader ==//
-            // create context object
             string result = DataReader.GetJsonData(commandQuery, context.Database.GetConnectionString());
 
             // Log result data and execution time
