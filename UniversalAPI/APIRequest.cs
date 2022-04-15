@@ -6,12 +6,12 @@ namespace UniversalAPI
     /// API request settings.
     /// </summary>
     /// 
-    public class APIRequestSettings
+    public class APIRequest
     {
-
         /// <summary>
         /// Pass a table(s) from which to take data.<br/>
-        /// You can pass two table names to join tables on the <see cref="JoinCondition"/>.
+        /// You can pass two table names to join tables on the <see cref="JoinCondition"/>.<br/>
+        /// This is a required parameter.
         /// </summary>
         /// <remarks>
         /// Example: "FirstTableName" or "FirstTableName, SecondTableName"
@@ -20,8 +20,9 @@ namespace UniversalAPI
         public string SelectedTables { get; set; }
 
         /// <summary>
-        /// Pass columns from which to take data.
-        /// Default value is "*" which means select all data from table(s).
+        /// Pass columns from which to take data.<br/>
+        /// Default value is "*" which means select all data from table(s).<br/>
+        /// This is a required parameter.
         /// </summary>
         /// <remarks>
         /// Example (If one table): "Id, Name, Address" or "FirstTableName.Id, FirstTableName.Name, ..."<br/>
@@ -29,6 +30,15 @@ namespace UniversalAPI
         /// </remarks>
         [NotNull]
         public string SelectedColumns { get; set; } = "*";
+
+        /// <summary>
+        /// Enter condition for search tables.
+        /// </summary>
+        /// <remarks>
+        /// Example (condition): "FirstTableName.Id = SecondTableName.Rank"<br/>
+        /// Example (conditions): "FirstTableName.Id = SecondTableName.Rank, FirstTableName.Name = SecondTableName.UserName" 
+        /// </remarks>
+        public string WhereCondition { get; set; }
 
         /// <summary>
         /// Enter condition for joining tables.

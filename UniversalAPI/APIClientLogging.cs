@@ -7,6 +7,9 @@ namespace UniversalAPI
     {
         private static void LogGetCommandQuery(string commandQuery)
         {
+            if (!CheckConsoleLogEnabled())
+                return;
+
             if (commandQuery == null)
             {
                 Console.WriteLine();
@@ -22,6 +25,9 @@ namespace UniversalAPI
         }
         private static void LogGetData(string data, DateTime startTime)
         {
+            if (!CheckConsoleLogEnabled())
+                return;
+
             if (data == null || data.Count() == 0)
             {
                 Console.WriteLine();
@@ -47,5 +53,8 @@ namespace UniversalAPI
                 Console.Write('=');
             Console.WriteLine();
         }
+
+        private static bool CheckConsoleLogEnabled() =>
+            ConsoleLogEnabled ? true : false;
     }
 }

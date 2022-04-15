@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,71 +9,45 @@ namespace UniversalAPI.Helpers
     public static class QueryCreator
     {
         /// <summary>
-        /// Creates an SQL query string. Validity checks for id, address, owner parameters.
+        /// Creates an SQL query string.
         /// </summary>
-        /// <param name="jsonRequest">JSON data string with the name of the request, conditions optional.</param>
-        /// <param name="requestSettings">Pass <see cref="APIRequestSettings"/> object with request settings.</param>
+        /// <param name="requestSettings">Pass <see cref="APIRequest"/> object with request settings.</param>
         /// <returns>Returns a SQL query string.</returns>
-        public static string CreateCommandQuery(string jsonRequest, APIRequestSettings requestSettings)
+        public static string CreateCommandQuery(APIRequest requestSettings)
         {
-            var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(jsonRequest.ToLower());
-
-            // Check data for specific parameters and validation
-            if (!DataChecker.CheckId(data))
-                return null;
-            if (!DataChecker.CheckAddress(data))
-                return null;
-            if (!DataChecker.CheckOwner(data))
+            if (!APIRequestValidator.IsValidAPIRequest(requestSettings))
                 return null;
 
-            string columns = requestSettings.SelectedColumns;
-            string joinCondition = requestSettings.JoinCondition;
-
-            // Convert SelectedTables string to List<string>
-            List<string> names = requestSettings.SelectedTables.Split(",").ToList();
-            names = names.Select(name => name.Replace(" ", string.Empty)).ToList();     // Remove all whitespace
-            List<string> tablesName = names;
-
+            List<string> tablesName = ConvertToList(requestSettings.SelectedTables);
+            tablesName = tablesName.Select(str => str.Replace(" ", string.Empty)).ToList();     // Remove all whitespace
             string commandQuery;
 
             if (tablesName.Count == 1)
-                commandQuery = CreateSelectQuery(tablesName.First(), columns, data);
+                commandQuery = CreateSelectQuery(tablesName.First(), requestSettings);
             else
-                commandQuery = CreateJoinQuery(tablesName, columns, joinCondition, data);
+                commandQuery = CreateJoinQuery(tablesName, requestSettings);
 
             return commandQuery;
         }
 
-        private static string CreateSelectQuery(string tableName, string columns, Dictionary<string, dynamic> data)
+        private static string CreateSelectQuery(string tableName, APIRequest requestSettings)
         {
+            string columns = requestSettings.SelectedColumns;
             string commandQuery = $"SELECT {columns} FROM {tableName} ";
 
-            if (data.Count != 0)
+            if (!string.IsNullOrEmpty(requestSettings.WhereCondition))
             {
-                List<string> conditions = new List<string>();
-                foreach (var param in data)
-                {
-                    var paramName = param.Key;
-                    var value = param.Value;
-                    if (value == null)
-                        return null;
-
-                    if (value.GetType() == typeof(string))
-                        conditions.Add($"{tableName}.{paramName} = '{value}'");
-                    else
-                        conditions.Add($"{tableName}.{paramName} = {value}");
-                }
-                string condition = string.Join(" AND ", conditions);
+                string condition = string.Join(" AND ", ConvertToList(requestSettings.WhereCondition));
                 commandQuery += ($"WHERE {condition} ");
             }
-            
             commandQuery += "FOR JSON PATH";
 
             return commandQuery;
         }
-        private static string CreateJoinQuery(List<string> tablesName, string columns, string joinCondition, Dictionary<string, dynamic> data)
+        private static string CreateJoinQuery(List<string> tablesName, APIRequest requestSettings)
         {
-            List<string> conditions = new List<string>();
+            string columns = requestSettings.SelectedColumns;
+            string joinCondition = requestSettings.JoinCondition;
             string firstTable = tablesName.ToArray()[0];
             string secondTable = tablesName.ToArray()[1];
             string commandQuery =
@@ -83,26 +56,25 @@ namespace UniversalAPI.Helpers
                 $"INNER JOIN {secondTable} " +
                 $"ON {joinCondition} ";
 
-            if (data.Count != 0)
+            if (!string.IsNullOrWhiteSpace(requestSettings.WhereCondition))
             {
-                foreach (var param in data)
-                {
-                    var paramName = param.Key;
-                    var value = param.Value;
-                    if (value == null)
-                        return null;
-
-                    if (value.GetType() == typeof(string))
-                        conditions.Add($"{firstTable}.{paramName} = '{value}'");
-                    else
-                        conditions.Add($"{firstTable}.{paramName} = {value}");
-                }
-                string condition = string.Join(" AND ", conditions);
+                string condition = string.Join(" AND ", ConvertToList(requestSettings.WhereCondition));
                 commandQuery += $"WHERE {condition} ";
             }
             commandQuery += "FOR JSON PATH";
 
             return commandQuery;
+        }
+
+        private static List<string> ConvertToList(string str)
+        {
+            List<string> names = str.Split(",").ToList();
+
+            int count = names.Count;
+            for (int i = 0; i < count; i++)
+                names[i] = names[i].Trim();
+
+            return names;
         }
     }
 }
