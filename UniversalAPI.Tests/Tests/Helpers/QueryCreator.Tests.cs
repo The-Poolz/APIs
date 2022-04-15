@@ -15,7 +15,7 @@ namespace UniversalAPI.Tests.Helpers
             {
                 SelectedTables = "SignUp, LeaderBoard",
                 SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
-                WhereCondition = "SignUp.Id = 3, SignUp.address = '0x3a31ee5557c9369c35573496555b1bc93553b553'",
+                WhereCondition = "SignUp.id = 3, SignUp.address = '0x3a31ee5557c9369c35573496555b1bc93553b553'",
                 JoinCondition = "SignUp.Address = LeaderBoard.Owner"
             };
 

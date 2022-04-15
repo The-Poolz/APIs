@@ -19,6 +19,7 @@ namespace UniversalAPI.Helpers
                 return null;
 
             List<string> tablesName = ConvertToList(requestSettings.SelectedTables);
+            tablesName = tablesName.Select(str => str.Replace(" ", string.Empty)).ToList();     // Remove all whitespace
             string commandQuery;
 
             if (tablesName.Count == 1)
@@ -68,7 +69,11 @@ namespace UniversalAPI.Helpers
         private static List<string> ConvertToList(string str)
         {
             List<string> names = str.Split(",").ToList();
-            names = names.Select(name => name.Replace(" ", string.Empty)).ToList();     // Remove all whitespace
+
+            int count = names.Count;
+            for (int i = 0; i < count; i++)
+                names[i] = names[i].Trim();
+
             return names;
         }
     }
