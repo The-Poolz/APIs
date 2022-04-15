@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UniversalAPI\UniversalAPI.csproj" />
+    <ProjectReference Include="..\QuickSQL\QuickSQL.csproj" />
   </ItemGroup>
 
 </Project>

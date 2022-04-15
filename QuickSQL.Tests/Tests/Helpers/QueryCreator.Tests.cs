@@ -1,6 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using UniversalAPI.Helpers;
+﻿using QuickSQL;
+using QuickSQL.Helpers;
 using Xunit;
 
 namespace UniversalAPI.Tests.Helpers
@@ -11,7 +10,7 @@ namespace UniversalAPI.Tests.Helpers
         public void GetCommandQuery()
         {
             // Arrange
-            var requestSEttings = new APIRequest
+            var requestSEttings = new Request
             {
                 SelectedTables = "SignUp, LeaderBoard",
                 SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",

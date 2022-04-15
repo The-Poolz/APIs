@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 
-namespace UniversalAPI
+namespace QuickSQL
 {
     /// <summary>
-    /// API request settings.
+    /// Set up an object for work <see cref="QuickSql.InvokeRequest(Request, DbContext)"/>
     /// </summary>
-    /// 
-    public class APIRequest
+    public class Request
     {
         /// <summary>
         /// Pass a table(s) from which to take data.<br/>
