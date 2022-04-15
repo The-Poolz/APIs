@@ -5,7 +5,7 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UniversalAPI.Tests
+namespace QuickSQL.Tests
 {
     public static class MockContext
     {
