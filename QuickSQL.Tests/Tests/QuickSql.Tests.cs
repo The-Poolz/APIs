@@ -1,20 +1,18 @@
-using Interfaces;
-using System.Collections.Generic;
 using Xunit;
-using Newtonsoft.Json;
+using QuickSQL;
 
 namespace UniversalAPI.Tests
 {
-    public class APIClientTests : TestData
+    public class QuickSqlTests : TestData
     {
         [Theory, MemberData(nameof(GetTestData))]
-        public void InvokeRequest(APIRequest requestSettings, string expected)
+        public void InvokeRequest(Request requestSettings, string expected)
         {
             // Arrange
             var dataContext = MockContext.GetTestDataContext();
 
             // Act
-            var result = APIClient.InvokeRequest(requestSettings, dataContext);
+            var result = QuickSql.InvokeRequest(requestSettings, dataContext);
 
             // Assert
             Assert.NotNull(result);

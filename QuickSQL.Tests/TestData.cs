@@ -12,7 +12,7 @@ namespace UniversalAPI.Tests
             return new List<object[]>
             {
                 new object[] {
-                    new APIRequest {
+                    new Request {
                         SelectedTables = "SignUp, LeaderBoard",
                         SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
                         WhereCondition = "SignUp.Id = 3, SignUp.Address = '0x3a31ee5557c9369c35573496555b1bc93553b553'",
@@ -21,7 +21,7 @@ namespace UniversalAPI.Tests
                     mysignupExpected
                 },
                 new object[] {
-                    new APIRequest {
+                    new Request {
                         SelectedTables = "Wallets",
                         SelectedColumns = "*",
                         WhereCondition = "Id = 3, Owner = '0x3a31ee5557c9369c35573496555b1bc93553b553'"
@@ -29,7 +29,7 @@ namespace UniversalAPI.Tests
                     walletExpected
                 },
                 new object[] {
-                    new APIRequest {
+                    new Request {
                         SelectedTables = "TokenBalances",
                         SelectedColumns = "Token, Owner, Amount"
                     },

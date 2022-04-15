@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
-    <ProjectReference Include="..\UniversalAPI\UniversalAPI.csproj" />
+    <ProjectReference Include="..\QuickSQL\QuickSQL.csproj" />
   </ItemGroup>
 
 </Project>

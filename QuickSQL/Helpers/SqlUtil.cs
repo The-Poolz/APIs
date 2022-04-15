@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace UniversalAPI.Helpers
+namespace QuickSQL.Helpers
 {
     public static class SqlUtil
     {

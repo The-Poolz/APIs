@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UniversalAPI.Helpers
+namespace QuickSQL.Helpers
 {
     /// <summary>
     /// Provides methods for creating SQL query string
@@ -11,11 +11,11 @@ namespace UniversalAPI.Helpers
         /// <summary>
         /// Creates an SQL query string.
         /// </summary>
-        /// <param name="requestSettings">Pass <see cref="APIRequest"/> object with request settings.</param>
+        /// <param name="requestSettings">Pass <see cref="Request"/> object with request settings.</param>
         /// <returns>Returns a SQL query string.</returns>
-        public static string CreateCommandQuery(APIRequest requestSettings)
+        public static string CreateCommandQuery(Request requestSettings)
         {
-            if (!APIRequestValidator.IsValidAPIRequest(requestSettings))
+            if (!RequestValidator.IsValidAPIRequest(requestSettings))
                 return null;
 
             List<string> tablesName = ConvertToList(requestSettings.SelectedTables);
@@ -30,7 +30,7 @@ namespace UniversalAPI.Helpers
             return commandQuery;
         }
 
-        private static string CreateSelectQuery(string tableName, APIRequest requestSettings)
+        private static string CreateSelectQuery(string tableName, Request requestSettings)
         {
             string columns = requestSettings.SelectedColumns;
             string commandQuery = $"SELECT {columns} FROM {tableName} ";
@@ -44,7 +44,7 @@ namespace UniversalAPI.Helpers
 
             return commandQuery;
         }
-        private static string CreateJoinQuery(List<string> tablesName, APIRequest requestSettings)
+        private static string CreateJoinQuery(List<string> tablesName, Request requestSettings)
         {
             string columns = requestSettings.SelectedColumns;
             string joinCondition = requestSettings.JoinCondition;

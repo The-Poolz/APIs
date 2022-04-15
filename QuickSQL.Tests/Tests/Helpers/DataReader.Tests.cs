@@ -1,4 +1,6 @@
-﻿using UniversalAPI.Helpers;
+﻿using Microsoft.EntityFrameworkCore;
+using QuickSQL;
+using QuickSQL.Helpers;
 using Xunit;
 
 namespace UniversalAPI.Tests.Helpers
@@ -6,12 +8,12 @@ namespace UniversalAPI.Tests.Helpers
     public class DataReaderTests : TestData
     {
         [Theory, MemberData(nameof(GetTestData))]
-        public void GetJsonData(APIRequest requestSettings, string expected)
+        public void GetJsonData(Request requestSettings, string expected)
         {
             var commandQuery = QueryCreator.CreateCommandQuery(requestSettings);
             var context = MockContext.GetTestDataContext();
 
-            var result = DataReader.GetJsonData(commandQuery, context);
+            var result = DataReader.GetJsonData(commandQuery, context.Database.GetConnectionString());
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
