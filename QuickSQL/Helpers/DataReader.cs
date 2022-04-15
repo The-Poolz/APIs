@@ -8,6 +8,9 @@ namespace QuickSQL.Helpers
     {
         public static string GetJsonData(string commandQuery, string connectionString)
         {
+            if (!CheckSqlInjection(commandQuery))
+                return null;
+
             var jsonResult = new StringBuilder();
             try
             {
@@ -31,6 +34,22 @@ namespace QuickSQL.Helpers
                 Console.WriteLine(ex.ToString());
             }
             return jsonResult.ToString();
+        }
+
+        private static bool CheckSqlInjection(string commandQuery)
+        {
+            string inj_str = "'|and|exec|insert|select|delete|update|count|*|%|chr|mid|master|truncate|char|declare|;|or|-|+|,";
+            string[] inj_stra = inj_str.Split("|");
+
+            int inj_count = inj_stra.Length;
+            for (int i = 0; i < inj_count; i++)
+            {
+                if (commandQuery.IndexOf(inj_stra[i]) >= 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
