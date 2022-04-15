@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace UniversalAPI.Tests
+namespace QuickSQL.Tests
 {
     public class TestData
     {

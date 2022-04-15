@@ -1,7 +1,6 @@
 using Xunit;
-using QuickSQL;
 
-namespace UniversalAPI.Tests
+namespace QuickSQL.Tests
 {
     public class QuickSqlTests : TestData
     {

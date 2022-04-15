@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using QuickSQL;
 using QuickSQL.Helpers;
 using Xunit;
 
-namespace UniversalAPI.Tests.Helpers
+namespace QuickSQL.Tests.Helpers
 {
     public class DataReaderTests : TestData
     {
