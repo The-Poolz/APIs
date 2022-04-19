@@ -4,7 +4,7 @@
 CREATE USER 'QuickSQL' IDENTIFIED BY 'QuickSQL';
 
 # Create DB 
-CREATE DATABASE IF NOT EXISTS `QuickSQL.Test` WITH OWNER = 'QuickSQL';
+CREATE DATABASE IF NOT EXISTS `QuickSQL.Test`;
 USE `QuickSQL.Test`;
 
 # Create table LeaderBoard with data
