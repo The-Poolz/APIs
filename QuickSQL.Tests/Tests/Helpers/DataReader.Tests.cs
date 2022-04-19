@@ -20,6 +20,7 @@ namespace QuickSQL.Tests.Helpers
             var commandQuery = QueryCreator.CreateCommandQuery(request);
             var context = MockContext.GetTestDataContext();
             context.Database.SetConnectionString(@"Data Source=127.0.0.1;User id=QuickSQL;Password=QuickSQL;Initial Catalog=QuickSQL.Test");
+            context.Database.OpenConnection();
 
             var result = DataReader.GetJsonData(commandQuery, context.Database.GetConnectionString());
 
@@ -28,6 +29,7 @@ namespace QuickSQL.Tests.Helpers
             var resultType = Assert.IsType<string>(result);
             string resultJson = Assert.IsAssignableFrom<string>(resultType);
             Assert.Equal(expected, resultJson);
+            context.Database.CloseConnection();
         }
     }
 }
