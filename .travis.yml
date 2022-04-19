@@ -3,6 +3,8 @@ mono: none
 dotnet: 3.1
 services:
   - mysql
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS test; SHOW DATABASES;'
 install:
 - dotnet restore
 
