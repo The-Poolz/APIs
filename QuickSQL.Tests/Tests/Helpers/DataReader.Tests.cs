@@ -19,7 +19,7 @@ namespace QuickSQL.Tests.Helpers
             var expected = "[{\"PoolId\":3,\"Rank\":\"3\",\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\",\"Amount\":\"250.02109769151781894\"}]";
             var commandQuery = QueryCreator.CreateCommandQuery(request);
             var context = MockContext.GetTestDataContext();
-            context.Database.SetConnectionString(@"Data Source=127.0.0.1;User id=root;Password=;Initial Catalog=QuickSQL.Test");
+            context.Database.SetConnectionString(@"Server=127.0.0.1;Database=QuickSQL.Test;Uid=root;Pwd=;");
             context.Database.OpenConnection();
 
             var result = DataReader.GetJsonData(commandQuery, context.Database.GetConnectionString());
