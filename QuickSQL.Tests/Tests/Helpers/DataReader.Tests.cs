@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuickSQL.Helpers;
 using Xunit;
+using System;
 
 namespace QuickSQL.Tests.Helpers
 {
