@@ -6,11 +6,20 @@ namespace QuickSQL.Tests.Helpers
 {
     public class DataReaderTests : TestData
     {
-        [Theory, MemberData(nameof(GetTestData))]
-        public void GetJsonData(Request requestSettings, string expected)
+        [Fact]
+        public void GetJsonData()
         {
-            var commandQuery = QueryCreator.CreateCommandQuery(requestSettings);
+            var request = new Request
+            {
+                SelectedTables = "SignUp, LeaderBoard",
+                SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
+                WhereCondition = "SignUp.Id = 3, SignUp.Address = '0x3a31ee5557c9369c35573496555b1bc93553b553'",
+                JoinCondition = "SignUp.Address = LeaderBoard.Owner"
+            };
+            var expected = "[{\"PoolId\":3,\"Rank\":\"3\",\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\",\"Amount\":\"250.02109769151781894\"}]";
+            var commandQuery = QueryCreator.CreateCommandQuery(request);
             var context = MockContext.GetTestDataContext();
+            context.Database.SetConnectionString(@"Data Source=QuickSQL.Test;User id=root;Password=;");
 
             var result = DataReader.GetJsonData(commandQuery, context.Database.GetConnectionString());
 
