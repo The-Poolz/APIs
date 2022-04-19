@@ -2,24 +2,50 @@
 CREATE USER 'dev'@'localhost' IDENTIFIED BY 'dev';
 GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON *.* TO 'dev'@'localhost';
 
-# Create DB
+DROP DATABASE `QuickSQL.Test`;
+
 CREATE DATABASE IF NOT EXISTS `QuickSQL.Test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `QuickSQL.Test`;
 
-# Create Table
-CREATE TABLE IF NOT EXISTS `users` (
-  `user_id` int(11) NOT NULL,
-  `created_on` timestamp NULL DEFAULT NULL,
-  `modified_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `username` varchar(50) DEFAULT NULL,
-  `salt` varchar(20) DEFAULT NULL,
-  `password` varchar(50) DEFAULT NULL,
-  `email` varchar(150) DEFAULT NULL,
-  `firstname` varchar(50) DEFAULT NULL,
-  `lastname` varchar(50) DEFAULT NULL,
-  `dob` date DEFAULT NULL
+CREATE TABLE IF NOT EXISTS `LeaderBoard` (
+  `Id` int(100) NOT NULL,
+  `Rank` varchar(200) DEFAULT NULL,
+  `Owner` varchar(200) DEFAULT NULL,
+  `Amount` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`);
-ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `LeaderBoard`
+  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `LeaderBoard`
+  MODIFY `Id` int(100) NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE IF NOT EXISTS `SignUp` (
+  `Id` int(100) NOT NULL,
+  `Address` varchar(200) DEFAULT NULL,
+  `PoolId` int(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `SignUp`
+  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `SignUp`
+  MODIFY `Id` int(100) NOT NULL AUTO_INCREMENT;
+  
+CREATE TABLE IF NOT EXISTS `TokenBalances` (
+  `Id` int(100) NOT NULL,
+  `Token` varchar(200) DEFAULT NULL,
+  `Owner` varchar(200) DEFAULT NULL,
+  `Amount` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `TokenBalances`
+  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `TokenBalances`
+  MODIFY `Id` int(100) NOT NULL AUTO_INCREMENT;
+  
+CREATE TABLE IF NOT EXISTS `Wallets` (
+  `Id` int(100) NOT NULL,
+  `Owner` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `Wallets`
+  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `Wallets`
+  MODIFY `Id` int(100) NOT NULL AUTO_INCREMENT;
+  
+SHOW TABLES;
