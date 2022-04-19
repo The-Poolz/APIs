@@ -68,3 +68,7 @@ INSERT INTO `Wallets` (`Id`, `Owner`) VALUES (3, N'0x3a31ee5557c9369c35573496555
 INSERT INTO `Wallets` (`Id`, `Owner`) VALUES (4, N'0x4a71ee5577c9d79c37577496555b1bc95558b554');
   
 SHOW TABLES;
+SELECT * FROM `LeaderBoard`;
+SELECT * FROM `SignUp`;
+SELECT * FROM `TokenBalances`;
+SELECT * FROM `Wallets`;
