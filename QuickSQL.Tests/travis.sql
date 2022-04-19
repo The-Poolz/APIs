@@ -1,9 +1,10 @@
 # Create Testuser
-CREATE USER 'dev'@'localhost' IDENTIFIED BY 'dev';
-GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON *.* TO 'dev'@'localhost';
+# CREATE USER 'dev'@'localhost' IDENTIFIED BY 'dev';
+# GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON *.* TO 'dev'@'localhost';
+CREATE USER QuickSQL WITH PASSWORD 'QuickSQL';
 
 # Create DB 
-CREATE DATABASE IF NOT EXISTS `QuickSQL.Test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS `QuickSQL.Test` WITH OWNER = 'QuickSQL';
 USE `QuickSQL.Test`;
 
 # Create table LeaderBoard with data
