@@ -10,7 +10,7 @@ namespace QuickSQL.Tests
     public static class MockContext
     {
         /* Emulate Data DB with data */
-        public static DataContext GetTestDataContext()
+        public static DataContextConnectionWrapper GetTestDataContext()
         {
             /* Initialize TokenBalance table */
             var tokenBalance = new List<TokenBalance>
@@ -77,7 +77,7 @@ namespace QuickSQL.Tests
             mockSetSignUp.As<IQueryable<SignUp>>().Setup(m => m.GetEnumerator()).Returns(signUp.GetEnumerator);
 
             /* Create and setting context */
-            var mockContext = new Mock<DataContext>();
+            var mockContext = new Mock<DataContextConnectionWrapper>();
 
             mockContext.Setup(t => t.TokenBalances).Returns(mockSetTokenBalance.Object);
             mockContext.Setup(t => t.Set<TokenBalance>()).Returns(mockSetTokenBalance.Object);
@@ -93,5 +93,17 @@ namespace QuickSQL.Tests
 
             return mockContext.Object;
         }
+    }
+
+    public class DataContextConnectionWrapper : DataContext
+    {
+        private string ConnectionString;
+
+        public void SetConnectionString(string connectionString)
+        {
+            if (connectionString != null || connectionString != string.Empty)
+                ConnectionString = connectionString;
+        }
+        public string GetConnectionString() => ConnectionString;
     }
 }

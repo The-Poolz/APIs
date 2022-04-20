@@ -1,34 +1,30 @@
 using Microsoft.Data.SqlClient;
-using System;
 using System.Text;
 
 namespace QuickSQL.Helpers
 {
     public static class DataReader
     {
+        const string emptyJson = "[]";
         public static string GetJsonData(string commandQuery, string connectionString)
         {
-            var jsonResult = new StringBuilder();
-            try
+            using (var connection = SqlUtil.GetConnection(connectionString))
             {
-                using (var connection = SqlUtil.GetConnection(connectionString))
-                {
-                    connection.Open();
-                    var reader = SqlUtil.GetReader(commandQuery, connection);
-                    if (!reader.HasRows)
-                        jsonResult.Append("[]");
+                connection.Open();
+                var reader = SqlUtil.GetReader(commandQuery, connection);
 
-                    while (reader.Read())
-                    {
-                        jsonResult.Append(reader.GetValue(0).ToString());
-                    }
-                    reader.Close();
-                }
-                return jsonResult.ToString();
+                if (!reader.HasRows)
+                    return emptyJson;
+
+                return ReadSql(reader);
             }
-            catch (SqlException ex)
+        }
+        public static string ReadSql(SqlDataReader reader)
+        {
+            var jsonResult = new StringBuilder();
+            while (reader.Read())
             {
-                Console.WriteLine(ex.ToString());
+                jsonResult.Append(reader.GetValue(0).ToString());
             }
             return jsonResult.ToString();
         }
