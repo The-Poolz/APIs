@@ -21,7 +21,8 @@ namespace QuickSQL.Tests.Helpers
             var commandQuery = QueryCreator.CreateCommandQuery(request);
             var context = MockContext.GetTestDataContext();
             //context.SetConnectionString(@"Data Source=127.0.0.1;User id=root;Password=;Initial Catalog=QuickSQL.Test");
-            context.SetConnectionString(@"Server=127.0.0.1;Uid=root;Pwd=;Database=QuickSQL.Test");
+            //context.SetConnectionString(@"Server=127.0.0.1;Uid=root;Pwd=;Database=QuickSQL.Test");
+            context.SetConnectionString(@"server=127.0.0.1;user id=root;password=;database=QuickSQL.Test");
 
             var result = DataReader.GetJsonData(commandQuery, context.GetConnectionString());
 
