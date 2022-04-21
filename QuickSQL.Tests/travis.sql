@@ -2,7 +2,7 @@ CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';
 GRANT ALL PRIVILEGES ON * . * TO 'test'@'localhost';
 
 # Create DB 
-SET @dbConnection = CREATE DATABASE IF NOT EXISTS `QuickSQL.Test`;  
+CREATE DATABASE IF NOT EXISTS `QuickSQL.Test`;  
 USE `QuickSQL.Test`;
 
 # Create table LeaderBoard with data
