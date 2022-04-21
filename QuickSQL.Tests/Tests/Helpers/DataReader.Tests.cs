@@ -11,7 +11,7 @@ namespace QuickSQL.Tests.Helpers
         public void GetJsonData()
         {
             //string connectionString = @"server=127.0.0.1;user id=root;password=;database=QuickSQL.Test";
-            string connectionString = @"Server=127.0.0.1;Uid=root;Pwd=;Database=QuickSQL.Test";
+            string connectionString = @"Server=127.0.0.1;Uid=test;Pwd=test;Database=QuickSQL.Test";
             var contextOptions = new DbContextOptionsBuilder<DbContext>()
                 .UseSqlServer(connectionString).Options;
             var context = new DbContext(contextOptions);
