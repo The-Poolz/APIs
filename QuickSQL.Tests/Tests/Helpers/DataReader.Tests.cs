@@ -26,7 +26,7 @@ namespace QuickSQL.Tests.Helpers
             var expected = "[{\"PoolId\":3,\"Rank\":\"3\",\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\",\"Amount\":\"250.02109769151781894\"}]";
             var commandQuery = QueryCreator.CreateCommandQuery(request);
 
-            string connectionString = @$"{Environment.GetEnvironmentVariable("DATABASE_URL")};user id=root;password=;database=QuickSQL.Test;";
+            string connectionString = @$"server=localhost;user id=root;password=;database=QuickSQL.Test";
 
             var result = DataReader.GetJsonData(commandQuery, connectionString);
 
