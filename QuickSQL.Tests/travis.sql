@@ -72,4 +72,4 @@ SELECT * FROM `SignUp`;
 SELECT * FROM `TokenBalances`;
 SELECT * FROM `Wallets`;
 
-select (@dbConnection)
+STATUS;
