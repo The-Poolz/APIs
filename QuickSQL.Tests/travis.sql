@@ -2,9 +2,6 @@ CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';
 GRANT ALL PRIVILEGES ON * . * TO 'test'@'localhost';
 
 # Create DB 
-
-DECLARE @dbConnection VARCHAR(200); 
-
 SET @dbConnection = CREATE DATABASE IF NOT EXISTS `QuickSQL.Test`;  
 USE `QuickSQL.Test`;
 
