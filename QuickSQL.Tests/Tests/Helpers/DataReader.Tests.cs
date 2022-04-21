@@ -11,10 +11,10 @@ namespace QuickSQL.Tests.Helpers
         public void GetJsonData()
         {
             //string connectionString = @"server=127.0.0.1;user id=root;password=;database=QuickSQL.Test";
-            string connectionString = @"Server=127.0.0.1;Uid=test;Pwd=test;Database=QuickSQL.Test";
-            var contextOptions = new DbContextOptionsBuilder<DbContext>()
-                .UseSqlServer(connectionString).Options;
-            var context = new DbContext(contextOptions);
+            //string connectionString = @"Server=127.0.0.1;Uid=test;Pwd=test;Database=QuickSQL.Test";
+            //var contextOptions = new DbContextOptionsBuilder<DbContext>()
+            //    .UseSqlServer(connectionString).Options;
+            //var context = new DbContext(contextOptions);
 
             var request = new Request
             {
@@ -26,7 +26,9 @@ namespace QuickSQL.Tests.Helpers
             var expected = "[{\"PoolId\":3,\"Rank\":\"3\",\"Owner\":\"0x3a31ee5557c9369c35573496555b1bc93553b553\",\"Amount\":\"250.02109769151781894\"}]";
             var commandQuery = QueryCreator.CreateCommandQuery(request);
 
-            var result = DataReader.GetJsonData(commandQuery, context.Database.GetConnectionString());
+            string connectionString = $"{Environment.GetEnvironmentVariable("DATABASE_URL")};user id=root;password=;database=QuickSQL.Test;";
+
+            var result = DataReader.GetJsonData(commandQuery, connectionString);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
