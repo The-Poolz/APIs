@@ -1,5 +1,3 @@
-﻿GRANT ALL ON *.* TO `root`;
-
 # Create DB 
 CREATE DATABASE IF NOT EXISTS `QuickSQL.Test`;
 USE `QuickSQL.Test`;
