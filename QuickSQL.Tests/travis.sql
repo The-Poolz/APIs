@@ -1,3 +1,6 @@
+CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';
+GRANT ALL PRIVILEGES ON * . * TO 'test'@'localhost';
+
 # Create DB 
 CREATE DATABASE IF NOT EXISTS `QuickSQL.Test`;
 USE `QuickSQL.Test`;
