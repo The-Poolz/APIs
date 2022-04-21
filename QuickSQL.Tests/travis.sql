@@ -2,7 +2,7 @@ CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';
 GRANT ALL PRIVILEGES ON * . * TO 'test'@'localhost';
 
 # Create DB 
-CREATE DATABASE IF NOT EXISTS `QuickSQL.Test`;
+CREATE DATABASE IF NOT EXISTS `QuickSQL.Test`;  
 USE `QuickSQL.Test`;
 
 # Create table LeaderBoard with data
@@ -71,3 +71,5 @@ SELECT * FROM `LeaderBoard`;
 SELECT * FROM `SignUp`;
 SELECT * FROM `TokenBalances`;
 SELECT * FROM `Wallets`;
+
+select (@dbConnection)
