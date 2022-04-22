@@ -32,7 +32,7 @@ namespace QuickSQL
             }
 
             //== Reading data with SqlDataReader ==//
-            string result = DataReader.GetJsonData(commandQuery, context.Database.GetConnectionString());
+            string result = MySqlDataReader.GetJsonData(commandQuery, context.Database.GetConnectionString());
 
             ConsoleOutput(request, commandQuery, result, startTime);
             return result;
