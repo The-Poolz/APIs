@@ -61,7 +61,7 @@ namespace QuickSQL.Helpers
                 string condition = string.Join(" AND ", ConvertToList(requestSettings.WhereCondition));
                 commandQuery += $"WHERE {condition} ";
             }
-            commandQuery += "FOR JSON PATH";
+            commandQuery += "JSON_EXTRACT()";
 
             return commandQuery;
         }
