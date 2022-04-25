@@ -18,50 +18,30 @@ namespace QuickSQL.Helpers
             if (!RequestValidator.IsValidAPIRequest(requestSettings))
                 return null;
 
-            List<string> tablesName = ConvertToList(requestSettings.SelectedTables);
-            tablesName = tablesName.Select(str => str.Replace(" ", string.Empty)).ToList();     // Remove all whitespace
-            string commandQuery;
+            string tableName = requestSettings.SelectedTables;
+            List<string> columns = ConvertToList(requestSettings.SelectedColumns);
+            //Create parse columns to json data
+            string jsonColumns = "JSON_ARRAYAGG(JSON_OBJECT(";
+            foreach (var column in columns)
+            {
+                if (columns.Last() == column)
+                {
+                    jsonColumns += $"'{column}',{column}";
+                }
+                else
+                {
+                    jsonColumns += $"'{column}',{column}, ";
+                }
+            }
+            jsonColumns += "))";
 
-            if (tablesName.Count == 1)
-                commandQuery = CreateSelectQuery(tablesName.First(), requestSettings);
-            else
-                commandQuery = CreateJoinQuery(tablesName, requestSettings);
-
-            return commandQuery;
-        }
-
-        private static string CreateSelectQuery(string tableName, Request requestSettings)
-        {
-            string columns = requestSettings.SelectedColumns;
-            string commandQuery = $"SELECT {columns} FROM {tableName} ";
+            string commandQuery = $"SELECT {jsonColumns} FROM {tableName}";
 
             if (!string.IsNullOrEmpty(requestSettings.WhereCondition))
             {
                 string condition = string.Join(" AND ", ConvertToList(requestSettings.WhereCondition));
-                commandQuery += ($"WHERE {condition} ");
+                commandQuery += ($" WHERE {condition}");
             }
-            commandQuery += "FOR JSON PATH";
-
-            return commandQuery;
-        }
-        private static string CreateJoinQuery(List<string> tablesName, Request requestSettings)
-        {
-            string columns = requestSettings.SelectedColumns;
-            string joinCondition = requestSettings.JoinCondition;
-            string firstTable = tablesName.ToArray()[0];
-            string secondTable = tablesName.ToArray()[1];
-            string commandQuery =
-                $"SELECT {columns} " +
-                $"FROM {firstTable} " +
-                $"INNER JOIN {secondTable} " +
-                $"ON {joinCondition} ";
-
-            if (!string.IsNullOrWhiteSpace(requestSettings.WhereCondition))
-            {
-                string condition = string.Join(" AND ", ConvertToList(requestSettings.WhereCondition));
-                commandQuery += $"WHERE {condition} ";
-            }
-            commandQuery += "FOR JSON PATH";
 
             return commandQuery;
         }

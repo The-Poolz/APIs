@@ -40,13 +40,5 @@ namespace QuickSQL
         /// </remarks>
         public string WhereCondition { get; set; }
 
-        /// <summary>
-        /// Enter condition for joining tables.
-        /// </summary>
-        /// <remarks>
-        /// Example (condition): "FirstTableName.Id = SecondTableName.Rank"<br/>
-        /// Example (conditions): "FirstTableName.Id = SecondTableName.Rank, FirstTableName.Name = SecondTableName.UserName" 
-        /// </remarks>
-        public string JoinCondition { get; set; }
     }
 }
