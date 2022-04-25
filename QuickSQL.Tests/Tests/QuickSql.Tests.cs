@@ -4,6 +4,7 @@ namespace QuickSQL.Tests
 {
     public class QuickSqlTests
     {
+        [Fact]
         public void InvokeRequest()
         {
             var request = new Request
