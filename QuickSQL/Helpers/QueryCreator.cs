@@ -18,20 +18,16 @@ namespace QuickSQL.Helpers
             if (!RequestValidator.IsValidAPIRequest(requestSettings))
                 return null;
 
-            string tableName = requestSettings.SelectedTables;
+            string tableName = requestSettings.SelectedTable;
             List<string> columns = ConvertToList(requestSettings.SelectedColumns);
             //Create parse columns to json data
             string jsonColumns = "JSON_ARRAYAGG(JSON_OBJECT(";
             foreach (var column in columns)
             {
                 if (columns.Last() == column)
-                {
                     jsonColumns += $"'{column}',{column}";
-                }
                 else
-                {
                     jsonColumns += $"'{column}',{column}, ";
-                }
             }
             jsonColumns += "))";
 

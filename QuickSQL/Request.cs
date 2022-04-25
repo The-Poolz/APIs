@@ -1,44 +1,36 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
-
-namespace QuickSQL
+﻿namespace QuickSQL
 {
     /// <summary>
-    /// Set up an object for work <see cref="QuickSql.InvokeRequest(Request, DbContext)"/>
+    /// Set up an object for work <see cref="QuickSql.InvokeRequest(Request, string)"/>
     /// </summary>
     public class Request
     {
         /// <summary>
-        /// Pass a table(s) from which to take data.<br/>
-        /// You can pass two table names to join tables on the <see cref="JoinCondition"/>.<br/>
+        /// Pass a table from which to take data.<br/>
         /// This is a required parameter.
         /// </summary>
         /// <remarks>
-        /// Example: "FirstTableName" or "FirstTableName, SecondTableName"
+        /// Example: "TableName"
         /// </remarks>
-        [NotNull]
-        public string SelectedTables { get; set; }
+        public string SelectedTable { get; set; }
 
         /// <summary>
         /// Pass columns from which to take data.<br/>
-        /// Default value is "*" which means select all data from table(s).<br/>
         /// This is a required parameter.
         /// </summary>
         /// <remarks>
-        /// Example (If one table): "Id, Name, Address" or "FirstTableName.Id, FirstTableName.Name, ..."<br/>
-        /// Example (If two tables): "FirstTableName.Id, FirstTableName.Name, SecondTableName.Address" 
+        /// Example : "Id, Name, Address"
         /// </remarks>
-        [NotNull]
-        public string SelectedColumns { get; set; } = "*";
+        public string SelectedColumns { get; set; }
 
         /// <summary>
-        /// Enter condition for search tables.
+        /// Enter condition for search tables.<br/>
+        /// Remarks: String parameter must be in quotes(it is default SQL logic)
         /// </summary>
         /// <remarks>
-        /// Example (condition): "FirstTableName.Id = SecondTableName.Rank"<br/>
-        /// Example (conditions): "FirstTableName.Id = SecondTableName.Rank, FirstTableName.Name = SecondTableName.UserName" 
+        /// Example (condition): "FirstTableName.Id = 1" or "Id = 1"<br/>
+        /// Example (conditions): "Id = 1, Name = 'String parameter must be in quotes'" 
         /// </remarks>
         public string WhereCondition { get; set; }
-
     }
 }
