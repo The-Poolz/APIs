@@ -62,15 +62,13 @@ namespace QuickSQL
             else
             {
                 Console.WriteLine("Received request:");
-                Console.WriteLine($"    SelectedTables: {request.SelectedTables}");
+                Console.WriteLine($"    SelectedTable: {request.SelectedTable}");
                 Console.WriteLine($"    SelectedColumns: {request.SelectedColumns}");
                 if (request.WhereCondition != null)
                     Console.WriteLine($"    WhereCondition: {request.WhereCondition}");
-                if (request.JoinCondition != null)
-                    Console.WriteLine($"    JoinCondition: {request.JoinCondition}");
             }
         }
         private static bool CheckConsoleOutputEnabled() =>
-            ConsoleOutputEnabled ? true : false;
+            ConsoleOutputEnabled;
     }
 }

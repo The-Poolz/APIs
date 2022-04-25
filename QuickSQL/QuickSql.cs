@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using System;
 using QuickSQL.Helpers;
 
@@ -18,7 +17,7 @@ namespace QuickSQL
         /// <param name="request">Pass <see cref="Request"/> object with request settings.</param>
         /// <param name="context">Context, storing tables for data fetching.</param>
         /// <returns>Returns JSON string data if data read is success, or return null if operation failed.</returns>
-        public static string InvokeRequest(Request request, DbContext context)
+        public static string InvokeRequest(Request request, string connectionString)
         {
             // Create start program time
             var startTime = DateTime.UtcNow;
@@ -32,7 +31,7 @@ namespace QuickSQL
             }
 
             //== Reading data with SqlDataReader ==//
-            string result = DataReader.GetJsonData(commandQuery, context.Database.GetConnectionString());
+            string result = MySqlDataReader.GetJsonData(commandQuery, connectionString);
 
             ConsoleOutput(request, commandQuery, result, startTime);
             return result;

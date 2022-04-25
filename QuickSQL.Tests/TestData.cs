@@ -13,16 +13,15 @@ namespace QuickSQL.Tests
             {
                 new object[] {
                     new Request {
-                        SelectedTables = "SignUp, LeaderBoard",
+                        SelectedTable = "SignUp, LeaderBoard",
                         SelectedColumns = "SignUp.PoolId, LeaderBoard.Rank, LeaderBoard.Owner, LeaderBoard.Amount",
                         WhereCondition = "SignUp.Id = 3, SignUp.Address = '0x3a31ee5557c9369c35573496555b1bc93553b553'",
-                        JoinCondition = "SignUp.Address = LeaderBoard.Owner"
                     },
                     mysignupExpected
                 },
                 new object[] {
                     new Request {
-                        SelectedTables = "Wallets",
+                        SelectedTable = "Wallets",
                         SelectedColumns = "*",
                         WhereCondition = "Id = 3, Owner = '0x3a31ee5557c9369c35573496555b1bc93553b553'"
                     },
@@ -30,7 +29,7 @@ namespace QuickSQL.Tests
                 },
                 new object[] {
                     new Request {
-                        SelectedTables = "TokenBalances",
+                        SelectedTable = "TokenBalances",
                         SelectedColumns = "Token, Owner, Amount"
                     },
                     tokenBalanceExpected
