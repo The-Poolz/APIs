@@ -3,8 +3,8 @@ mono: none
 dotnet: 3.1
 env:
   global:
-    - DATABASE_NAME=QuickSQL.Test
-    - DATABASE_URL=mysql://root@localhost/$DATABASE_NAME
+    - IsTravisCI=true
+    - TravisCIConnectionString=server=127.0.0.1;user id=root;password=;database=QuickSQL.Test
 services:
   - mysql
 before_install:
