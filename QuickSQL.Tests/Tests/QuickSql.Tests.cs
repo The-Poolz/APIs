@@ -1,4 +1,5 @@
 using Xunit;
+using System;
 
 namespace QuickSQL.Tests
 {
@@ -10,13 +11,24 @@ namespace QuickSQL.Tests
             var request = new Request
             {
                 SelectedTable = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount"
+                SelectedColumns = "Token, Owner, Amount",
+                WhereCondition = "Id = 1"
             };
-            var expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}, {\"Owner\": \"0x2a01ee5557c9d69c35577496555b1bc95558b552\", \"Token\": \"Poolz\", \"Amount\": \"300\"}, {\"Owner\": \"0x3a31ee5557c9369c35573496555b1bc93553b553\", \"Token\": \"ETH\", \"Amount\": \"200\"}, {\"Owner\": \"0x4a71ee5577c9d79c37577496555b1bc95558b554\", \"Token\": \"BTH\", \"Amount\": \"100\"}]";
-            string connectionString = @$"server=127.0.0.1;user id=root;password=;database=QuickSQL.Test";
+            string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
+            string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
+            string result;
 
             // Act
-            var result = QuickSql.InvokeRequest(request, connectionString);
+            if (Convert.ToBoolean(isTravisCi))
+            {
+                string connectionString = Environment.GetEnvironmentVariable("TravisCIConnectionString");
+                result = QuickSql.InvokeRequest(request, connectionString, Providers.MySql);
+            }
+            else
+            {
+                string connectionString = LocalConnection.ConnectionString;
+                result = QuickSql.InvokeRequest(request, connectionString, Providers.MySql);
+            }
 
             // Assert
             Assert.NotNull(result);
