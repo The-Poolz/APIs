@@ -10,7 +10,7 @@ namespace QuickSQL.Tests
         {
             var request = new Request
             {
-                SelectedTable = "TokenBalances",
+                TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
                 WhereCondition = "Id = 1"
             };

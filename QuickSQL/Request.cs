@@ -12,7 +12,7 @@
         /// <remarks>
         /// Example: "TableName"
         /// </remarks>
-        public string SelectedTable { get; set; }
+        public string TableName { get; set; }
 
         /// <summary>
         /// Pass columns from which to take data.<br/>

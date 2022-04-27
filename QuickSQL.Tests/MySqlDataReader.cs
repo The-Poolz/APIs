@@ -1,5 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
-using QuickSQL.DataReaders;
+using QuickSQL.DataReader;
 using System.Data.Common;
 
 namespace QuickSQL.Tests

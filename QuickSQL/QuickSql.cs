@@ -1,5 +1,5 @@
 using QuickSQL.QueryCreators;
-using QuickSQL.DataReaders;
+using QuickSQL.DataReader;
 
 namespace QuickSQL
 {
@@ -23,7 +23,7 @@ namespace QuickSQL
             }
             else if (dataReader.Provider == Providers.MicrosoftSqlServer)
             {
-                string commandQuery = MSQLSQueryCreator.CreateCommandQuery(request);
+                string commandQuery = SqlQueryCreator.CreateCommandQuery(request);
                 result = dataReader.GetJsonData(commandQuery, connectionString);
             }
             return result;

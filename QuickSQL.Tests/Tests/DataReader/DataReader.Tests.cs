@@ -2,7 +2,7 @@
 using Xunit;
 using System;
 
-namespace QuickSQL.Tests.Helpers
+namespace QuickSQL.Tests.DataReader
 {
     public class DataReaderTests
     {
@@ -11,7 +11,7 @@ namespace QuickSQL.Tests.Helpers
         {
             var request = new Request
             {
-                SelectedTable = "TokenBalances",
+                TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
                 WhereCondition = "Id = 1"
             };

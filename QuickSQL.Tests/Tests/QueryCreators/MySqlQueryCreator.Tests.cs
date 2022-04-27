@@ -1,9 +1,9 @@
 ﻿using QuickSQL.QueryCreators;
 using Xunit;
 
-namespace QuickSQL.Tests.Helpers
+namespace QuickSQL.Tests.QueryCreators
 {
-    public class QueryCreatorTests
+    public class MySqlQueryCreatorTests
     {
         [Fact]
         public void GetCommandQuery()
@@ -11,7 +11,7 @@ namespace QuickSQL.Tests.Helpers
             // Arrange
             var request = new Request
             {
-                SelectedTable = "TokenBalances",
+                TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount"
             };
             string expected = "SELECT JSON_ARRAYAGG(JSON_OBJECT('Token',Token, 'Owner',Owner, 'Amount',Amount)) FROM TokenBalances";
