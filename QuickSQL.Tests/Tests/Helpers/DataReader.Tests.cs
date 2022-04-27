@@ -25,6 +25,7 @@ namespace QuickSQL.Tests.Helpers
             if (Convert.ToBoolean(isTravisCi))
             {
                 string connectionString = Environment.GetEnvironmentVariable("TravisCIConnectionString");
+                Console.WriteLine($"DataReaderTests connectionString - {connectionString}");
                 result = MySqlDataReader.GetJsonData(commandQuery, connectionString);
             }
             else
