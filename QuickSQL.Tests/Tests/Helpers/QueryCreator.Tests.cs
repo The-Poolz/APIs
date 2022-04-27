@@ -1,4 +1,4 @@
-﻿using QuickSQL.Helpers;
+﻿using QuickSQL.QueryCreators;
 using Xunit;
 
 namespace QuickSQL.Tests.Helpers
@@ -17,7 +17,7 @@ namespace QuickSQL.Tests.Helpers
             string expected = "SELECT JSON_ARRAYAGG(JSON_OBJECT('Token',Token, 'Owner',Owner, 'Amount',Amount)) FROM TokenBalances";
 
             // Act
-            var result = QueryCreator.CreateCommandQuery(request);
+            var result = MySqlQueryCreator.CreateCommandQuery(request);
 
             // Assert
             Assert.NotNull(result);

@@ -1,7 +1,7 @@
 using MySql.Data.MySqlClient;
 using System.Text;
 
-namespace QuickSQL.Helpers
+namespace QuickSQL.DataReaders
 {
     public static class MySqlDataReader
     {

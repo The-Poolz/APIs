@@ -1,5 +1,6 @@
+using QuickSQL.QueryCreators;
+using QuickSQL.DataReaders;
 using System;
-using QuickSQL.Helpers;
 
 namespace QuickSQL
 {
@@ -17,20 +18,54 @@ namespace QuickSQL
         /// <param name="request">Pass <see cref="Request"/> object with request settings.</param>
         /// <param name="context">Context, storing tables for data fetching.</param>
         /// <returns>Returns JSON string data if data read is success, or return null if operation failed.</returns>
-        public static string InvokeRequest(Request request, string connectionString)
+        public static string InvokeRequest(Request request, string connectionString, Providers provider)
+        {
+            string result = string.Empty;
+            if (provider == Providers.MicrosoftSqlServer)
+            {
+                result = MSQLSRequest(request, connectionString);
+            }
+            else if (provider == Providers.MySql)
+            {
+                result = MySqlRequest(request, connectionString);
+            }
+            return result;
+        }
+
+        private static string MSQLSRequest(Request request, string connectionString)
         {
             // Create start program time
             var startTime = DateTime.UtcNow;
 
             //== Create SQL query ==//
-            string commandQuery = QueryCreator.CreateCommandQuery(request);
+            string commandQuery = MSQLSQueryCreator.CreateCommandQuery(request);
             if (commandQuery == null)
             {
                 ConsoleOutput(request, commandQuery, null, startTime);
                 return null;
             }
 
-            //== Reading data with SqlDataReader ==//
+            //== Reading data with DataReader ==//
+            string result = MSQLSDataReader.GetJsonData(commandQuery, connectionString);
+
+            ConsoleOutput(request, commandQuery, result, startTime);
+            return result;
+        }
+
+        private static string MySqlRequest(Request request, string connectionString)
+        {
+            // Create start program time
+            var startTime = DateTime.UtcNow;
+
+            //== Create SQL query ==//
+            string commandQuery = MySqlQueryCreator.CreateCommandQuery(request);
+            if (commandQuery == null)
+            {
+                ConsoleOutput(request, commandQuery, null, startTime);
+                return null;
+            }
+
+            //== Reading data with DataReader ==//
             string result = MySqlDataReader.GetJsonData(commandQuery, connectionString);
 
             ConsoleOutput(request, commandQuery, result, startTime);
