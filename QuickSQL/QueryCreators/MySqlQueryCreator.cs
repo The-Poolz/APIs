@@ -42,7 +42,6 @@ namespace QuickSQL.QueryCreators
             return commandQuery;
         }
 
-        private static List<string> ConvertToList(string str)
-            => str.Split(",").ToList();
+        private static List<string> ConvertToList(string str) => str.Split(",").ToList();
     }
 }
