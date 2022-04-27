@@ -20,7 +20,8 @@ namespace QuickSQL.Tests.Helpers
             string commandQuery = MySqlQueryCreator.CreateCommandQuery(request);
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             string result;
-            Console.WriteLine($"DataReaderTests IsTravisCI - {isTravisCi}");
+            bool travis = Convert.ToBoolean(isTravisCi);
+            Console.WriteLine($"DataReaderTests IsTravisCI - {travis}");
 
             if (Convert.ToBoolean(isTravisCi))
             {
