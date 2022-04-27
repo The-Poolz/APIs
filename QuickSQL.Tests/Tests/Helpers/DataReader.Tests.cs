@@ -1,5 +1,4 @@
 ﻿using QuickSQL.QueryCreators;
-using QuickSQL.DataReaders;
 using Xunit;
 using System;
 
@@ -19,22 +18,17 @@ namespace QuickSQL.Tests.Helpers
             string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
             string commandQuery = MySqlQueryCreator.CreateCommandQuery(request);
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
-            string result;
-            bool travis = Convert.ToBoolean(isTravisCi);
-            Console.WriteLine($"DataReaderTests IsTravisCI - {travis}");
-
+            string connectionString;
             if (Convert.ToBoolean(isTravisCi))
-            {
-                string connectionString = Environment.GetEnvironmentVariable("TravisCIConnectionString");
-                Console.WriteLine($"DataReaderTests connectionString - {connectionString}");
-                result = MySqlDataReader.GetJsonData(commandQuery, connectionString);
-            }
+                connectionString = Environment.GetEnvironmentVariable("TravisCIConnectionString");
             else
-            {
-                string connectionString = LocalConnection.ConnectionString;
-                result = MySqlDataReader.GetJsonData(commandQuery, connectionString);
-            }
+                connectionString = LocalConnection.ConnectionString;
+            MySqlDataReader reader = new MySqlDataReader();
 
+            // Act
+            string result = reader.GetJsonData(commandQuery, connectionString);
+
+            // Assert
             Assert.NotNull(result);
             Assert.NotEmpty(result);
             var resultType = Assert.IsType<string>(result);
