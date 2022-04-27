@@ -16,10 +16,10 @@ namespace QuickSQL.QueryCreators
         /// <returns>Returns a SQL query string.</returns>
         public static string CreateCommandQuery(Request requestSettings)
         {
-            if (!RequestValidator.IsValidAPIRequest(requestSettings))
+            if (!RequestValidator.IsValidRequest(requestSettings))
                 return null;
 
-            string tableName = requestSettings.SelectedTable;
+            string tableName = requestSettings.TableName;
             List<string> columns = ConvertToList(requestSettings.SelectedColumns);
             string jsonColumns = "JSON_ARRAYAGG(JSON_OBJECT(";
             foreach (var column in columns)

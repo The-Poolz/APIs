@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using System.Text;
 
-namespace QuickSQL.DataReaders
+namespace QuickSQL.DataReader
 {
     public abstract class BaseDataReader
     {

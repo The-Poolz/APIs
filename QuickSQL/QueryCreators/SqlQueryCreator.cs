@@ -7,7 +7,7 @@ namespace QuickSQL.QueryCreators
     /// <summary>
     /// Provides methods for creating SQL query string
     /// </summary>
-    public static class MSQLSQueryCreator
+    public static class SqlQueryCreator
     {
         /// <summary>
         /// Creates an SQL query string.
@@ -16,10 +16,10 @@ namespace QuickSQL.QueryCreators
         /// <returns>Returns a SQL query string.</returns>
         public static string CreateCommandQuery(Request requestSettings)
         {
-            if (!RequestValidator.IsValidAPIRequest(requestSettings))
+            if (!RequestValidator.IsValidRequest(requestSettings))
                 return null;
 
-            string commandQuery = $"SELECT {requestSettings.SelectedColumns} FROM {requestSettings.SelectedTable}";
+            string commandQuery = $"SELECT {requestSettings.SelectedColumns} FROM {requestSettings.TableName}";
             if (!string.IsNullOrEmpty(requestSettings.WhereCondition))
             {
                 string condition = string.Join(" AND ", ConvertToList(requestSettings.WhereCondition));
