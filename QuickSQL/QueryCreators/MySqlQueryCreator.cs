@@ -20,7 +20,7 @@ namespace QuickSQL.QueryCreators
                 return null;
 
             string tableName = requestSettings.TableName;
-            List<string> columns = ConvertToList(requestSettings.SelectedColumns);
+            List<string> columns = requestSettings.SelectedColumns.Split(",").ToList();
             string jsonColumns = "JSON_ARRAYAGG(JSON_OBJECT(";
             foreach (var column in columns)
             {
@@ -35,13 +35,11 @@ namespace QuickSQL.QueryCreators
 
             if (!string.IsNullOrEmpty(requestSettings.WhereCondition))
             {
-                string condition = string.Join(" AND ", ConvertToList(requestSettings.WhereCondition));
+                string condition = string.Join(" AND ", requestSettings.WhereCondition.Split(",").ToList());
                 commandQuery += ($" WHERE {condition}");
             }
 
             return commandQuery;
         }
-
-        private static List<string> ConvertToList(string str) => str.Split(",").ToList();
     }
 }

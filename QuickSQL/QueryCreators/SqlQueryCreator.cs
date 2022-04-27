@@ -1,5 +1,4 @@
 using QuickSQL.Helpers;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace QuickSQL.QueryCreators
@@ -22,14 +21,11 @@ namespace QuickSQL.QueryCreators
             string commandQuery = $"SELECT {requestSettings.SelectedColumns} FROM {requestSettings.TableName}";
             if (!string.IsNullOrEmpty(requestSettings.WhereCondition))
             {
-                string condition = string.Join(" AND ", ConvertToList(requestSettings.WhereCondition));
+                string condition = string.Join(" AND ", requestSettings.WhereCondition.Split(",").ToList());
                 commandQuery += ($" WHERE {condition}");
             }
             commandQuery += " FOR JSON PATH";
             return commandQuery;
         }
-
-        private static List<string> ConvertToList(string str)
-            => str.Split(",").ToList();
     }
 }
