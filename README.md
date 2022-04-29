@@ -67,7 +67,7 @@ Request tokenBalances = new Request
 };
 ```
 
-The third step<, invoke request.
+The third step, invoke request.
 ```c#
 MySqlDataReader reader = new MySqlDataReader();     // Your DataReader
 Request tokenBalances = new Request
