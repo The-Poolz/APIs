@@ -1,4 +1,3 @@
-os: windows
 before_script:
  # Use mssqlserver2014-sqllocaldb rather than sqllocaldb package which has an issue:
  # https://dba.stackexchange.com/questions/191393/localdb-v14-creates-wrong-path-for-mdf-files
