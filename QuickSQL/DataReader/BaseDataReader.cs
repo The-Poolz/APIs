@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using System;
+using System.Data.Common;
 using System.Text;
 
 namespace QuickSQL.DataReader
@@ -15,14 +16,13 @@ namespace QuickSQL.DataReader
             connection.Open();
             var reader = CreateReader(commandQuery, connection);
 
-            if (!reader.HasRows)
-                return emptyJson;
-
             var jsonResult = new StringBuilder();
             while (reader.Read())
             {
                 jsonResult.Append(reader.GetValue(0).ToString());
             }
+            if (string.IsNullOrEmpty(jsonResult.ToString()))
+                return emptyJson;
             return jsonResult.ToString();
         }
         public abstract DbConnection CreateConnection(string connectionString);

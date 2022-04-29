@@ -20,7 +20,7 @@ namespace QuickSQL.Tests
             if (Convert.ToBoolean(isTravisCi))
                 connectionString = Environment.GetEnvironmentVariable("TravisCIConnectionString");
             else
-                connectionString = LocalConnection.ConnectionString;
+                connectionString = LocalConnection.MySqlConnection;
             MySqlDataReader reader = new MySqlDataReader();
 
             // Act
