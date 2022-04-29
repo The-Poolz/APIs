@@ -3,12 +3,11 @@ using Xunit;
 
 namespace QuickSQL.Tests.QueryCreators
 {
-    public class MySqlQueryCreatorTests
+    public static class MySqlQueryCreatorTests
     {
         [Fact]
-        public void GetCommandQuery()
+        public static void GetCommandQuery()
         {
-            // Arrange
             var request = new Request
             {
                 TableName = "TokenBalances",
@@ -19,12 +18,42 @@ namespace QuickSQL.Tests.QueryCreators
             // Act
             var result = MySqlQueryCreator.CreateCommandQuery(request);
 
-            // Assert
             Assert.NotNull(result);
-            var resultType = Assert.IsType<string>(result);
-            var json = Assert.IsAssignableFrom<string>(resultType);
-            Assert.NotEqual(string.Empty, json);
-            Assert.Equal(expected, json);
+            Assert.IsType<string>(result);
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public static void GetCommandQueryWithCondition()
+        {
+            var request = new Request
+            {
+                TableName = "TokenBalances",
+                SelectedColumns = "Token, Owner, Amount",
+                WhereCondition = "Id = 1"
+            };
+            string expected = "SELECT JSON_ARRAYAGG(JSON_OBJECT('Token',Token, 'Owner',Owner, 'Amount',Amount)) FROM TokenBalances WHERE Id = 1";
+
+            // Act
+            var result = MySqlQueryCreator.CreateCommandQuery(request);
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public static void GetCommandQueryWithInvalidRequest()
+        {
+            var request = new Request
+            {
+                SelectedColumns = "Token, Owner, Amount"
+            };
+
+            // Act
+            var result = MySqlQueryCreator.CreateCommandQuery(request);
+
+            Assert.Null(result);
         }
     }
 }

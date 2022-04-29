@@ -1,12 +1,13 @@
 using Xunit;
 using System;
+using System.Globalization;
 
 namespace QuickSQL.Tests
 {
-    public class QuickSqlTests
+    public static class QuickSqlTests
     {
         [Fact]
-        public void InvokeRequest()
+        public static void InvokeRequest()
         {
             var request = new Request
             {
@@ -17,10 +18,10 @@ namespace QuickSQL.Tests
             string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             string connectionString;
-            if (Convert.ToBoolean(isTravisCi))
+            if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
                 connectionString = Environment.GetEnvironmentVariable("TravisCIConnectionString");
             else
-                connectionString = LocalConnection.ConnectionString;
+                connectionString = LocalConnection.MySqlConnection;
             MySqlDataReader reader = new MySqlDataReader();
 
             // Act
