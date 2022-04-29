@@ -1,6 +1,7 @@
 using Xunit;
 using System;
 using System.Globalization;
+using QuickSQL.DataReader;
 
 namespace QuickSQL.Tests
 {
@@ -27,12 +28,47 @@ namespace QuickSQL.Tests
             // Act
             string result = QuickSql.InvokeRequest(request, connectionString, reader);
 
-            // Assert
             Assert.NotNull(result);
-            var resultType = Assert.IsType<string>(result);
-            var json = Assert.IsAssignableFrom<string>(resultType);
-            Assert.NotEqual(string.Empty, json);
-            Assert.Equal(expected, json);
+            Assert.IsType<string>(result);
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public static void InvokeRequestMicrosoftSqlServerProvider()
+        {
+            var request = new Request
+            {
+                TableName = "TokenBalances",
+                SelectedColumns = "Token, Owner, Amount",
+                WhereCondition = "Id = 1"
+            };
+            string expected;
+            string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
+            string connectionString;
+            BaseDataReader reader;
+            string result;
+
+            // Act
+            if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
+            {
+                expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
+                //Travis CI does not support MicrosoftSqlServer database services,
+                //so we have to make a stub for it. You can test yourself locally MicrosoftSqlServer
+                reader = new MySqlDataReader();
+                connectionString = Environment.GetEnvironmentVariable("TravisCIConnectionString");
+                result = QuickSql.InvokeRequest(request, connectionString, reader);
+            }
+            else
+            {
+                expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
+                reader = new MicrosoftSqlServerDataReader();
+                connectionString = LocalConnection.MicrosoftSqlServerConnection;
+                result = QuickSql.InvokeRequest(request, connectionString, reader);
+            }
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal(expected, result);
         }
     }
 }
