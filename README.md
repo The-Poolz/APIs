@@ -4,13 +4,13 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/the-poolz/apis/badge?s=740ae1e3b7dbe3f939056f89e5d009f7544c75a2)](https://www.codefactor.io/repository/github/the-poolz/apis)
 
 By default, Entity Framework does not support the ability to dynamically select by passing a string with the table name to get a DbSet.
-This is how this library came about. This library allows you to perform a SELECT query by passing `Request` object.
+This is how this library came about. This library allows you to perform a SELECT query by passing `Request` object, and your provider's `DataReader` definitions.
 
 ## Install
 
 ## Example usage:
 
-The first step is to create a DataReader for your SQL provider. It is easier than it might seem, to implement your DateReader inherit the abstract class `BaseDataReader`. This abstract class have core logic for read SQL data. You first need to specify your database provider. Next, you need to define `CreateConnection()` and `CreateReader()` for your provider.
+***The first step*** is to create a DataReader for your SQL provider. It is easier than it might seem, to implement your DateReader inherit the abstract class `BaseDataReader`. This abstract class have core logic for read SQL data. You first need to specify your database provider. Next, you need to define `CreateConnection()` and `CreateReader()` for your provider.
 
 **Example for MySql provider**
 ```c#
@@ -51,7 +51,7 @@ public override Providers Provider => Providers.MySql;
 >Providers currently supported: [SupportedProviders](https://github.com/The-Poolz/APIs/blob/master/QuickSQL/Providers.cs)
 
 
-The second step is to create the desired request.
+***The second step*** is to create the desired request.
 
 **Request fields**
 
@@ -67,7 +67,7 @@ Request tokenBalances = new Request
 };
 ```
 
-The third step, invoke request.
+***The third step***, invoke request.
 ```c#
 MySqlDataReader reader = new MySqlDataReader();     // Your DataReader
 Request tokenBalances = new Request
