@@ -28,12 +28,9 @@ namespace QuickSQL.Tests
             // Act
             string result = QuickSql.InvokeRequest(request, connectionString, reader);
 
-            // Assert
             Assert.NotNull(result);
-            var resultType = Assert.IsType<string>(result);
-            var json = Assert.IsAssignableFrom<string>(resultType);
-            Assert.NotEqual(string.Empty, json);
-            Assert.Equal(expected, json);
+            Assert.IsType<string>(result);
+            Assert.Equal(expected, result);
         }
 
         [Fact]
