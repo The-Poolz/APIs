@@ -29,7 +29,6 @@ namespace QuickSQL.Tests.DataReader
             // Act
             var result = reader.GetJsonData(commandQuery, connectionString);
 
-            // Assert
             Assert.NotNull(result);
             Assert.IsType<string>(result);
             Assert.Equal(expected, result);
@@ -57,7 +56,6 @@ namespace QuickSQL.Tests.DataReader
             // Act
             string result = reader.GetJsonData(commandQuery, connectionString);
 
-            // Assert
             Assert.NotNull(result);
             Assert.IsType<string>(result);
             Assert.Equal(expected, result);
@@ -72,7 +70,6 @@ namespace QuickSQL.Tests.DataReader
             // Act
             string result = reader.ProviderName;
 
-            // Assert
             Assert.NotNull(result);
             Assert.IsType<string>(result);
             Assert.Equal(expected, result);
