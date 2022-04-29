@@ -3,10 +3,10 @@ using Xunit;
 
 namespace QuickSQL.Tests.Helpers
 {
-    public class RequestValidatorTests
+    public static class RequestValidatorTests
     {
         [Fact]
-        public void IsValidRequestDefault()
+        public static void IsValidRequestDefault()
         {
             // Arrange
             var request = new Request
@@ -25,7 +25,7 @@ namespace QuickSQL.Tests.Helpers
         }
 
         [Fact]
-        public void IsValidRequestWithoutWhereCondition()
+        public static void IsValidRequestWithoutWhereCondition()
         {
             // Arrange
             var request = new Request
@@ -43,7 +43,7 @@ namespace QuickSQL.Tests.Helpers
         }
 
         [Fact]
-        public void IsValidRequestWithoutSelectedColumns()
+        public static void IsValidRequestWithoutSelectedColumns()
         {
             // Arrange
             var request = new Request
@@ -61,7 +61,7 @@ namespace QuickSQL.Tests.Helpers
         }
 
         [Fact]
-        public void IsValidRequestWithoutTableName()
+        public static void IsValidRequestWithoutTableName()
         {
             // Arrange
             var request = new Request
@@ -79,7 +79,7 @@ namespace QuickSQL.Tests.Helpers
         }
 
         [Fact]
-        public void NotNullTableNameDetault()
+        public static void NotNullTableNameDetault()
         {
             // Arrange
             var request = new Request
@@ -98,7 +98,7 @@ namespace QuickSQL.Tests.Helpers
         }
 
         [Fact]
-        public void NotNullTableNameWithoutTableName()
+        public static void NotNullTableNameWithoutTableName()
         {
             // Arrange
             var request = new Request
@@ -116,7 +116,7 @@ namespace QuickSQL.Tests.Helpers
         }
 
         [Fact]
-        public void NotNullSelectedColumnsDetault()
+        public static void NotNullSelectedColumnsDetault()
         {
             // Arrange
             var request = new Request
@@ -135,7 +135,7 @@ namespace QuickSQL.Tests.Helpers
         }
 
         [Fact]
-        public void NotNullSelectedColumnsWithoutSelectedColumns()
+        public static void NotNullSelectedColumnsWithoutSelectedColumns()
         {
             // Arrange
             var request = new Request

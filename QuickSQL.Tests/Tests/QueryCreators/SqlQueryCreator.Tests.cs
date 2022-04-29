@@ -3,10 +3,10 @@ using Xunit;
 
 namespace QuickSQL.Tests.QueryCreators
 {
-    public class SqlQueryCreatorTests
+    public static class SqlQueryCreatorTests
     {
         [Fact]
-        public void GetCommandQuery()
+        public static void GetCommandQuery()
         {
             var request = new Request
             {
@@ -24,7 +24,7 @@ namespace QuickSQL.Tests.QueryCreators
         }
 
         [Fact]
-        public void GetCommandQueryWithCondition()
+        public static void GetCommandQueryWithCondition()
         {
             var request = new Request
             {
@@ -43,7 +43,7 @@ namespace QuickSQL.Tests.QueryCreators
         }
 
         [Fact]
-        public void GetCommandQueryWithInvalidRequest()
+        public static void GetCommandQueryWithInvalidRequest()
         {
             var request = new Request
             {

@@ -1,13 +1,14 @@
 ﻿using QuickSQL.QueryCreators;
 using Xunit;
 using System;
+using System.Globalization;
 
 namespace QuickSQL.Tests.DataReader
 {
-    public class BaseDataReader
+    public static class BaseDataReaderTests
     {
         [Fact]
-        public void GetJsonData()
+        public static void GetJsonData()
         {
             MySqlDataReader reader = new MySqlDataReader();
             var request = new Request
@@ -20,7 +21,7 @@ namespace QuickSQL.Tests.DataReader
             string commandQuery = MySqlQueryCreator.CreateCommandQuery(request);
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             string connectionString;
-            if (Convert.ToBoolean(isTravisCi))
+            if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
                 connectionString = Environment.GetEnvironmentVariable("TravisCIConnectionString");
             else
                 connectionString = LocalConnection.MySqlConnection;
@@ -35,7 +36,7 @@ namespace QuickSQL.Tests.DataReader
         }
 
         [Fact]
-        public void GetJsonDataEmptyJsonResult()
+        public static void GetJsonDataEmptyJsonResult()
         {
             MySqlDataReader reader = new MySqlDataReader();
             var request = new Request
@@ -48,7 +49,7 @@ namespace QuickSQL.Tests.DataReader
             string commandQuery = MySqlQueryCreator.CreateCommandQuery(request);
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             string connectionString;
-            if (Convert.ToBoolean(isTravisCi))
+            if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
                 connectionString = Environment.GetEnvironmentVariable("TravisCIConnectionString");
             else
                 connectionString = LocalConnection.MySqlConnection;
@@ -63,7 +64,7 @@ namespace QuickSQL.Tests.DataReader
         }
 
         [Fact]
-        public void GetProviderName()
+        public static void GetProviderName()
         {
             MySqlDataReader reader = new MySqlDataReader();
             string expected = Providers.MySql.ToString();

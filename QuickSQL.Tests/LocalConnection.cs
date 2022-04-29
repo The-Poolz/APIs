@@ -2,6 +2,6 @@
 {
     public static class LocalConnection
     {
-        public static string MySqlConnection = @$"server=127.0.0.1;user id=root;password=stas2526;database=QuickSQL.Test";
+        public const string MySqlConnection = @"server=127.0.0.1;user id=root;password=stas2526;database=QuickSQL.Test";
     }
 }
