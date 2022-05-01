@@ -2,12 +2,11 @@ language: csharp
 mono: none
 dotnet: 3.1
 
-os: windows
 before_script:
- # Use mssqlserver2014-sqllocaldb rather than sqllocaldb package which has an issue:
- # https://dba.stackexchange.com/questions/191393/localdb-v14-creates-wrong-path-for-mdf-files
- - choco install mssqlserver2014-sqllocaldb
- - powershell -Command "Set-ExecutionPolicy Bypass"
+ -wget -qO- https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add microsoft.asc
+ -sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list)"
+ -sudo apt-get update
+ -sudo apt-get install -y mssql-server
 
 env:
   global:
@@ -21,7 +20,7 @@ install:
 - dotnet restore
 
 script:
- - powershell -File build.ps1
+ -systemctl status mssql-server --no-pager
  - dotnet tool install --global coveralls.net --version 2.0.0
  - export PATH="$PATH:/home/travis/.dotnet/tools"
  - dotnet test --collect:"XPlat Code Coverage"
