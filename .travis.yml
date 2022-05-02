@@ -13,6 +13,7 @@ before_install:
  - sudo apt-get update
  - sudo apt-get install -y mssql-server
  - sudo /opt/mssql/bin/mssql-conf setup
+ - echo 2
  - mysql -u root --password="" < QuickSQL.Tests/travis.sql
 install:
  - dotnet restore
