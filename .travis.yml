@@ -9,7 +9,7 @@ services:
   - mysql
 before_install:
  - sudo docker pull mcr.microsoft.com/mssql/server:2017-latest
- - sudo docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=<YourStrong@Passw0rd>" \
+ - sudo docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Tr@vis777P@ssw@rd" \
    -p 1433:1433 --name travis --hostname sql1 \
    -d \
    mcr.microsoft.com/mssql/server:2017-latest
