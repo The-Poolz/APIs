@@ -17,6 +17,7 @@ install:
  - dotnet restore
 
 script:
+ - systemctl status mssql-server --no-pager
  - dotnet tool install --global coveralls.net --version 2.0.0
  - export PATH="$PATH:/home/travis/.dotnet/tools"
  - dotnet test --collect:"XPlat Code Coverage"
