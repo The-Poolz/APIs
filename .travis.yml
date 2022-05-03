@@ -8,12 +8,12 @@ env:
 services:
   - mysql
 before_install:
- - sudo docker pull mcr.microsoft.com/mssql/server:2017-latest
- - sudo docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Tr@vis777P@ssw@rd" \
+ - docker pull mcr.microsoft.com/mssql/server:2017-latest
+ - docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Tr_vis777P_ssw_rd" \
    -p 1433:1433 --name travis --hostname sql1 \
    -d \
    mcr.microsoft.com/mssql/server:2017-latest
- - sudo docker ps -a
+ - docker ps -a
  - mysql -u root --password="" < QuickSQL.Tests/travis.sql
 install:
  - dotnet restore
