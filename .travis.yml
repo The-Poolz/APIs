@@ -8,7 +8,7 @@ env:
 services:
   - mysql
 before_install:
-  - mysql -u root --password="" < QuickSQL.Tests/travis.sql
+  - mysql -u root --password="" < QuickSQL.Tests/travis-mysql.sql
 install:
 - dotnet restore
 
