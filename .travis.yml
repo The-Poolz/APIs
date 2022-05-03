@@ -6,20 +6,19 @@ env:
     - IsTravisCI=true
     - TravisCIConnectionString="server=127.0.0.1;user id=root;password=;database=QuickSQL.Test"
 services:
+  - docker
   - mysql
 before_install:
- - docker pull mcr.microsoft.com/mssql/server:2017-latest
- - docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Tr_vis777P_ssw_rd" \
-   -p 1433:1433 --name travis --hostname sql1 \
-   -d \
-   mcr.microsoft.com/mssql/server:2017-latest
- - docker ps -a
- - mysql -u root --password="" < QuickSQL.Tests/travis.sql
+  - docker pull mcr.microsoft.com/mssql/server:2017-latest
+  - docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Tr_vis777P_ssw_rd" \
+    -p 1433:1433 --name travis --hostname sql1 \ -d \ mcr.microsoft.com/mssql/server:2017-latest
+  - docker ps -a
+  - mysql -u root --password="" < QuickSQL.Tests/travis.sql
 install:
- - dotnet restore
+  - dotnet restore
 
 script:
- - dotnet tool install --global coveralls.net --version 2.0.0
- - export PATH="$PATH:/home/travis/.dotnet/tools"
- - dotnet test --collect:"XPlat Code Coverage"
- - bash <(curl -s https://codecov.io/bash) -t b15b632a-483f-4088-aa4b-aaf7413481d4
+  - dotnet tool install --global coveralls.net --version 2.0.0
+  - export PATH="$PATH:/home/travis/.dotnet/tools"
+  - dotnet test --collect:"XPlat Code Coverage"
+  - bash <(curl -s https://codecov.io/bash) -t b15b632a-483f-4088-aa4b-aaf7413481d4
