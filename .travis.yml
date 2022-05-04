@@ -14,7 +14,7 @@ install:
   - dotnet restore
 before_script:
   - sudo docker pull mcr.microsoft.com/mssql/server
-  - sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Y@urStr@ng!P_SSw0rd' -p 1433:1433 --name travis --hostname=travis -d mcr.microsoft.com/mssql/server
+  - sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Y@urStr@ng!P_SSw0rd' -p 1434:1434 --name travis --hostname=travis -d mcr.microsoft.com/mssql/server
   - sudo docker cp QuickSQL.Tests/travis-mssql.sql travis:travis-mssql.sql
   - sudo docker exec -it travis /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Y@urStr@ng!P_SSw0rd'
   - sudo docker ps -a
