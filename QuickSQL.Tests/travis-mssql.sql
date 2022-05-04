@@ -1,11 +1,9 @@
-#Create DB
 CREATE DATABASE [QuickSQL.Test]
 GO
 
 USE [QuickSQL.Test]
 GO
 
-#Create table
 CREATE TABLE [dbo].[TokenBalances] (
     [Id]     INT            IDENTITY (1, 1) NOT NULL,
     [Token]  NVARCHAR (MAX) NULL,
@@ -14,7 +12,6 @@ CREATE TABLE [dbo].[TokenBalances] (
 );
 GO
 
-#Set table data
 SET IDENTITY_INSERT [dbo].[TokenBalances] ON
 INSERT INTO [dbo].[TokenBalances] ([Id], [Token], [Owner], [Amount]) VALUES (1, N'ADH', N'0x1a01ee5577c9d69c35a77496565b1bc95588b521', N'400')
 INSERT INTO [dbo].[TokenBalances] ([Id], [Token], [Owner], [Amount]) VALUES (2, N'Poolz', N'0x2a01ee5557c9d69c35577496555b1bc95558b552', N'300')
