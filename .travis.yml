@@ -5,7 +5,7 @@ env:
   global:
     - IsTravisCI=true
     - TravisCIMySqlConnection="server=127.0.0.1;user id=root;password=;database=QuickSQL.Test"
-    - TravisCIMicrosoftSqlServerConnection="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=QuickSQL.Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+    - TravisCIMicrosoftSqlServerConnection="Server=localhost;Database=QuickSQL.Test;User Id=sa;Password=Y@urStr@ng!P_SSw0rd;"
 services:
   - docker
   - mysql
