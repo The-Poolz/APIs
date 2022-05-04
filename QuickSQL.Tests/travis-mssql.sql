@@ -21,3 +21,5 @@ INSERT INTO [dbo].[TokenBalances] ([Id], [Token], [Owner], [Amount]) VALUES (2, 
 INSERT INTO [dbo].[TokenBalances] ([Id], [Token], [Owner], [Amount]) VALUES (3, N'ETH', N'0x3a31ee5557c9369c35573496555b1bc93553b553', N'200')
 INSERT INTO [dbo].[TokenBalances] ([Id], [Token], [Owner], [Amount]) VALUES (4, N'BTH', N'0x4a71ee5577c9d79c37577496555b1bc95558b554', N'100')
 SET IDENTITY_INSERT [dbo].[TokenBalances] OFF
+
+SELECT * FROM [dbo].[TokenBalances]
