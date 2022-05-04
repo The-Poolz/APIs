@@ -16,7 +16,7 @@ before_script:
   - sudo docker pull mcr.microsoft.com/mssql/server
   - sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=YourStrong!Passw0rd' -p 1433:1433 --name travis --hostname=travis -d mcr.microsoft.com/mssql/server
   - sudo docker cp QuickSQL.Tests/travis-mssql.sql travis:travis-mssql.sql
-  - sudo docker exec -it travis /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrong!Passw0rd' -i travis-mssql.sql
+  - sudo docker exec -it travis /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "YourStrong!Passw0rd" -i travis-mssql.sql
   - sudo docker ps -a
 script:
   - dotnet tool install --global coveralls.net --version 2.0.0
