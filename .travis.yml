@@ -5,7 +5,7 @@ env:
   global:
     - IsTravisCI=true
     - TravisCIMySqlConnection="server=127.0.0.1;user id=root;password=;database=QuickSQL.Test"
-    - TravisCIMicrosoftSqlServerConnection="Server=localhost;Database=QuickSQL.Test;User id=sa;Password=Y@urStr@ng!P_SSw0rd;"
+    - TravisCIMicrosoftSqlServerConnection="Server=127.0.0.1,1434;Database=QuickSQL.Test;User id=sa;Password=Y@urStr@ng!P_SSw0rd;"
 services:
   - docker
   - mysql
@@ -15,7 +15,7 @@ install:
   - dotnet restore
 before_script:
   - sudo docker pull mcr.microsoft.com/mssql/server:2017-latest
-  - sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Y@urStr@ng!P_SSw0rd' -p 1434:1434 --name travis -d mcr.microsoft.com/mssql/server:2017-latest
+  - sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Y@urStr@ng!P_SSw0rd' -p 1434:1434 --hostname travis --name travis -d mcr.microsoft.com/mssql/server:2017-latest
   - sudo docker cp QuickSQL.Tests/travis-mssql.sql travis:travis-mssql.sql
   - sudo docker exec -it travis /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Y@urStr@ng!P_SSw0rd' -i travis-mssql.sql
   - sudo docker logs travis
