@@ -20,7 +20,7 @@ namespace QuickSQL.Tests
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-                connectionString = Environment.GetEnvironmentVariable("TravisCIConnectionString");
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
             else
                 connectionString = LocalConnection.MySqlConnection;
             MySqlDataReader reader = new MySqlDataReader();
@@ -51,11 +51,9 @@ namespace QuickSQL.Tests
             // Act
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
             {
-                expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
-                //Travis CI does not support MicrosoftSqlServer database services,
-                //so we have to make a stub for it. You can test yourself locally MicrosoftSqlServer
-                reader = new MySqlDataReader();
-                connectionString = Environment.GetEnvironmentVariable("TravisCIConnectionString");
+                expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
+                reader = new MicrosoftSqlServerDataReader();
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
                 result = QuickSql.InvokeRequest(request, connectionString, reader);
             }
             else

@@ -4,16 +4,24 @@ dotnet: 3.1
 env:
   global:
     - IsTravisCI=true
-    - TravisCIConnectionString="server=127.0.0.1;user id=root;password=;database=QuickSQL.Test"
+    - TravisCIMySqlConnection="server=127.0.0.1;user id=root;password=;database=QuickSQL.Test"
+    - TravisCIMicrosoftSqlServerConnection="Server=travis,1434;Database=QuickSQL.Test;User id=sa;Password=Y@urStr@ng!P_SSw0rd;"
 services:
+  - docker
   - mysql
 before_install:
   - mysql -u root --password="" < QuickSQL.Tests/travis-mysql.sql
 install:
-- dotnet restore
-
+  - dotnet restore
+before_script:
+  - sudo docker pull mcr.microsoft.com/mssql/server:2017-latest
+  - sudo docker run --network="host" -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Y@urStr@ng!P_SSw0rd' -p 1434:1434 --hostname travis --name travis -d mcr.microsoft.com/mssql/server:2017-latest
+  - sudo docker cp QuickSQL.Tests/travis-mssql.sql travis:travis-mssql.sql
+  - sudo docker exec -it travis /opt/mssql-tools/bin/sqlcmd -S travis,1434 -U sa -P 'Y@urStr@ng!P_SSw0rd' -i travis-mssql.sql
+  - sudo docker logs travis
+  - sudo docker ps -a
 script:
- - dotnet tool install --global coveralls.net --version 2.0.0
- - export PATH="$PATH:/home/travis/.dotnet/tools"
- - dotnet test --collect:"XPlat Code Coverage"
- - bash <(curl -s https://codecov.io/bash) -t b15b632a-483f-4088-aa4b-aaf7413481d4
+  - dotnet tool install --global coveralls.net --version 2.0.0
+  - export PATH="$PATH:/home/travis/.dotnet/tools"
+  - dotnet test --collect:"XPlat Code Coverage"
+  - bash <(curl -s https://codecov.io/bash) -t b15b632a-483f-4088-aa4b-aaf7413481d4
