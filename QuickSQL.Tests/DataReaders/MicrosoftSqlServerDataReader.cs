@@ -1,8 +1,9 @@
-﻿using QuickSQL.DataReader;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Data.SqlClient;
 
-namespace QuickSQL.Tests
+using QuickSQL.DataReader;
+
+namespace QuickSQL.Tests.DataReaders
 {
     public class MicrosoftSqlServerDataReader : BaseDataReader
     {

@@ -1,5 +1,4 @@
-﻿using QuickSQL.QueryCreators;
-using Xunit;
+﻿using Xunit;
 
 namespace QuickSQL.Tests.QueryCreators
 {
@@ -14,9 +13,10 @@ namespace QuickSQL.Tests.QueryCreators
                 SelectedColumns = "Token, Owner, Amount"
             };
             string expected = "SELECT JSON_ARRAYAGG(JSON_OBJECT('Token',Token, 'Owner',Owner, 'Amount',Amount)) FROM TokenBalances";
+            var queryCreator = new MySqlQueryCreator();
 
             // Act
-            var result = MySqlQueryCreator.CreateCommandQuery(request);
+            var result = queryCreator.CreateCommandQuery(request);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -33,9 +33,10 @@ namespace QuickSQL.Tests.QueryCreators
                 WhereCondition = "Id = 1"
             };
             string expected = "SELECT JSON_ARRAYAGG(JSON_OBJECT('Token',Token, 'Owner',Owner, 'Amount',Amount)) FROM TokenBalances WHERE Id = 1";
+            var queryCreator = new MySqlQueryCreator();
 
             // Act
-            var result = MySqlQueryCreator.CreateCommandQuery(request);
+            var result = queryCreator.CreateCommandQuery(request);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -49,9 +50,10 @@ namespace QuickSQL.Tests.QueryCreators
             {
                 SelectedColumns = "Token, Owner, Amount"
             };
+            var queryCreator = new MySqlQueryCreator();
 
             // Act
-            var result = MySqlQueryCreator.CreateCommandQuery(request);
+            var result = queryCreator.CreateCommandQuery(request);
 
             Assert.Null(result);
         }

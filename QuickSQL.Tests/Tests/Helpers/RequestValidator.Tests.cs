@@ -1,5 +1,6 @@
-﻿using QuickSQL.Helpers;
-using Xunit;
+﻿using Xunit;
+
+using QuickSQL.QueryCreator.Helpers;
 
 namespace QuickSQL.Tests.Helpers
 {

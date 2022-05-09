@@ -1,7 +1,10 @@
-﻿namespace QuickSQL
+﻿using QuickSQL.DataReader;
+using QuickSQL.QueryCreator;
+
+namespace QuickSQL
 {
     /// <summary>
-    /// Set up an object for work <see cref="QuickSql.InvokeRequest(Request, string)"/>
+    /// Set up an object for work <see cref="QuickSql.InvokeRequest(Request, string, BaseDataReader, BaseQueryCreator)"/>
     /// </summary>
     public class Request
     {
@@ -28,7 +31,7 @@
         /// Remarks: String parameter must be in quotes(it is default SQL logic)
         /// </summary>
         /// <remarks>
-        /// Example (condition): "FirstTableName.Id = 1" or "Id = 1"<br/>
+        /// Example (condition): "TableName.Id = 1" or "Id = 1"<br/>
         /// Example (conditions): "Id = 1, Name = 'String parameter must be in quotes'" 
         /// </remarks>
         public string WhereCondition { get; set; }

@@ -1,7 +1,9 @@
-﻿using QuickSQL.QueryCreators;
-using Xunit;
+﻿using Xunit;
 using System;
 using System.Globalization;
+
+using QuickSQL.Tests.DataReaders;
+using QuickSQL.Tests.QueryCreators;
 
 namespace QuickSQL.Tests.DataReader
 {
@@ -18,7 +20,8 @@ namespace QuickSQL.Tests.DataReader
                 WhereCondition = "Id = 1"
             };
             string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
-            string commandQuery = MySqlQueryCreator.CreateCommandQuery(request);
+            var queryCreator = new MySqlQueryCreator();
+            string commandQuery = queryCreator.CreateCommandQuery(request);
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
@@ -45,7 +48,8 @@ namespace QuickSQL.Tests.DataReader
                 WhereCondition = "Id = 40"
             };
             string expected = "[]";
-            string commandQuery = MySqlQueryCreator.CreateCommandQuery(request);
+            var queryCreator = new MySqlQueryCreator();
+            string commandQuery = queryCreator.CreateCommandQuery(request);
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))

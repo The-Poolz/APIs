@@ -1,8 +1,9 @@
-﻿using MySql.Data.MySqlClient;
-using QuickSQL.DataReader;
-using System.Data.Common;
+﻿using System.Data.Common;
+using MySql.Data.MySqlClient;
 
-namespace QuickSQL.Tests
+using QuickSQL.DataReader;
+
+namespace QuickSQL.Tests.DataReaders
 {
     public class MySqlDataReader : BaseDataReader
     {

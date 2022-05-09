@@ -1,26 +1,26 @@
-using QuickSQL.Helpers;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 
-namespace QuickSQL.QueryCreators
+using QuickSQL.QueryCreator;
+
+namespace QuickSQL.Tests.QueryCreators
 {
     /// <summary>
     /// Provides methods for creating SQL query string
     /// </summary>
-    public static class MySqlQueryCreator
+    public class MySqlQueryCreator : BaseQueryCreator
     {
+        public override Providers Provider => Providers.MySql;
+
         /// <summary>
         /// Creates an SQL query string.
         /// </summary>
-        /// <param name="requestSettings">Pass <see cref="Request"/> object with request settings.</param>
+        /// <param name="request">Pass <see cref="Request"/> object with request settings.</param>
         /// <returns>Returns a SQL query string.</returns>
-        public static string CreateCommandQuery(Request requestSettings)
+        protected override string OnCreateCommandQuery(Request request)
         {
-            if (!RequestValidator.IsValidRequest(requestSettings))
-                return null;
-
-            string tableName = requestSettings.TableName;
-            List<string> columns = requestSettings.SelectedColumns.Split(",").ToList();
+            string tableName = request.TableName;
+            List<string> columns = request.SelectedColumns.Split(",").ToList();
             string jsonColumns = "JSON_ARRAYAGG(JSON_OBJECT(";
             foreach (var column in columns)
             {
@@ -33,9 +33,9 @@ namespace QuickSQL.QueryCreators
 
             string commandQuery = $"SELECT {jsonColumns} FROM {tableName}";
 
-            if (!string.IsNullOrEmpty(requestSettings.WhereCondition))
+            if (!string.IsNullOrEmpty(request.WhereCondition))
             {
-                string condition = string.Join(" AND ", requestSettings.WhereCondition.Split(",").ToList());
+                string condition = string.Join(" AND ", request.WhereCondition.Split(",").ToList());
                 commandQuery += ($" WHERE {condition}");
             }
 

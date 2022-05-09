@@ -2,7 +2,7 @@
 {
     public enum Providers
     {
-        MicrosoftSqlServer,
-        MySql
+        MySql,
+        MicrosoftSqlServer
     }
 }
