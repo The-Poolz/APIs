@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.Text;
 using System.Data.Common;
-using System.Text;
 
 namespace QuickSQL.DataReader
 {

@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickSQL", "QuickSQL\QuickS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickSQL.Tests", "QuickSQL.Tests\QuickSQL.Tests.csproj", "{25063430-1979-44DA-A1BF-F2DD1E6A560A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickSQL.MySql", "QuickSQL.MySql\QuickSQL.MySql.csproj", "{2BCD3717-3042-4465-8C72-A7B44DE108B1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickSQL.MicrosoftSqlServer", "QuickSQL.MicrosoftSqlServer\QuickSQL.MicrosoftSqlServer.csproj", "{1A49F03D-8A06-46B8-B2DD-5AC441B4904F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{25063430-1979-44DA-A1BF-F2DD1E6A560A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25063430-1979-44DA-A1BF-F2DD1E6A560A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25063430-1979-44DA-A1BF-F2DD1E6A560A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BCD3717-3042-4465-8C72-A7B44DE108B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BCD3717-3042-4465-8C72-A7B44DE108B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BCD3717-3042-4465-8C72-A7B44DE108B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BCD3717-3042-4465-8C72-A7B44DE108B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A49F03D-8A06-46B8-B2DD-5AC441B4904F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A49F03D-8A06-46B8-B2DD-5AC441B4904F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A49F03D-8A06-46B8-B2DD-5AC441B4904F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A49F03D-8A06-46B8-B2DD-5AC441B4904F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

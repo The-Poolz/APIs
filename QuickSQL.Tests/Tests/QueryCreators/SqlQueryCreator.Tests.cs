@@ -1,5 +1,4 @@
-﻿using QuickSQL.QueryCreators;
-using Xunit;
+﻿using Xunit;
 
 namespace QuickSQL.Tests.QueryCreators
 {
@@ -14,9 +13,10 @@ namespace QuickSQL.Tests.QueryCreators
                 SelectedColumns = "Token, Owner, Amount"
             };
             string expected = "SELECT Token, Owner, Amount FROM TokenBalances FOR JSON PATH";
+            var queryCreator = new SqlQueryCreator();
 
             // Act
-            var result = SqlQueryCreator.CreateCommandQuery(request);
+            var result = queryCreator.CreateCommandQuery(request);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -33,9 +33,10 @@ namespace QuickSQL.Tests.QueryCreators
                 WhereCondition = "Id = 1"
             };
             string expected = "SELECT Token, Owner, Amount FROM TokenBalances WHERE Id = 1 FOR JSON PATH";
+            var queryCreator = new SqlQueryCreator();
 
             // Act
-            var result = SqlQueryCreator.CreateCommandQuery(request);
+            var result = queryCreator.CreateCommandQuery(request);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -49,9 +50,10 @@ namespace QuickSQL.Tests.QueryCreators
             {
                 SelectedColumns = "Token, Owner, Amount"
             };
+            var queryCreator = new SqlQueryCreator();
 
             // Act
-            var result = SqlQueryCreator.CreateCommandQuery(request);
+            var result = queryCreator.CreateCommandQuery(request);
 
             Assert.Null(result);
         }

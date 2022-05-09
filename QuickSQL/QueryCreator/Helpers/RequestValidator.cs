@@ -1,4 +1,4 @@
-﻿namespace QuickSQL.Helpers
+﻿namespace QuickSQL.QueryCreator.Helpers
 {
     public static class RequestValidator
     {
