@@ -4,18 +4,53 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/the-poolz/apis/badge?s=740ae1e3b7dbe3f939056f89e5d009f7544c75a2)](https://www.codefactor.io/repository/github/the-poolz/apis)
 
 By default, Entity Framework does not support the ability to dynamically select by passing a string with the table name to get a DbSet.
-This is how this library came about. This library allows you to perform a SELECT query by passing `Request` object, and your provider's `DataReader` definitions.
+This is how this library came about. This library allows you to perform a SELECT query by passing `Request` object.
 
 ## Install
 
 ## Example usage:
 
-***The first step*** is to create a DataReader for your SQL provider. It is easier than it might seem, to implement your DateReader inherit the abstract class `BaseDataReader`. This abstract class have core logic for read SQL data. You first need to specify your database provider. Next, you need to define `CreateConnection()` and `CreateReader()` for your provider.
+>Providers currently supported: [SupportedProviders](https://github.com/The-Poolz/APIs/blob/master/QuickSQL/Providers.cs)
+>>Also you can add your provider, see below.
+
+***The first step*** is to create the desired request.
+
+```c#
+Request tokenBalances = new Request
+{
+    TableName = "TokenBalances",
+    SelectedColumns = "Token, Owner, Amount",
+    WhereCondition = "Id = 1, Token = 'ARD'"
+};
+```
+**Request fields**
+
+* `TableName` - This is a required parameter. Pass a table name from which to take data.
+* `SelectedColumns` - This is a required parameter. Pass columns from which to take data.
+* `WhereCondition` - Not required parameter. Enter condition for search tables. If it is a string parameter, you need to pass the condition parameter in single quotes, like `TableName.Username = 'Alex'`.
+
+***The second step***, invoke request.
+```c#
+Request tokenBalances = new Request
+{
+    TableName = "TokenBalances",
+    SelectedColumns = "Token, Owner, Amount",
+    WhereCondition = "Id = 1, Token = 'ARD'"
+};
+string result = QuickSql.InvokeRequest(
+    tokenBalances,
+    connectionString,
+    new MySqlDataReader(),
+    new MySqlQueryCreator()
+);
+```
+
+## I didn't find my provider. Instructions for adding your provider
+
+***The first step*** is to create a DataReader for your SQL provider. It is easier than it might seem, to implement your DateReader inherit the abstract class `BaseDataReader`. This abstract class have core logic for read SQL data. You need to define `CreateConnection()` and `CreateReader()` for your provider.
 
 **Example for MySql provider**
 ```c#
-using QuickSQL.DataReader;
-
 public class MySqlDataReader : BaseDataReader
 {
     public override Providers Provider => Providers.MySql;
@@ -27,11 +62,10 @@ public class MySqlDataReader : BaseDataReader
         => new MySqlCommand(commandQuery, (MySqlConnection)connection).ExecuteReader();
 }
 ```
-**Example for Microsoft SQL Server provider**
-```c#
-using QuickSQL.DataReader;
 
-public class MicrosoftSqlServerDataReader : BaseDataReader
+**Example for MicrosoftSqlServer provider**
+```c#
+public class SqlDataReader : BaseDataReader
 {
     public override Providers Provider => Providers.MicrosoftSqlServer;
 
@@ -42,39 +76,35 @@ public class MicrosoftSqlServerDataReader : BaseDataReader
         => new SqlCommand(commandQuery, (SqlConnection)connection).ExecuteReader();
 }
 ```
-
-In this line you select your database provider.
+Now this line does not contain logic. You just need to define Provider to match the abstract class. The selected provider is not important.
 ```c#
-public override Providers Provider => Providers.MySql;
+public override Providers Provider => Providers.MicrosoftSqlServer;
 ```
 
->Providers currently supported: [SupportedProviders](https://github.com/The-Poolz/APIs/blob/master/QuickSQL/Providers.cs)
 
+***The second step*** is to create a QueryCreator for your SQL provider. You need to define `OnCreateCommandQuery()` for your provider. This function should create a SQL query string returning data in JSON format.
 
-***The second step*** is to create the desired request.
-
-**Request fields**
-
-* `TableName` - This is a required parameter. Pass a table from which to take data.
-* `SelectedColumns` - This is a required parameter. Pass columns from which to take data.
-* `WhereCondition` - Not required parameter. Enter condition for search tables. If it is a string parameter, you need to pass the condition parameter in single quotes, like `TableName.Username = 'Alex'`.
+**Example for MicrosoftSqlServer provider**
 ```c#
-Request tokenBalances = new Request
+public class SqlQueryCreator : BaseQueryCreator
 {
-    TableName = "TokenBalances",
-    SelectedColumns = "Token, Owner, Amount",
-    WhereCondition = "Id = 1"
-};
+    public override Providers Provider => Providers.MicrosoftSqlServer;
+
+    protected override string OnCreateCommandQuery(Request request)
+    {
+        string commandQuery = $"SELECT {request.SelectedColumns} FROM {request.TableName}";
+        if (!string.IsNullOrEmpty(request.WhereCondition))
+        {
+            string condition = string.Join(" AND ", request.WhereCondition.Split(",").ToList());
+            commandQuery += ($" WHERE {condition}");
+        }
+        commandQuery += " FOR JSON PATH";
+        return commandQuery;
+    }
+}
 ```
 
-***The third step***, invoke request.
+Now this line does not contain logic. You just need to define Provider to match the abstract class. The selected provider is not important.
 ```c#
-MySqlDataReader reader = new MySqlDataReader();     // Your DataReader
-Request tokenBalances = new Request
-{
-    TableName = "TokenBalances",
-    SelectedColumns = "Token, Owner, Amount",
-    WhereCondition = "Id = 1"
-};
-QuickSql.InvokeRequest(tokenBalances, connectionString, reader);
+public override Providers Provider => Providers.MicrosoftSqlServer;
 ```
