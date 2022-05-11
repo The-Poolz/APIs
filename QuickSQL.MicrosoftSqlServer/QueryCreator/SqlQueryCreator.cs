@@ -2,7 +2,7 @@ using System.Linq;
 
 using QuickSQL.QueryCreator;
 
-namespace QuickSQL.MicrosoftSqlServer.QueryCreator
+namespace QuickSQL.MicrosoftSqlServer
 {
     /// <summary>
     /// Provides methods for creating SQL query string

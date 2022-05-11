@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 
 using QuickSQL.DataReader;
 
-namespace QuickSQL.MicrosoftSqlServer.DataReader
+namespace QuickSQL.MicrosoftSqlServer
 {
     public class SqlDataReader : BaseDataReader
     {

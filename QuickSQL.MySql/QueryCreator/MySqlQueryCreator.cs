@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using QuickSQL.QueryCreator;
 
-namespace QuickSQL.MySql.QueryCreator
+namespace QuickSQL.MySql
 {
     /// <summary>
     /// Provides methods for creating SQL query string

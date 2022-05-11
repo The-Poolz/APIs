@@ -3,7 +3,7 @@ using MySql.Data.MySqlClient;
 
 using QuickSQL.DataReader;
 
-namespace QuickSQL.MySql.DataReader
+namespace QuickSQL.MySql
 {
     public class MySqlDataReader : BaseDataReader
     {
