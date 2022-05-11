@@ -76,5 +76,39 @@ namespace QuickSQL.Tests
             Assert.IsType<string>(result);
             Assert.Equal(expected, result);
         }
+
+        [Fact]
+        public static void InvokeRequestWithoutConnectionString()
+        {
+            var request = new Request
+            {
+                TableName = "TokenBalances",
+                SelectedColumns = "Token, Owner, Amount",
+                WhereCondition = "Id = 1"
+            };
+            string connectionString = "   ";
+
+            // Act
+            var result = QuickSql.InvokeRequest(request, connectionString, new MySqlDataReader(), new MySqlQueryCreator());
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public static void InvokeRequestInvalidProviders()
+        {
+            var request = new Request
+            {
+                TableName = "TokenBalances",
+                SelectedColumns = "Token, Owner, Amount",
+                WhereCondition = "Id = 1"
+            };
+            string connectionString = "not connection string";
+
+            // Act
+            var result = QuickSql.InvokeRequest(request, connectionString, null, null);
+
+            Assert.Null(result);
+        }
     }
 }

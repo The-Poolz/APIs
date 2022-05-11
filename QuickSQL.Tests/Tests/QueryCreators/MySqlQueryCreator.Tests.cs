@@ -57,5 +57,19 @@ namespace QuickSQL.Tests.QueryCreators
 
             Assert.Null(result);
         }
+
+        [Fact]
+        public static void GetProviderName()
+        {
+            MySqlQueryCreator reader = new MySqlQueryCreator();
+            string expected = Providers.MySql.ToString();
+
+            // Act
+            string result = reader.ProviderName;
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal(expected, result);
+        }
     }
 }
