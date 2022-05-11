@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageId>ArdenHide.Utils.QuickSQL.MicrosoftSqlServer</PackageId>
+    <Authors>ArdenHide</Authors>
+    <Company>ArdenHide</Company>
+    <Description>Adding Microsoft Sql Server provider to QuickSQL.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/The-Poolz/APIs</RepositoryUrl>
+    <PackageTags>ArdenHide, SQL, Sql, QuickSQL</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageId>ArdenHide.Utils.QuickSQL.MySql</PackageId>
+    <Authors>ArdenHide</Authors>
+    <Company>ArdenHide</Company>
+    <Description>Adding MySql provider to QuickSQL.</Description>
+    <Copyright></Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/The-Poolz/APIs</RepositoryUrl>
+    <PackageTags>ArdenHide, SQL, Sql, QuickSQL, MySQL, MySql</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
