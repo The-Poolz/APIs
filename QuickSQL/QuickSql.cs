@@ -17,7 +17,7 @@ namespace QuickSQL
         /// <returns>Returns JSON string data if data read is success, or return empty JSON if data not found. Return null if operation failed.</returns>
         public static string InvokeRequest(Request request, string connectionString, BaseDataReader dataReader, BaseQueryCreator queryCreator)
         {
-            if (string.IsNullOrEmpty(connectionString)
+            if (string.IsNullOrEmpty(connectionString.Trim())
                 || dataReader == null
                 || queryCreator == null)
             {
