@@ -32,7 +32,7 @@ namespace QuickSQL
         /// Remarks: String parameter must be in quotes(it is default SQL logic)
         /// </summary>
         /// <remarks>
-        /// Example: 
+        /// Example: new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
         /// </remarks>
         public Collection<Condition> WhereConditions { get; set; }
     }
