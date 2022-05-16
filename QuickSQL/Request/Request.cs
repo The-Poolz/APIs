@@ -1,6 +1,6 @@
 ﻿using QuickSQL.DataReader;
 using QuickSQL.QueryCreator;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace QuickSQL
 {
@@ -34,6 +34,11 @@ namespace QuickSQL
         /// <remarks>
         /// Example: 
         /// </remarks>
-        public List<Condition> WhereConditions { get; set; }
+        public Collection<Condition> WhereConditions { get; set; }
+
+        public Request(Collection<Condition> whereConditions)
+        {
+            WhereConditions = whereConditions;
+        }
     }
 }

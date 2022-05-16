@@ -10,7 +10,7 @@ namespace QuickSQL.Tests.QueryCreator
 
             if (request.WhereConditions != null)
             {
-                commandQuery += $" {base.CreateWhereCondition(request.WhereConditions)}";
+                commandQuery += $" {CreateWhereCondition(request.WhereConditions)}";
             }
 
             commandQuery += " FOR JSON PATH";

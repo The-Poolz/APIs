@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace QuickSQL.QueryCreator.Helpers
 {
     public static class ConditionsValidator
     {
-        public static bool IsValidWhereCondition(List<Condition> conditions)
+        public static bool IsValidWhereCondition(Collection<Condition> conditions)
         {
             if (conditions == null || conditions.Count == 0)
                 return true;

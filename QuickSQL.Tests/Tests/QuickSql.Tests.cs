@@ -1,7 +1,7 @@
 using Xunit;
 using System;
 using System.Globalization;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using QuickSQL.Tests.DataReader;
 using QuickSQL.Tests.QueryCreator;
@@ -25,9 +25,9 @@ namespace QuickSQL.Tests
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new List<Condition>
+                WhereConditions = new Collection<Condition>
                 {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 }
             };
             string connectionString;
@@ -52,9 +52,9 @@ namespace QuickSQL.Tests
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new List<Condition>
+                WhereConditions = new Collection<Condition>
                 {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 }
             };
             string connectionString = "   ";
@@ -72,15 +72,15 @@ namespace QuickSQL.Tests
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new List<Condition>
+                WhereConditions = new Collection<Condition>
                 {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 }
             };
             string connectionString = "not connection string";
             string expected = "Format of the initialization string does not conform to specification starting at index 0.";
 
-            Action result = () => QuickSql.InvokeRequest(request, connectionString,
+            void result() => QuickSql.InvokeRequest(request, connectionString,
                 new SqlDataReader(), new SqlQueryCreator());
 
             ArgumentException exception = Assert.Throws<ArgumentException>(result);
@@ -94,9 +94,9 @@ namespace QuickSQL.Tests
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new List<Condition>
+                WhereConditions = new Collection<Condition>
                 {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 }
             };
             string connectionString = "not connection string";

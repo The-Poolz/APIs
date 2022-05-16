@@ -1,7 +1,7 @@
 ﻿using Xunit;
 using System;
 using System.Globalization;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using QuickSQL.Tests.QueryCreator;
 
@@ -24,9 +24,9 @@ namespace QuickSQL.Tests.DataReader
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new List<Condition>
+                WhereConditions = new Collection<Condition>
                 {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 }
             };
             string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
@@ -52,9 +52,9 @@ namespace QuickSQL.Tests.DataReader
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new List<Condition>
+                WhereConditions = new Collection<Condition>
                 {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "40" }
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "40" }
                 }
             };
             string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);

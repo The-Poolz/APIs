@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using QuickSQL.QueryCreator.Helpers;
 
@@ -14,7 +15,7 @@ namespace QuickSQL.QueryCreator
             return OnCreateCommandQuery(request);
         }
 
-        protected string CreateWhereCondition(List<Condition> conditions)
+        protected static string CreateWhereCondition(Collection<Condition> conditions)
         {
             string whereCondition = string.Empty;
             if (conditions != null)

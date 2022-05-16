@@ -1,6 +1,6 @@
 ﻿namespace QuickSQL
 {
-    public enum OperatorNames
+    public enum OperatorName
     {
         Equals,
         NotEquals,

@@ -1,5 +1,5 @@
 ﻿using Xunit;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using QuickSQL.QueryCreator.Helpers;
 
@@ -14,9 +14,9 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new List<Condition>
+                WhereConditions = new Collection<Condition>
                 {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 }
             };
 
@@ -47,9 +47,9 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
             var request = new Request
             {
                 TableName = "TokenBalances",
-                WhereConditions = new List<Condition>
+                WhereConditions = new Collection<Condition>
                 {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 }
             };
 
@@ -65,9 +65,9 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
             var request = new Request
             {
                 SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new List<Condition>
+                WhereConditions = new Collection<Condition>
                 {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 }
             };
 

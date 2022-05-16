@@ -4,14 +4,14 @@ namespace QuickSQL
 {
     public static class ValidOperators
     {
-        public static readonly Dictionary<OperatorNames, string> Operators = new Dictionary<OperatorNames, string>
+        public static readonly Dictionary<OperatorName, string> Operators = new Dictionary<OperatorName, string>
         {
-            { OperatorNames.Equals, "=" },
-            { OperatorNames.NotEquals, "!=" },
-            { OperatorNames.Less, "<" },
-            { OperatorNames.LessOrEqual, "<=" },
-            { OperatorNames.More, ">" },
-            { OperatorNames.MoreOrEqual, ">=" }
+            { OperatorName.Equals, "=" },
+            { OperatorName.NotEquals, "!=" },
+            { OperatorName.Less, "<" },
+            { OperatorName.LessOrEqual, "<=" },
+            { OperatorName.More, ">" },
+            { OperatorName.MoreOrEqual, ">=" }
         };
     }
 }
