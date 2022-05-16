@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System;
 
 namespace QuickSQL
 {
@@ -10,8 +10,12 @@ namespace QuickSQL
 
         public string GetConditionString()
         {
-            string operatorSymbol = Operators.operators.FirstOrDefault(op => op.Name == Operator).Value;
-            return $"{ParamName} {operatorSymbol} {ParamValue}";
+            if (ValidOperators.Operators.ContainsKey(Operator))
+            {
+                ValidOperators.Operators.TryGetValue(Operator, out string operatorSymbol);
+                return $"{ParamName} {operatorSymbol} {ParamValue}";
+            }
+            throw new ArgumentException("Invalid condition operatior", "Operator");
         }
     }
 }

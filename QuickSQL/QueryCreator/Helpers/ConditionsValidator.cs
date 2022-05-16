@@ -23,9 +23,9 @@
             => condition.ParamValue != null && string.IsNullOrEmpty(condition.ParamValue.Trim());
         public static bool IsValidOperator(Condition condition)
         {
-            foreach (var @operator in Operators.operators)
+            foreach (var @operator in ValidOperators.Operators)
             {
-                if (condition.Operator == @operator.Name)
+                if (condition.Operator == @operator.Key)
                     return true;
             }
             return false;
