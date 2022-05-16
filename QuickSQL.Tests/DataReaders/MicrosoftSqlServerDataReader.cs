@@ -7,8 +7,6 @@ namespace QuickSQL.Tests.DataReaders
 {
     public class MicrosoftSqlServerDataReader : BaseDataReader
     {
-        public override Providers Provider => Providers.MicrosoftSqlServer;
-
         public override DbConnection CreateConnection(string connectionString)
             => new SqlConnection(connectionString);
 

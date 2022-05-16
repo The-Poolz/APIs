@@ -1,5 +1,6 @@
 ﻿using QuickSQL.DataReader;
 using QuickSQL.QueryCreator;
+using System.Collections.Generic;
 
 namespace QuickSQL
 {
@@ -22,7 +23,7 @@ namespace QuickSQL
         /// This is a required parameter.
         /// </summary>
         /// <remarks>
-        /// Example : "Id, Name, Address"
+        /// Example: "Id, Name, Address"
         /// </remarks>
         public string SelectedColumns { get; set; }
 
@@ -31,9 +32,8 @@ namespace QuickSQL
         /// Remarks: String parameter must be in quotes(it is default SQL logic)
         /// </summary>
         /// <remarks>
-        /// Example (condition): "TableName.Id = 1" or "Id = 1"<br/>
-        /// Example (conditions): "Id = 1, Name = 'String parameter must be in quotes'" 
+        /// Example: 
         /// </remarks>
-        public string WhereCondition { get; set; }
+        public List<Condition> WhereConditions { get; set; }
     }
 }

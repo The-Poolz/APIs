@@ -5,9 +5,6 @@ namespace QuickSQL.DataReader
 {
     public abstract class BaseDataReader
     {
-        public abstract Providers Provider { get; }
-        public string ProviderName => Provider.ToString();
-
         public string GetJsonData(string commandQuery, string connectionString)
         {
             string emptyJson = "[]";

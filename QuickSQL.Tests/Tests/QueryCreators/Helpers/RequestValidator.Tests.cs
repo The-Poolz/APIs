@@ -1,8 +1,9 @@
 ﻿using Xunit;
+using System.Collections.Generic;
 
 using QuickSQL.QueryCreator.Helpers;
 
-namespace QuickSQL.Tests.Helpers
+namespace QuickSQL.Tests.QueryCreators.Helpers
 {
     public static class RequestValidatorTests
     {
@@ -14,7 +15,10 @@ namespace QuickSQL.Tests.Helpers
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
 
             // Act
@@ -50,7 +54,10 @@ namespace QuickSQL.Tests.Helpers
             var request = new Request
             {
                 TableName = "TokenBalances",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
 
             // Act
@@ -68,7 +75,10 @@ namespace QuickSQL.Tests.Helpers
             var request = new Request
             {
                 SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
 
             // Act
@@ -87,7 +97,10 @@ namespace QuickSQL.Tests.Helpers
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
 
             // Act
@@ -105,7 +118,10 @@ namespace QuickSQL.Tests.Helpers
             var request = new Request
             {
                 SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
 
             // Act
@@ -124,7 +140,10 @@ namespace QuickSQL.Tests.Helpers
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
 
             // Act
@@ -142,7 +161,10 @@ namespace QuickSQL.Tests.Helpers
             var request = new Request
             {
                 TableName = "TokenBalances",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
 
             // Act

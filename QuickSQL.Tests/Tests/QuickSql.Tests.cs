@@ -1,6 +1,7 @@
 using Xunit;
 using System;
 using System.Globalization;
+using System.Collections.Generic;
 
 using QuickSQL.DataReader;
 using QuickSQL.QueryCreator;
@@ -18,7 +19,10 @@ namespace QuickSQL.Tests
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
             string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
@@ -45,7 +49,10 @@ namespace QuickSQL.Tests
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
             string expected;
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
@@ -84,7 +91,10 @@ namespace QuickSQL.Tests
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
             string connectionString = "   ";
 
@@ -101,7 +111,10 @@ namespace QuickSQL.Tests
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
             string connectionString = "not connection string";
 

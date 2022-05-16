@@ -10,8 +10,6 @@ namespace QuickSQL.Tests.QueryCreators
     /// </summary>
     public class MySqlQueryCreator : BaseQueryCreator
     {
-        public override Providers Provider => Providers.MySql;
-
         /// <summary>
         /// Creates an SQL query string.
         /// </summary>
@@ -33,10 +31,9 @@ namespace QuickSQL.Tests.QueryCreators
 
             string commandQuery = $"SELECT {jsonColumns} FROM {tableName}";
 
-            if (!string.IsNullOrEmpty(request.WhereCondition))
+            if (request.WhereConditions != null)
             {
-                string condition = string.Join(" AND ", request.WhereCondition.Split(",").ToList());
-                commandQuery += ($" WHERE {condition}");
+                commandQuery += $" {base.CreateWhereCondition(request.WhereConditions)}";
             }
 
             return commandQuery;

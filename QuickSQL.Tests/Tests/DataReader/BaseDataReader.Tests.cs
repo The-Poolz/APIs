@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using System;
 using System.Globalization;
+using System.Collections.Generic;
 
 using QuickSQL.Tests.DataReaders;
 using QuickSQL.Tests.QueryCreators;
@@ -17,7 +18,10 @@ namespace QuickSQL.Tests.DataReader
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
             string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
             var queryCreator = new MySqlQueryCreator();
@@ -45,7 +49,10 @@ namespace QuickSQL.Tests.DataReader
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 40"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "40" }
+                }
             };
             string expected = "[]";
             var queryCreator = new MySqlQueryCreator();
@@ -59,20 +66,6 @@ namespace QuickSQL.Tests.DataReader
 
             // Act
             string result = reader.GetJsonData(commandQuery, connectionString);
-
-            Assert.NotNull(result);
-            Assert.IsType<string>(result);
-            Assert.Equal(expected, result);
-        }
-
-        [Fact]
-        public static void GetProviderName()
-        {
-            MySqlDataReader reader = new MySqlDataReader();
-            string expected = Providers.MySql.ToString();
-
-            // Act
-            string result = reader.ProviderName;
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);

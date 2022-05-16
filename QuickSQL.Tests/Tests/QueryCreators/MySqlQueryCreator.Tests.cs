@@ -1,4 +1,5 @@
 ﻿using Xunit;
+using System.Collections.Generic;
 
 namespace QuickSQL.Tests.QueryCreators
 {
@@ -30,7 +31,10 @@ namespace QuickSQL.Tests.QueryCreators
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 1"
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
             };
             string expected = "SELECT JSON_ARRAYAGG(JSON_OBJECT('Token',Token, 'Owner',Owner, 'Amount',Amount)) FROM TokenBalances WHERE Id = 1";
             var queryCreator = new MySqlQueryCreator();
@@ -56,20 +60,6 @@ namespace QuickSQL.Tests.QueryCreators
             var result = queryCreator.CreateCommandQuery(request);
 
             Assert.Null(result);
-        }
-
-        [Fact]
-        public static void GetProviderName()
-        {
-            MySqlQueryCreator reader = new MySqlQueryCreator();
-            string expected = Providers.MySql.ToString();
-
-            // Act
-            string result = reader.ProviderName;
-
-            Assert.NotNull(result);
-            Assert.IsType<string>(result);
-            Assert.Equal(expected, result);
         }
     }
 }
