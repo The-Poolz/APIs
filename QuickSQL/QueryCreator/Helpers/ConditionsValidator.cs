@@ -1,26 +1,28 @@
-﻿namespace QuickSQL.QueryCreator.Helpers
+﻿using System.Collections.Generic;
+
+namespace QuickSQL.QueryCreator.Helpers
 {
     public static class ConditionsValidator
     {
-        public static bool IsValidWhereCondition(Request request)
+        public static bool IsValidWhereCondition(List<Condition> conditions)
         {
-            if (request.WhereConditions == null || request.WhereConditions.Count == 0)
+            if (conditions == null || conditions.Count == 0)
                 return true;
 
-            foreach (var condition in request.WhereConditions)
+            foreach (var condition in conditions)
             {
                 if (!NotNullParamName(condition)
-                    && !NotNullParamValue(condition)
-                    && !IsValidOperator(condition))
+                    || !NotNullParamValue(condition)
+                    || !IsValidOperator(condition))
                     return false;
             }
             return true;
         }
 
         public static bool NotNullParamName(Condition condition)
-            => condition.ParamName != null && string.IsNullOrEmpty(condition.ParamName.Trim());
+            => condition.ParamName != null && !string.IsNullOrEmpty(condition.ParamName.Trim());
         public static bool NotNullParamValue(Condition condition)
-            => condition.ParamValue != null && string.IsNullOrEmpty(condition.ParamValue.Trim());
+            => condition.ParamValue != null && !string.IsNullOrEmpty(condition.ParamValue.Trim());
         public static bool IsValidOperator(Condition condition)
         {
             foreach (var @operator in ValidOperators.Operators)

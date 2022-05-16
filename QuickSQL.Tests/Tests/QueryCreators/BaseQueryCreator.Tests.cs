@@ -1,23 +1,24 @@
 ﻿using Xunit;
 using System.Collections.Generic;
 
-namespace QuickSQL.Tests.QueryCreators
+namespace QuickSQL.Tests.QueryCreator
 {
-    public static class MySqlQueryCreatorTests
+    /// <summary>
+    /// SqlQueryCreator has implemented the BaseQueryCreator tests.
+    /// </summary>
+    public static class BaseQueryCreatorTests
     {
         [Fact]
         public static void GetCommandQuery()
         {
+            string expected = "SELECT Token, Owner, Amount FROM TokenBalances FOR JSON PATH";
             var request = new Request
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount"
             };
-            string expected = "SELECT JSON_ARRAYAGG(JSON_OBJECT('Token',Token, 'Owner',Owner, 'Amount',Amount)) FROM TokenBalances";
-            var queryCreator = new MySqlQueryCreator();
 
-            // Act
-            var result = queryCreator.CreateCommandQuery(request);
+            var result = new SqlQueryCreator().CreateCommandQuery(request);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -27,6 +28,7 @@ namespace QuickSQL.Tests.QueryCreators
         [Fact]
         public static void GetCommandQueryWithCondition()
         {
+            string expected = "SELECT Token, Owner, Amount FROM TokenBalances WHERE Id = 1 FOR JSON PATH";
             var request = new Request
             {
                 TableName = "TokenBalances",
@@ -36,11 +38,8 @@ namespace QuickSQL.Tests.QueryCreators
                     new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
                 }
             };
-            string expected = "SELECT JSON_ARRAYAGG(JSON_OBJECT('Token',Token, 'Owner',Owner, 'Amount',Amount)) FROM TokenBalances WHERE Id = 1";
-            var queryCreator = new MySqlQueryCreator();
 
-            // Act
-            var result = queryCreator.CreateCommandQuery(request);
+            var result = new SqlQueryCreator().CreateCommandQuery(request);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -48,16 +47,14 @@ namespace QuickSQL.Tests.QueryCreators
         }
 
         [Fact]
-        public static void GetCommandQueryWithInvalidRequest()
+        public static void GetCommandQueryInvalidRequest()
         {
             var request = new Request
             {
                 SelectedColumns = "Token, Owner, Amount"
             };
-            var queryCreator = new MySqlQueryCreator();
 
-            // Act
-            var result = queryCreator.CreateCommandQuery(request);
+            var result = new SqlQueryCreator().CreateCommandQuery(request);
 
             Assert.Null(result);
         }

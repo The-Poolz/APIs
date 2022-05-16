@@ -3,18 +3,24 @@ using System;
 using System.Globalization;
 using System.Collections.Generic;
 
-using QuickSQL.DataReader;
-using QuickSQL.QueryCreator;
-using QuickSQL.Tests.DataReaders;
-using QuickSQL.Tests.QueryCreators;
+using QuickSQL.Tests.DataReader;
+using QuickSQL.Tests.QueryCreator;
 
 namespace QuickSQL.Tests
 {
+    /// <summary>
+    /// QuickSql tests.
+    /// </summary>
+    /// <remarks>
+    /// All tests with databese use the Microsoft Sql Server provider.
+    /// </remarks>
     public static class QuickSqlTests
     {
         [Fact]
         public static void InvokeRequest()
         {
+            string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
+            string expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
             var request = new Request
             {
                 TableName = "TokenBalances",
@@ -24,60 +30,15 @@ namespace QuickSQL.Tests
                     new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
                 }
             };
-            string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
-            string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             string connectionString;
+
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
-            else
-                connectionString = LocalConnection.MySqlConnection;
-            var reader = new MySqlDataReader();
-            var queryCreator = new MySqlQueryCreator();
-
-            // Act
-            string result = QuickSql.InvokeRequest(request, connectionString, reader, queryCreator);
-
-            Assert.NotNull(result);
-            Assert.IsType<string>(result);
-            Assert.Equal(expected, result);
-        }
-
-        [Fact]
-        public static void InvokeRequestMicrosoftSqlServerProvider()
-        {
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new List<Condition>
-                {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
-                }
-            };
-            string expected;
-            string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
-            string connectionString;
-            BaseDataReader reader;
-            BaseQueryCreator queryCreator;
-            string result;
-
-            // Act
-            if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-            {
-                expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
-                reader = new MicrosoftSqlServerDataReader();
-                queryCreator = new SqlQueryCreator();
                 connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
-                result = QuickSql.InvokeRequest(request, connectionString, reader, queryCreator);
-            }
             else
-            {
-                expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
-                reader = new MicrosoftSqlServerDataReader();
-                queryCreator = new SqlQueryCreator();
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
-                result = QuickSql.InvokeRequest(request, connectionString, reader, queryCreator);
-            }
+
+            var result = QuickSql.InvokeRequest(request, connectionString,
+                new SqlDataReader(), new SqlQueryCreator());
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -98,10 +59,32 @@ namespace QuickSQL.Tests
             };
             string connectionString = "   ";
 
-            // Act
-            var result = QuickSql.InvokeRequest(request, connectionString, new MySqlDataReader(), new MySqlQueryCreator());
+            var result = QuickSql.InvokeRequest(request, connectionString,
+                new SqlDataReader(), new SqlQueryCreator());
 
             Assert.Null(result);
+        }
+
+        [Fact]
+        public static void InvokeRequestInvalidConnectionString()
+        {
+            var request = new Request
+            {
+                TableName = "TokenBalances",
+                SelectedColumns = "Token, Owner, Amount",
+                WhereConditions = new List<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
+                }
+            };
+            string connectionString = "not connection string";
+            string expected = "Format of the initialization string does not conform to specification starting at index 0.";
+
+            Action result = () => QuickSql.InvokeRequest(request, connectionString,
+                new SqlDataReader(), new SqlQueryCreator());
+
+            ArgumentException exception = Assert.Throws<ArgumentException>(result);
+            Assert.Equal(expected, exception.Message);
         }
 
         [Fact]
@@ -118,7 +101,6 @@ namespace QuickSQL.Tests
             };
             string connectionString = "not connection string";
 
-            // Act
             var result = QuickSql.InvokeRequest(request, connectionString, null, null);
 
             Assert.Null(result);

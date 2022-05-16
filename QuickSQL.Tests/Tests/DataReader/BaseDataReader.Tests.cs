@@ -3,17 +3,23 @@ using System;
 using System.Globalization;
 using System.Collections.Generic;
 
-using QuickSQL.Tests.DataReaders;
-using QuickSQL.Tests.QueryCreators;
+using QuickSQL.Tests.QueryCreator;
 
 namespace QuickSQL.Tests.DataReader
 {
+    /// <summary>
+    /// SqlDataReader has implemented the BaseDataReader tests.
+    /// </summary>
+    /// <remarks>
+    /// All tests with databese use the Microsoft Sql Server provider.
+    /// </remarks>
     public static class BaseDataReaderTests
     {
         [Fact]
         public static void GetJsonData()
         {
-            MySqlDataReader reader = new MySqlDataReader();
+            string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
+            string expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
             var request = new Request
             {
                 TableName = "TokenBalances",
@@ -23,18 +29,14 @@ namespace QuickSQL.Tests.DataReader
                     new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
                 }
             };
-            string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
-            var queryCreator = new MySqlQueryCreator();
-            string commandQuery = queryCreator.CreateCommandQuery(request);
-            string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
+            string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
                 connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
             else
-                connectionString = LocalConnection.MySqlConnection;
+                connectionString = LocalConnection.MicrosoftSqlServerConnection;
 
-            // Act
-            var result = reader.GetJsonData(commandQuery, connectionString);
+            var result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -44,7 +46,8 @@ namespace QuickSQL.Tests.DataReader
         [Fact]
         public static void GetJsonDataEmptyJsonResult()
         {
-            MySqlDataReader reader = new MySqlDataReader();
+            string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
+            string expected = "[]";
             var request = new Request
             {
                 TableName = "TokenBalances",
@@ -54,18 +57,14 @@ namespace QuickSQL.Tests.DataReader
                     new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "40" }
                 }
             };
-            string expected = "[]";
-            var queryCreator = new MySqlQueryCreator();
-            string commandQuery = queryCreator.CreateCommandQuery(request);
-            string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
+            string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
                 connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
             else
-                connectionString = LocalConnection.MySqlConnection;
+                connectionString = LocalConnection.MicrosoftSqlServerConnection;
 
-            // Act
-            string result = reader.GetJsonData(commandQuery, connectionString);
+            string result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);

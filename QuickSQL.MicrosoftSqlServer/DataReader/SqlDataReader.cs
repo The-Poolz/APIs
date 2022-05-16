@@ -1,6 +1,5 @@
 ﻿using System.Data.Common;
 using System.Data.SqlClient;
-
 using QuickSQL.DataReader;
 
 namespace QuickSQL.MicrosoftSqlServer

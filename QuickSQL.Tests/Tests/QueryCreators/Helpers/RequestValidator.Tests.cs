@@ -10,7 +10,6 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void IsValidRequestDefault()
         {
-            // Arrange
             var request = new Request
             {
                 TableName = "TokenBalances",
@@ -21,10 +20,8 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
                 }
             };
 
-            // Act
             var result = RequestValidator.IsValidRequest(request);
 
-            // Assert
             Assert.IsType<bool>(result);
             Assert.True(result);
         }
@@ -32,17 +29,14 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void IsValidRequestWithoutWhereCondition()
         {
-            // Arrange
             var request = new Request
             {
                 TableName = "TokenBalances",
                 SelectedColumns = "Token, Owner, Amount"
             };
 
-            // Act
             var result = RequestValidator.IsValidRequest(request);
 
-            // Assert
             Assert.IsType<bool>(result);
             Assert.True(result);
         }
@@ -50,7 +44,6 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void IsValidRequestWithoutSelectedColumns()
         {
-            // Arrange
             var request = new Request
             {
                 TableName = "TokenBalances",
@@ -60,10 +53,8 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
                 }
             };
 
-            // Act
             var result = RequestValidator.IsValidRequest(request);
 
-            // Assert
             Assert.IsType<bool>(result);
             Assert.False(result);
         }
@@ -71,7 +62,6 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void IsValidRequestWithoutTableName()
         {
-            // Arrange
             var request = new Request
             {
                 SelectedColumns = "Token, Owner, Amount",
@@ -81,10 +71,8 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
                 }
             };
 
-            // Act
             var result = RequestValidator.IsValidRequest(request);
 
-            // Assert
             Assert.IsType<bool>(result);
             Assert.False(result);
         }
@@ -92,42 +80,21 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void NotNullTableNameDetault()
         {
-            // Arrange
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new List<Condition>
-                {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
-                }
-            };
+            var tableName = "TokenBalances";
 
-            // Act
-            var result = RequestValidator.NotNullTableName(request);
+            var result = RequestValidator.NotNullTableName(tableName);
 
-            // Assert
             Assert.IsType<bool>(result);
             Assert.True(result);
         }
 
         [Fact]
-        public static void NotNullTableNameWithoutTableName()
+        public static void NotNullTableNameEmptyParam()
         {
-            // Arrange
-            var request = new Request
-            {
-                SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new List<Condition>
-                {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
-                }
-            };
+            var tableName = "    ";
 
-            // Act
-            var result = RequestValidator.NotNullTableName(request);
+            var result = RequestValidator.NotNullTableName(tableName);
 
-            // Assert
             Assert.IsType<bool>(result);
             Assert.False(result);
         }
@@ -135,42 +102,21 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void NotNullSelectedColumnsDetault()
         {
-            // Arrange
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new List<Condition>
-                {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
-                }
-            };
+            var selectedColumns = "Token, Owner, Amount";
 
-            // Act
-            var result = RequestValidator.NotNullSelectedColumns(request);
+            var result = RequestValidator.NotNullSelectedColumns(selectedColumns);
 
-            // Assert
             Assert.IsType<bool>(result);
             Assert.True(result);
         }
 
         [Fact]
-        public static void NotNullSelectedColumnsWithoutSelectedColumns()
+        public static void NotNullSelectedColumnsEmptyParam()
         {
-            // Arrange
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                WhereConditions = new List<Condition>
-                {
-                    new Condition { ParamName = "Id", Operator = OperatorNames.Equals, ParamValue = "1" }
-                }
-            };
+            var selectedColumns = "      ";
 
-            // Act
-            var result = RequestValidator.NotNullSelectedColumns(request);
+            var result = RequestValidator.NotNullSelectedColumns(selectedColumns);
 
-            // Assert
             Assert.IsType<bool>(result);
             Assert.False(result);
         }
