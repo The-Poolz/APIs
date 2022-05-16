@@ -35,10 +35,5 @@ namespace QuickSQL
         /// Example: 
         /// </remarks>
         public Collection<Condition> WhereConditions { get; set; }
-
-        public Request(Collection<Condition> whereConditions)
-        {
-            WhereConditions = whereConditions;
-        }
     }
 }
