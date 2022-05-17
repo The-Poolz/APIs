@@ -20,15 +20,13 @@ namespace QuickSQL.Tests.DataReader
         {
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             string expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new Collection<Condition>
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-                }
-            };
+                });
             string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
@@ -48,15 +46,13 @@ namespace QuickSQL.Tests.DataReader
         {
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             string expected = "[]";
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new Collection<Condition>
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "40" }
-                }
-            };
+                });
             string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))

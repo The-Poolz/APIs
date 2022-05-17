@@ -10,15 +10,13 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void IsValidRequestDefault()
         {
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new Collection<Condition>
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-                }
-            };
+                });
 
             var result = RequestValidator.IsValidRequest(request);
 
@@ -29,11 +27,7 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void IsValidRequestWithoutWhereCondition()
         {
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount"
-            };
+            var request = new Request("TokenBalances", "Token, Owner, Amount");
 
             var result = RequestValidator.IsValidRequest(request);
 
@@ -44,14 +38,13 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void IsValidRequestWithoutSelectedColumns()
         {
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                WhereConditions = new Collection<Condition>
+            var request = new Request(
+                "TokenBalances",
+                "   ",
+                new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-                }
-            };
+                });
 
             var result = RequestValidator.IsValidRequest(request);
 
@@ -62,14 +55,13 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void IsValidRequestWithoutTableName()
         {
-            var request = new Request
-            {
-                SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new Collection<Condition>
+            var request = new Request(
+                "    ",
+                "Token, Owner, Amount",
+                new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-                }
-            };
+                });
 
             var result = RequestValidator.IsValidRequest(request);
 

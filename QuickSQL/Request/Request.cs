@@ -9,6 +9,18 @@ namespace QuickSQL
     /// </summary>
     public class Request
     {
+        public Request(string tableName, string selectedColumns)
+        {
+            TableName = tableName;
+            SelectedColumns = selectedColumns;
+        }
+        public Request(string tableName, string selectedColumns, Collection<Condition> whereConditions)
+        {
+            TableName = tableName;
+            SelectedColumns = selectedColumns;
+            WhereConditions = whereConditions;
+        }
+
         /// <summary>
         /// Pass a table from which to take data.<br/>
         /// This is a required parameter.
@@ -16,7 +28,7 @@ namespace QuickSQL
         /// <remarks>
         /// Example: "TableName"
         /// </remarks>
-        public string TableName { get; set; }
+        public string TableName;
 
         /// <summary>
         /// Pass columns from which to take data.<br/>
@@ -25,7 +37,7 @@ namespace QuickSQL
         /// <remarks>
         /// Example: "Id, Name, Address"
         /// </remarks>
-        public string SelectedColumns { get; set; }
+        public string SelectedColumns;
 
         /// <summary>
         /// Enter condition for search tables.<br/>
@@ -34,6 +46,6 @@ namespace QuickSQL
         /// <remarks>
         /// Example: new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
         /// </remarks>
-        public Collection<Condition> WhereConditions { get; set; }
+        public readonly Collection<Condition> WhereConditions;
     }
 }

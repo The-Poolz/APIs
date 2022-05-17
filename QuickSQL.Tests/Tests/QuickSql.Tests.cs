@@ -21,15 +21,13 @@ namespace QuickSQL.Tests
         {
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             string expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new Collection<Condition>
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-                }
-            };
+                });
             string connectionString;
 
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
@@ -48,15 +46,13 @@ namespace QuickSQL.Tests
         [Fact]
         public static void InvokeRequestWithoutConnectionString()
         {
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new Collection<Condition>
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-                }
-            };
+                });
             string connectionString = "   ";
 
             var result = QuickSql.InvokeRequest(request, connectionString,
@@ -68,15 +64,13 @@ namespace QuickSQL.Tests
         [Fact]
         public static void InvokeRequestInvalidConnectionString()
         {
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new Collection<Condition>
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-                }
-            };
+                });
             string connectionString = "not connection string";
             string expected = "Format of the initialization string does not conform to specification starting at index 0.";
 
@@ -90,15 +84,13 @@ namespace QuickSQL.Tests
         [Fact]
         public static void InvokeRequestInvalidProviders()
         {
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount",
-                WhereConditions = new Collection<Condition>
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-                }
-            };
+                });
             string connectionString = "not connection string";
 
             var result = QuickSql.InvokeRequest(request, connectionString, null, null);

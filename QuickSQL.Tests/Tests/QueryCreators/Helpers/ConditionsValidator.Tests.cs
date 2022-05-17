@@ -5,7 +5,7 @@ using QuickSQL.QueryCreator.Helpers;
 
 namespace QuickSQL.Tests.QueryCreators.Helpers
 {
-    public class ConditionsValidatorTests
+    public static class ConditionsValidatorTests
     {
         [Fact]
         public static void IsValidWhereConditionDefault()
