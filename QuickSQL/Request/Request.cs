@@ -29,6 +29,7 @@ namespace QuickSQL
         /// Example: "TableName"
         /// </remarks>
         readonly string TableName;
+        public string GetTableName() => TableName;
 
         /// <summary>
         /// Pass columns from which to take data.<br/>
@@ -38,6 +39,7 @@ namespace QuickSQL
         /// Example: "Id, Name, Address"
         /// </remarks>
         readonly string SelectedColumns;
+        public string GetSelectedColumns() => SelectedColumns;
 
         /// <summary>
         /// Enter condition for search tables.<br/>
@@ -47,5 +49,6 @@ namespace QuickSQL
         /// Example: new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
         /// </remarks>
         readonly Collection<Condition> WhereConditions;
+        public Collection<Condition> GetWhereConditions() => WhereConditions;
     }
 }

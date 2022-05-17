@@ -3,9 +3,9 @@
     public static class RequestValidator
     {
         public static bool IsValidRequest(Request request)
-            => NotNullTableName(request.TableName)
-            && NotNullSelectedColumns(request.SelectedColumns)
-            && ConditionsValidator.IsValidWhereCondition(request.WhereConditions);
+            => NotNullTableName(request.GetTableName())
+            && NotNullSelectedColumns(request.GetSelectedColumns())
+            && ConditionsValidator.IsValidWhereCondition(request.GetWhereConditions());
 
         public static bool NotNullTableName(string tableName)
             => tableName != null && !string.IsNullOrEmpty(tableName.Trim());

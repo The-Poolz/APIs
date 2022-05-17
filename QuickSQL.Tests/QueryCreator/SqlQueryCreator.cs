@@ -6,11 +6,11 @@ namespace QuickSQL.Tests.QueryCreator
     {
         protected override string OnCreateCommandQuery(Request request)
         {
-            string commandQuery = $"SELECT {request.SelectedColumns} FROM {request.TableName}";
+            string commandQuery = $"SELECT {request.GetSelectedColumns()} FROM {request.GetTableName()}";
 
-            if (request.WhereConditions != null)
+            if (request.GetWhereConditions() != null)
             {
-                commandQuery += $" {CreateWhereCondition(request.WhereConditions)}";
+                commandQuery += $" {CreateWhereCondition(request.GetWhereConditions())}";
             }
 
             commandQuery += " FOR JSON PATH";
