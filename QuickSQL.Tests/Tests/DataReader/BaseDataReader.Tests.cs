@@ -30,7 +30,7 @@ namespace QuickSQL.Tests.DataReader
             string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
 
@@ -56,7 +56,7 @@ namespace QuickSQL.Tests.DataReader
             string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
 
