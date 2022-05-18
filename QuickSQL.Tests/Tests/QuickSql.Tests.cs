@@ -61,25 +61,25 @@ namespace QuickSQL.Tests
             Assert.Null(result);
         }
 
-        [Fact]
-        public static void InvokeRequestInvalidConnectionString()
-        {
-            var request = new Request(
-                "TokenBalances",
-                "Token, Owner, Amount",
-                new Collection<Condition>
-                {
-                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-                });
-            string connectionString = "not connection string";
-            string expected = "Format of the initialization string does not conform to specification starting at index 0.";
+        //[Fact]
+        //public static void InvokeRequestInvalidConnectionString()
+        //{
+        //    var request = new Request(
+        //        "TokenBalances",
+        //        "Token, Owner, Amount",
+        //        new Collection<Condition>
+        //        {
+        //            new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+        //        });
+        //    string connectionString = "not connection string";
+        //    string expected = "Format of the initialization string does not conform to specification starting at index 0.";
 
-            void result() => QuickSql.InvokeRequest(request, connectionString,
-                new SqlDataReader(), new SqlQueryCreator());
+        //    void result() => QuickSql.InvokeRequest(request, connectionString,
+        //        new SqlDataReader(), new SqlQueryCreator());
 
-            ArgumentException exception = Assert.Throws<ArgumentException>(result);
-            Assert.Equal(expected, exception.Message);
-        }
+        //    ArgumentException exception = Assert.Throws<ArgumentException>(result);
+        //    Assert.Equal(expected, exception.Message);
+        //}
 
         [Fact]
         public static void InvokeRequestInvalidProviders()
