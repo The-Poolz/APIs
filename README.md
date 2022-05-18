@@ -4,11 +4,29 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/the-poolz/apis/badge?s=740ae1e3b7dbe3f939056f89e5d009f7544c75a2)](https://www.codefactor.io/repository/github/the-poolz/apis)
 
 
-
 By default, Entity Framework does not support the ability to dynamically select by passing a string with the table name to get a DbSet.
 This is how this library came about. This library allows you to perform a SELECT query by passing `Request` object.
 
 ## Install
+**Package Manager**
+```
+Install-Package ArdenHide.Utils.QuickSQL -Version 1.0.0
+```
+**.NET CLI**
+```
+dotnet add package ArdenHide.Utils.QuickSQL --version 1.0.0
+```
+
+You also need to install a package with your provider or implement your provider. Example for Microsoft Sql Server provider:
+
+**Package Manager**
+```
+Install-Package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer -Version 1.0.0
+```
+**.NET CLI**
+```
+dotnet add package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer --version 1.0.0
+```
 
 ## Example usage:
 
