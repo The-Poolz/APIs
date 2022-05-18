@@ -18,6 +18,7 @@ dotnet add package ArdenHide.Utils.QuickSQL --version 1.0.0
 ```
 
 You also need to install a package with your provider or implement your provider. Example for Microsoft Sql Server provider:
+
 **Package Manager**
 ```
 Install-Package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer -Version 1.0.0
