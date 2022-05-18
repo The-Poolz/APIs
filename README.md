@@ -9,15 +9,24 @@ By default, Entity Framework does not support the ability to dynamically select 
 This is how this library came about. This library allows you to perform a SELECT query by passing `Request` object.
 
 ## Install
+**Package Manager**
+```
+Install-Package ArdenHide.Utils.QuickSQL -Version 1.0.0
+```
+**.NET CLI**
+```
+dotnet add package ArdenHide.Utils.QuickSQL --version 1.0.0
+```
+
+You also need to install a package with your provider or implement your provider. Example for Microsoft Sql Server provider:
 
 **Package Manager**
 ```
-Install-Package ArdenHide.Utils.QuickSQL
+Install-Package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer -Version 1.0.0
 ```
-
 **.NET CLI**
 ```
-dotnet add package ArdenHide.Utils.QuickSQL
+dotnet add package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer --version 1.0.0
 ```
 
 ## Example usage:
@@ -99,10 +108,12 @@ public class SqlDataReader : BaseDataReader
 }
 ```
 
-***The second step*** is to create a QueryCreator for your SQL provider. You need to define `OnCreateCommandQuery()` for your provider. This function should create a SQL query string returning data in JSON format.
+***The second step*** is to create a QueryCreator for your SQL provider. You need to define `OnCreateCommandQuery()` for your provider. This function should create a SQL query string returning data in JSON format. You can use the `CreateWhereCondition()` internal function to create the condition string.
 
 **Example for MicrosoftSqlServer provider**
 ```c#
+using QuickSQL.QueryCreator;
+
 public class SqlQueryCreator : BaseQueryCreator
 {
     protected override string OnCreateCommandQuery(Request request)
