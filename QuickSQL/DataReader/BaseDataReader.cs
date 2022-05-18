@@ -25,6 +25,7 @@ namespace QuickSQL.DataReader
                 while (reader.Read())
                 {
                     jsonResult.Append(reader.GetValue(0).ToString());
+                    System.Console.WriteLine(jsonResult.ToString());
                 }
             }
 
