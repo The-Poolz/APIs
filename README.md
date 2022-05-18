@@ -16,7 +16,9 @@ Install-Package ArdenHide.Utils.QuickSQL -Version 1.0.0
 
 **.NET CLI**
 
-```dotnet add package ArdenHide.Utils.QuickSQL --version 1.0.0```
+```
+dotnet add package ArdenHide.Utils.QuickSQL --version 1.0.0
+```
 
 ## Example usage:
 
