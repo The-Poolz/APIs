@@ -10,6 +10,16 @@ This is how this library came about. This library allows you to perform a SELECT
 
 ## Install
 
+**Package Manager**
+```
+Install-Package ArdenHide.Utils.QuickSQL
+```
+
+**.NET CLI**
+```
+dotnet add package ArdenHide.Utils.QuickSQL
+```
+
 ## Example usage:
 
 >Providers currently supported: [SupportedProviders](https://github.com/The-Poolz/APIs/blob/master/QuickSQL/Providers.cs)
@@ -18,32 +28,42 @@ This is how this library came about. This library allows you to perform a SELECT
 ***The first step*** is to create the desired request.
 
 ```c#
-Request tokenBalances = new Request
-{
-    TableName = "TokenBalances",
-    SelectedColumns = "Token, Owner, Amount",
-    WhereCondition = "Id = 1, Token = 'ARD'"
-};
+using QuickSQL;
+
+Request tokenBalances = new Request(
+    "TokenBalances",
+    "Token, Owner, Amount",
+    new Collection<Condition>
+    {
+        new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" },
+        new Condition { ParamName = "Name", Operator = OperatorName.Equals, ParamValue = "'Alex'" },
+    });
 ```
 **Request fields**
 
 * `TableName` - This is a required parameter. Pass a table name from which to take data.
 * `SelectedColumns` - This is a required parameter. Pass columns from which to take data.
-* `WhereCondition` - Not required parameter. Enter condition for search tables. If it is a string parameter, you need to pass the condition parameter in single quotes, like `TableName.Username = 'Alex'`.
+* `WhereConditions` - Not required parameter. Enter condition for search tables. If it is a string parameter, you need to pass the condition parameter in single quotes, like `ParamValue = "'Alex'`.
 
 ***The second step***, invoke request.
 ```c#
-Request tokenBalances = new Request
-{
-    TableName = "TokenBalances",
-    SelectedColumns = "Token, Owner, Amount",
-    WhereCondition = "Id = 1, Token = 'ARD'"
-};
+using QuickSQL;
+using QuickSQL.MicrosoftSqlServer;
+
+Request tokenBalances = new Request(
+    "TokenBalances",
+    "Token, Owner, Amount",
+    new Collection<Condition>
+    {
+        new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" },
+        new Condition { ParamName = "Name", Operator = OperatorName.Equals, ParamValue = "'Alex'" },
+    });
+    
 string result = QuickSql.InvokeRequest(
     tokenBalances,
     connectionString,
-    new MySqlDataReader(),
-    new MySqlQueryCreator()
+    new SqlDataReader(),
+    new SqlQueryCreator()
 );
 ```
 
@@ -53,10 +73,10 @@ string result = QuickSql.InvokeRequest(
 
 **Example for MySql provider**
 ```c#
+using QuickSQL.Datareader;
+
 public class MySqlDataReader : BaseDataReader
 {
-    public override Providers Provider => Providers.MySql;
-
     public override DbConnection CreateConnection(string connectionString)
         => new MySqlConnection(connectionString);
 
@@ -67,10 +87,10 @@ public class MySqlDataReader : BaseDataReader
 
 **Example for MicrosoftSqlServer provider**
 ```c#
+using QuickSQL.Datareader;
+
 public class SqlDataReader : BaseDataReader
 {
-    public override Providers Provider => Providers.MicrosoftSqlServer;
-
     public override DbConnection CreateConnection(string connectionString)
         => new SqlConnection(connectionString);
 
@@ -78,11 +98,6 @@ public class SqlDataReader : BaseDataReader
         => new SqlCommand(commandQuery, (SqlConnection)connection).ExecuteReader();
 }
 ```
-Now this line does not contain logic. You just need to define Provider to match the abstract class. The selected provider is not important.
-```c#
-public override Providers Provider => Providers.MicrosoftSqlServer;
-```
-
 
 ***The second step*** is to create a QueryCreator for your SQL provider. You need to define `OnCreateCommandQuery()` for your provider. This function should create a SQL query string returning data in JSON format.
 
@@ -90,23 +105,17 @@ public override Providers Provider => Providers.MicrosoftSqlServer;
 ```c#
 public class SqlQueryCreator : BaseQueryCreator
 {
-    public override Providers Provider => Providers.MicrosoftSqlServer;
-
     protected override string OnCreateCommandQuery(Request request)
     {
         string commandQuery = $"SELECT {request.SelectedColumns} FROM {request.TableName}";
-        if (!string.IsNullOrEmpty(request.WhereCondition))
+
+        if (request.WhereConditions != null)
         {
-            string condition = string.Join(" AND ", request.WhereCondition.Split(",").ToList());
-            commandQuery += ($" WHERE {condition}");
+            commandQuery += $" {CreateWhereCondition(request.WhereConditions)}";
         }
+
         commandQuery += " FOR JSON PATH";
         return commandQuery;
     }
 }
-```
-
-Now this line does not contain logic. You just need to define Provider to match the abstract class. The selected provider is not important.
-```c#
-public override Providers Provider => Providers.MicrosoftSqlServer;
 ```
