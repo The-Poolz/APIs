@@ -28,13 +28,14 @@ namespace QuickSQL.Tests.DataReader
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 });
             string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
+            var reader = new SqlDataReader();
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
                 connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
 
-            var result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
+            var result = reader.GetJsonData(commandQuery, connectionString);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -54,13 +55,14 @@ namespace QuickSQL.Tests.DataReader
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "40" }
                 });
             string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
+            var reader = new SqlDataReader();
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
                 connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
 
-            string result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
+            string result = reader.GetJsonData(commandQuery, connectionString);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
