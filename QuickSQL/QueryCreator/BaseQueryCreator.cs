@@ -24,9 +24,6 @@ namespace QuickSQL.QueryCreator
                 List<string> formatConditions = new List<string>();
                 foreach (var cond in conditions)
                 {
-                    if (!ValidOperators.Operators.ContainsKey(cond.Operator))
-                        throw new ArgumentException("Invalid condition operatior.");
-
                     ValidOperators.Operators.TryGetValue(cond.Operator, out string operatorSymbol);
                     var conditionString = $"{cond.ParamName} {operatorSymbol} {cond.ParamValue}";
 

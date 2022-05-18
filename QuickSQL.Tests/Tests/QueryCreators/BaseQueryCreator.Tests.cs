@@ -1,5 +1,6 @@
 ﻿using Xunit;
 using System.Collections.ObjectModel;
+using System;
 
 namespace QuickSQL.Tests.QueryCreator
 {
