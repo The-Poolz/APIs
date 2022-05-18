@@ -9,9 +9,13 @@ This is how this library came about. This library allows you to perform a SELECT
 
 ## Install
 **Package Manager**
-```Install-Package ArdenHide.Utils.QuickSQL -Version 1.0.0```
+
+```
+Install-Package ArdenHide.Utils.QuickSQL -Version 1.0.0
+```
 
 **.NET CLI**
+
 ```dotnet add package ArdenHide.Utils.QuickSQL --version 1.0.0```
 
 ## Example usage:
