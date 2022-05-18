@@ -28,15 +28,14 @@ namespace QuickSQL.Tests.DataReader
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 });
             string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
-            var reader = new SqlDataReader();
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
                 connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
-
-            var result = reader.GetJsonData(commandQuery, connectionString);
-
+            Console.WriteLine($"Connection {connectionString}");
+            var result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
+            Console.WriteLine($"Resilt: {result}");
             Assert.NotNull(result);
             Assert.IsType<string>(result);
             Assert.Equal(expected, result);
@@ -55,14 +54,13 @@ namespace QuickSQL.Tests.DataReader
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "40" }
                 });
             string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
-            var reader = new SqlDataReader();
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
                 connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
 
-            string result = reader.GetJsonData(commandQuery, connectionString);
+            string result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
