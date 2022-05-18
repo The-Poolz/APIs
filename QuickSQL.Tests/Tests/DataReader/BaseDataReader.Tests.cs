@@ -33,9 +33,13 @@ namespace QuickSQL.Tests.DataReader
                 connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
-            Console.WriteLine($"Connection {connectionString}");
+            Console.WriteLine($"Connection string {connectionString}");
+            var connection = new SqlDataReader().CreateConnection(connectionString);
+            Console.WriteLine(connection.State.ToString());
+
             var result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
             Console.WriteLine($"Resilt: {result}");
+
             Assert.NotNull(result);
             Assert.IsType<string>(result);
             Assert.Equal(expected, result);
