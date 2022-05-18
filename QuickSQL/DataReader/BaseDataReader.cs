@@ -21,15 +21,15 @@ namespace QuickSQL.DataReader
                 var reader = CreateReader(commandQuery, connection);
 
                 System.Console.WriteLine("reader is: " + reader.IsClosed);
-
                 while (reader.HasRows)
                 {
+                    System.Console.WriteLine(reader.IsClosed);
+
                     while (reader.Read())
                     {
                         jsonResult.Append(reader.GetValue(0).ToString());
                         System.Console.WriteLine(jsonResult.ToString());
                     }
-
                     reader.NextResult();
                 }
             }
