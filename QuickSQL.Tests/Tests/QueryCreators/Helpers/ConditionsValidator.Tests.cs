@@ -38,6 +38,21 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         }
 
         [Fact]
+        public static void IsValidWhereConditionInvalid()
+        {
+            var conditions = new Collection<Condition>
+            {
+                new Condition { ParamName = "   ", Operator = OperatorName.Equals, ParamValue = "1" },
+                new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "2" }
+            };
+
+            var result = ConditionsValidator.IsValidWhereCondition(conditions);
+
+            Assert.IsType<bool>(result);
+            Assert.False(result);
+        }
+
+        [Fact]
         public static void NotNullParamNameDefault()
         {
             var condition = new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" };

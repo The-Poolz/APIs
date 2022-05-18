@@ -1,6 +1,7 @@
-﻿using QuickSQL.DataReader;
+﻿using System.Collections.ObjectModel;
+
+using QuickSQL.DataReader;
 using QuickSQL.QueryCreator;
-using System.Collections.ObjectModel;
 
 namespace QuickSQL
 {
