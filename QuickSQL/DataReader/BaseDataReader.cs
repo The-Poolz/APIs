@@ -8,15 +8,20 @@ namespace QuickSQL.DataReader
         public string GetJsonData(string commandQuery, string connectionString)
         {
             string emptyJson = "[]";
-            using var connection = CreateConnection(connectionString);
-            connection.Open();
-            var reader = CreateReader(commandQuery, connection);
+            StringBuilder jsonResult = new StringBuilder();
 
-            var jsonResult = new StringBuilder();
-            while (reader.Read())
+            using (var connection = CreateConnection(connectionString))
             {
-                jsonResult.Append(reader.GetValue(0).ToString());
+                connection.Open();
+
+                var reader = CreateReader(commandQuery, connection);
+
+                while (reader.Read())
+                {
+                    jsonResult.Append(reader.GetValue(0).ToString());
+                }
             }
+
             if (string.IsNullOrEmpty(jsonResult.ToString()))
                 return emptyJson;
             return jsonResult.ToString();
