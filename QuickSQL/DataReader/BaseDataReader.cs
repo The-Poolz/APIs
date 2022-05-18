@@ -10,11 +10,17 @@ namespace QuickSQL.DataReader
             string emptyJson = "[]";
             StringBuilder jsonResult = new StringBuilder();
 
+            System.Console.WriteLine("connection string: " + connectionString);
+
             using (var connection = CreateConnection(connectionString))
             {
                 connection.Open();
 
+                System.Console.WriteLine(connection.State.ToString());
+
                 var reader = CreateReader(commandQuery, connection);
+
+                System.Console.WriteLine("reader is: " + reader.IsClosed);
 
                 while (reader.Read())
                 {
