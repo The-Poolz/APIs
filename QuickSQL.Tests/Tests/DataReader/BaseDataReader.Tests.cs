@@ -35,7 +35,9 @@ namespace QuickSQL.Tests.DataReader
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
             Console.WriteLine($"Connection string {connectionString}");
             var connection = new SqlDataReader().CreateConnection(connectionString);
+            var reader = new SqlDataReader().CreateReader(commandQuery, connection);
             Console.WriteLine(connection.State.ToString());
+            Console.WriteLine(reader.VisibleFieldCount);
 
             var result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
             Console.WriteLine($"Resilt: {result}");
