@@ -17,8 +17,11 @@ namespace QuickSQL.DataReader
                 while (reader.Read())
                 {
                     jsonResult.Append(reader.GetValue(0).ToString());
+                    if (!reader.HasRows)
+                    {
+                        reader.Close();
+                    }
                 }
-                reader.Close();
             }
 
             if (string.IsNullOrEmpty(jsonResult.ToString()))
