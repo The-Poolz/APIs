@@ -16,28 +16,28 @@ namespace QuickSQL.Tests
     /// </remarks>
     public static class QuickSqlTests
     {
-        //[Fact]
-        //public static void InvokeRequest()
-        //{
-        //    string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
-        //    string expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
-        //    var request = new Request(
-        //        "TokenBalances",
-        //        "Token, Owner, Amount");
-        //    string connectionString;
+        [Fact]
+        public static void InvokeRequest()
+        {
+            string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
+            string expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount");
+            string connectionString;
 
-        //    if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-        //        connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
-        //    else
-        //        connectionString = LocalConnection.MicrosoftSqlServerConnection;
+            if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
+            else
+                connectionString = LocalConnection.MicrosoftSqlServerConnection;
 
-        //    var result = QuickSql.InvokeRequest(request, connectionString,
-        //        new SqlDataReader(), new SqlQueryCreator());
+            var result = QuickSql.InvokeRequest(request, connectionString,
+                new SqlDataReader(), new SqlQueryCreator());
 
-        //    Assert.NotNull(result);
-        //    Assert.IsType<string>(result);
-        //    Assert.Equal(expected, result);
-        //}
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal(expected, result);
+        }
 
         //[Fact]
         //public static void InvokeRequestWithoutConnectionString()
