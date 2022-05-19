@@ -1,4 +1,6 @@
-﻿namespace QuickSQL.QueryCreator.Helpers
+﻿using System.Collections.ObjectModel;
+
+namespace QuickSQL.QueryCreator.Helpers
 {
     public static class RequestValidator
     {
@@ -9,7 +11,7 @@
 
         public static bool NotNullTableName(string tableName)
             => tableName != null && !string.IsNullOrEmpty(tableName.Trim());
-        public static bool NotNullSelectedColumns(string selectedColumns)
-            => selectedColumns != null && !string.IsNullOrEmpty(selectedColumns.Trim());
+        public static bool NotNullSelectedColumns(Collection<string> selectedColumns)
+            => selectedColumns != null && selectedColumns.Count != 0;
     }
 }

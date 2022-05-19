@@ -23,7 +23,12 @@ namespace QuickSQL.Tests
             string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
             var request = new Request(
                 "TokenBalances",
-                "Token, Owner, Amount",
+                new Collection<string>
+                {
+                    { "Token" },
+                    { "Owner" },
+                    { "Amount" }
+                },
                 new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
@@ -48,7 +53,12 @@ namespace QuickSQL.Tests
         {
             var request = new Request(
                 "TokenBalances",
-                "Token, Owner, Amount",
+                new Collection<string>
+                {
+                    { "Token" },
+                    { "Owner" },
+                    { "Amount" }
+                },
                 new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
@@ -66,7 +76,12 @@ namespace QuickSQL.Tests
         {
             var request = new Request(
                 "TokenBalances",
-                "Token, Owner, Amount",
+                new Collection<string>
+                {
+                    { "Token" },
+                    { "Owner" },
+                    { "Amount" }
+                },
                 new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
@@ -86,7 +101,12 @@ namespace QuickSQL.Tests
         {
             var request = new Request(
                 "TokenBalances",
-                "Token, Owner, Amount",
+                new Collection<string>
+                {
+                    { "Token" },
+                    { "Owner" },
+                    { "Amount" }
+                },
                 new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }

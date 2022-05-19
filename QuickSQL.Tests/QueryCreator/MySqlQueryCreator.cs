@@ -10,11 +10,10 @@ namespace QuickSQL.Tests.QueryCreator
         protected override string OnCreateCommandQuery(Request request)
         {
             string tableName = request.TableName;
-            List<string> columns = request.SelectedColumns.Split(",").ToList();
             string jsonColumns = "JSON_ARRAYAGG(JSON_OBJECT(";
-            foreach (var column in columns)
+            foreach (var column in request.SelectedColumns)
             {
-                if (columns.Last() == column)
+                if (request.SelectedColumns.Last() == column)
                     jsonColumns += $"'{column.Trim()}',{column.Trim()}";
                 else
                     jsonColumns += $"'{column.Trim()}',{column.Trim()}, ";

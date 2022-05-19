@@ -12,7 +12,12 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         {
             var request = new Request(
                 "TokenBalances",
-                "Token, Owner, Amount",
+                new Collection<string>
+                {
+                    { "Token" },
+                    { "Owner" },
+                    { "Amount" }
+                },
                 new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
@@ -27,7 +32,13 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void IsValidRequestWithoutWhereCondition()
         {
-            var request = new Request("TokenBalances", "Token, Owner, Amount");
+            var request = new Request("TokenBalances",
+                new Collection<string>
+                {
+                    { "Token" },
+                    { "Owner" },
+                    { "Amount" }
+                });
 
             var result = RequestValidator.IsValidRequest(request);
 
@@ -40,7 +51,7 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         {
             var request = new Request(
                 "TokenBalances",
-                "   ",
+                new Collection<string> { },
                 new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
@@ -57,7 +68,12 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         {
             var request = new Request(
                 "    ",
-                "Token, Owner, Amount",
+                new Collection<string>
+                {
+                    { "Token" },
+                    { "Owner" },
+                    { "Amount" }
+                },
                 new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
@@ -94,7 +110,12 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void NotNullSelectedColumnsDetault()
         {
-            var selectedColumns = "Token, Owner, Amount";
+            var selectedColumns = new Collection<string>
+            {
+                { "Token" },
+                { "Owner" },
+                { "Amount" }
+            };
 
             var result = RequestValidator.NotNullSelectedColumns(selectedColumns);
 
@@ -105,7 +126,7 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         [Fact]
         public static void NotNullSelectedColumnsEmptyParam()
         {
-            var selectedColumns = "      ";
+            var selectedColumns = new Collection<string> { };
 
             var result = RequestValidator.NotNullSelectedColumns(selectedColumns);
 
