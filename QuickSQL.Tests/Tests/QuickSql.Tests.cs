@@ -23,7 +23,11 @@ namespace QuickSQL.Tests
             string expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
             var request = new Request(
                 "TokenBalances",
-                "Token, Owner, Amount");
+                "Token, Owner, Amount",
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                });
             string connectionString;
 
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))

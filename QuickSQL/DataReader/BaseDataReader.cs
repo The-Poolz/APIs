@@ -14,14 +14,12 @@ namespace QuickSQL.DataReader
             {
                 connection.Open();
                 var reader = CreateReader(commandQuery, connection);
-                while (reader.Read())
+                int countResults = reader.FieldCount;
+                for (int i = 0; i < countResults; i++)
                 {
                     jsonResult.Append(reader.GetValue(0).ToString());
-                    if (!reader.HasRows)
-                    {
-                        reader.Close();
-                    }
                 }
+                reader.Close();
             }
 
             if (string.IsNullOrEmpty(jsonResult.ToString()))
