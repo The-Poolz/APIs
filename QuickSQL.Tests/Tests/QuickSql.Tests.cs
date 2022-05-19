@@ -20,7 +20,7 @@ namespace QuickSQL.Tests
         public static void InvokeRequest()
         {
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
-            string expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
+            string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
             var request = new Request(
                 "TokenBalances",
                 "Token, Owner, Amount",
@@ -31,12 +31,12 @@ namespace QuickSQL.Tests
             string connectionString;
 
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
             else
-                connectionString = LocalConnection.MicrosoftSqlServerConnection;
+                connectionString = LocalConnection.MySqlConnection;
 
             var result = QuickSql.InvokeRequest(request, connectionString,
-                new SqlDataReader(), new SqlQueryCreator());
+                new MySqlDataReader(), new MySqlQueryCreator());
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
