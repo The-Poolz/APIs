@@ -14,8 +14,7 @@ namespace QuickSQL.DataReader
             {
                 connection.Open();
                 var reader = CreateReader(commandQuery, connection);
-                int countResults = reader.FieldCount;
-                for (int i = 0; i < countResults; i++)
+                while (reader.Read())
                 {
                     jsonResult.Append(reader.GetValue(0).ToString());
                 }
