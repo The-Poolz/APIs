@@ -11,7 +11,7 @@ namespace QuickSQL.Tests.DataReader
     /// SqlDataReader has implemented the BaseDataReader tests.
     /// </summary>
     /// <remarks>
-    /// All tests with databese use the Microsoft Sql Server provider.
+    /// All tests with databese use the MySql provider.
     /// </remarks>
     public static class BaseDataReaderTests
     {
@@ -41,30 +41,30 @@ namespace QuickSQL.Tests.DataReader
             Assert.Equal(expected, result);
         }
 
-        //[Fact]
-        //public static void GetJsonDataEmptyJsonResult()
-        //{
-        //    string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
-        //    string expected = "[]";
-        //    var request = new Request(
-        //        "TokenBalances",
-        //        "Token, Owner, Amount",
-        //        new Collection<Condition>
-        //        {
-        //            new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "40" }
-        //        });
-        //    string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
-        //    string connectionString;
-        //    if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-        //        connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
-        //    else
-        //        connectionString = LocalConnection.MicrosoftSqlServerConnection;
+        [Fact]
+        public static void GetJsonDataEmptyJsonResult()
+        {
+            string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
+            string expected = "[]";
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "40" }
+                });
+            string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
+            string connectionString;
+            if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
+            else
+                connectionString = LocalConnection.MicrosoftSqlServerConnection;
 
-        //    string result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
+            string result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
 
-        //    Assert.NotNull(result);
-        //    Assert.IsType<string>(result);
-        //    Assert.Equal(expected, result);
-        //}
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal(expected, result);
+        }
     }
 }

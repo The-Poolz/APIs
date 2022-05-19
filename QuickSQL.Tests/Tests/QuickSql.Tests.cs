@@ -12,7 +12,7 @@ namespace QuickSQL.Tests
     /// QuickSql tests.
     /// </summary>
     /// <remarks>
-    /// All tests with databese use the Microsoft Sql Server provider.
+    /// All tests with databese use the MySql provider.
     /// </remarks>
     public static class QuickSqlTests
     {
@@ -43,59 +43,59 @@ namespace QuickSQL.Tests
             Assert.Equal(expected, result);
         }
 
-        //[Fact]
-        //public static void InvokeRequestWithoutConnectionString()
-        //{
-        //    var request = new Request(
-        //        "TokenBalances",
-        //        "Token, Owner, Amount",
-        //        new Collection<Condition>
-        //        {
-        //            new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-        //        });
-        //    string connectionString = "   ";
+        [Fact]
+        public static void InvokeRequestWithoutConnectionString()
+        {
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                });
+            string connectionString = "   ";
 
-        //    var result = QuickSql.InvokeRequest(request, connectionString,
-        //        new SqlDataReader(), new SqlQueryCreator());
+            var result = QuickSql.InvokeRequest(request, connectionString,
+                new SqlDataReader(), new SqlQueryCreator());
 
-        //    Assert.Null(result);
-        //}
+            Assert.Null(result);
+        }
 
-        //[Fact]
-        //public static void InvokeRequestInvalidConnectionString()
-        //{
-        //    var request = new Request(
-        //        "TokenBalances",
-        //        "Token, Owner, Amount",
-        //        new Collection<Condition>
-        //        {
-        //            new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-        //        });
-        //    string connectionString = "not connection string";
-        //    string expected = "Format of the initialization string does not conform to specification starting at index 0.";
+        [Fact]
+        public static void InvokeRequestInvalidConnectionString()
+        {
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                });
+            string connectionString = "not connection string";
+            string expected = "Format of the initialization string does not conform to specification starting at index 0.";
 
-        //    void result() => QuickSql.InvokeRequest(request, connectionString,
-        //        new SqlDataReader(), new SqlQueryCreator());
+            void result() => QuickSql.InvokeRequest(request, connectionString,
+                new SqlDataReader(), new SqlQueryCreator());
 
-        //    ArgumentException exception = Assert.Throws<ArgumentException>(result);
-        //    Assert.Equal(expected, exception.Message);
-        //}
+            ArgumentException exception = Assert.Throws<ArgumentException>(result);
+            Assert.Equal(expected, exception.Message);
+        }
 
-        //[Fact]
-        //public static void InvokeRequestInvalidProviders()
-        //{
-        //    var request = new Request(
-        //        "TokenBalances",
-        //        "Token, Owner, Amount",
-        //        new Collection<Condition>
-        //        {
-        //            new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-        //        });
-        //    string connectionString = "not connection string";
+        [Fact]
+        public static void InvokeRequestInvalidProviders()
+        {
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                });
+            string connectionString = "not connection string";
 
-        //    var result = QuickSql.InvokeRequest(request, connectionString, null, null);
+            var result = QuickSql.InvokeRequest(request, connectionString, null, null);
 
-        //    Assert.Null(result);
-        //}
+            Assert.Null(result);
+        }
     }
 }

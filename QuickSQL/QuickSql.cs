@@ -14,6 +14,7 @@ namespace QuickSQL
         /// <param name="request">Pass <see cref="Request"/> object with request settings.</param>
         /// <param name="connectionString">Connection string to database.</param>
         /// <param name="dataReader">DataReader defining <see cref="BaseDataReader.CreateConnection(string)"/> and <see cref="BaseDataReader.CreateReader(string, DbConnection)"/> methods for your provider.<br/>Supported providers <see cref="Providers"/>.</param>
+        /// <param name="queryCreator">QueryCreator defining <see cref="BaseQueryCreator.OnCreateCommandQuery(Request)"</see> methods for your provider.<br/>Supported providers <see cref="Providers"/>./></param>
         /// <returns>Returns JSON string data if data read is success, or return empty JSON if data not found. Return null if operation failed.</returns>
         public static string InvokeRequest(Request request, string connectionString, BaseDataReader dataReader, BaseQueryCreator queryCreator)
         {
