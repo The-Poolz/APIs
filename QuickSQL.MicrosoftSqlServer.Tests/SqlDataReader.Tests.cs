@@ -8,10 +8,10 @@ using System.Collections.ObjectModel;
 
 namespace QuickSQL.MicrosoftSqlServer.Tests
 {
-    public class SqlDataReaderTests
+    public static class SqlDataReaderTests
     {
         [Fact]
-        public void CreateConnection()
+        public static void CreateConnection()
         {
             ConnectionState expectedState = ConnectionState.Closed;
             string connectionString;
@@ -29,7 +29,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
         }
 
         [Fact]
-        public void CreateReader()
+        public static void CreateReader()
         {
             string connectionString;
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
@@ -59,7 +59,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
         }
 
         [Fact]
-        public void GetJsonDataDefault()
+        public static void GetJsonDataDefault()
         {
             string expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
             string connectionString;
@@ -85,7 +85,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
         }
 
         [Fact]
-        public void GetJsonDataInvalidCommand()
+        public static void GetJsonDataInvalidCommand()
         {
             string expected = "Invalid object name 'Token'.";
             string connectionString;
@@ -110,7 +110,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
         }
 
         [Fact]
-        public void GetJsonDataInvalidConnectionString()
+        public static void GetJsonDataInvalidConnectionString()
         {
             string expected = "Format of the initialization string does not conform to specification starting at index 0.";
             string connectionString = "not connection string";

@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace QuickSQL.MicrosoftSqlServer.Tests
 {
-    public class SqlQueryCreatorTests
+    public static class SqlQueryCreatorTests
     {
         [Fact]
         public static void GetCommandQuery()
