@@ -1,36 +1,40 @@
 ﻿using Xunit;
 using System;
 using System.Globalization;
+using System.Collections.ObjectModel;
 
-using QuickSQL.Tests.DataReaders;
-using QuickSQL.Tests.QueryCreators;
+using QuickSQL.Tests.QueryCreator;
 
 namespace QuickSQL.Tests.DataReader
 {
+    /// <summary>
+    /// SqlDataReader has implemented the BaseDataReader tests.
+    /// </summary>
+    /// <remarks>
+    /// All tests with databese use the MySql provider.
+    /// </remarks>
     public static class BaseDataReaderTests
     {
         [Fact]
         public static void GetJsonData()
         {
-            MySqlDataReader reader = new MySqlDataReader();
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 1"
-            };
-            string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
-            var queryCreator = new MySqlQueryCreator();
-            string commandQuery = queryCreator.CreateCommandQuery(request);
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
+            string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                });
+            string commandQuery = new MySqlQueryCreator().CreateCommandQuery(request);
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
                 connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
             else
                 connectionString = LocalConnection.MySqlConnection;
 
-            // Act
-            var result = reader.GetJsonData(commandQuery, connectionString);
+            var result = new MySqlDataReader().GetJsonData(commandQuery, connectionString);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -40,39 +44,23 @@ namespace QuickSQL.Tests.DataReader
         [Fact]
         public static void GetJsonDataEmptyJsonResult()
         {
-            MySqlDataReader reader = new MySqlDataReader();
-            var request = new Request
-            {
-                TableName = "TokenBalances",
-                SelectedColumns = "Token, Owner, Amount",
-                WhereCondition = "Id = 40"
-            };
-            string expected = "[]";
-            var queryCreator = new MySqlQueryCreator();
-            string commandQuery = queryCreator.CreateCommandQuery(request);
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
+            string expected = "[]";
+            var request = new Request(
+                "TokenBalances",
+                "Token, Owner, Amount",
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "40" }
+                });
+            string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
             string connectionString;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
-                connectionString = LocalConnection.MySqlConnection;
+                connectionString = LocalConnection.MicrosoftSqlServerConnection;
 
-            // Act
-            string result = reader.GetJsonData(commandQuery, connectionString);
-
-            Assert.NotNull(result);
-            Assert.IsType<string>(result);
-            Assert.Equal(expected, result);
-        }
-
-        [Fact]
-        public static void GetProviderName()
-        {
-            MySqlDataReader reader = new MySqlDataReader();
-            string expected = Providers.MySql.ToString();
-
-            // Act
-            string result = reader.ProviderName;
+            string result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);

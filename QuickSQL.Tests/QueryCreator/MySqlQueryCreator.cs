@@ -1,22 +1,12 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 
 using QuickSQL.QueryCreator;
 
-namespace QuickSQL.Tests.QueryCreators
+namespace QuickSQL.Tests.QueryCreator
 {
-    /// <summary>
-    /// Provides methods for creating SQL query string
-    /// </summary>
     public class MySqlQueryCreator : BaseQueryCreator
     {
-        public override Providers Provider => Providers.MySql;
-
-        /// <summary>
-        /// Creates an SQL query string.
-        /// </summary>
-        /// <param name="request">Pass <see cref="Request"/> object with request settings.</param>
-        /// <returns>Returns a SQL query string.</returns>
         protected override string OnCreateCommandQuery(Request request)
         {
             string tableName = request.TableName;
@@ -33,10 +23,9 @@ namespace QuickSQL.Tests.QueryCreators
 
             string commandQuery = $"SELECT {jsonColumns} FROM {tableName}";
 
-            if (!string.IsNullOrEmpty(request.WhereCondition))
+            if (request.WhereConditions != null)
             {
-                string condition = string.Join(" AND ", request.WhereCondition.Split(",").ToList());
-                commandQuery += ($" WHERE {condition}");
+                commandQuery += $" {CreateWhereCondition(request.WhereConditions)}";
             }
 
             return commandQuery;

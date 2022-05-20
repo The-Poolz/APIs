@@ -16,10 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="obj\QuickSQL.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <Folder Include="obj\" />
   </ItemGroup>
 
 </Project>

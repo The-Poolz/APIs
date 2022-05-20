@@ -3,12 +3,10 @@ using MySql.Data.MySqlClient;
 
 using QuickSQL.DataReader;
 
-namespace QuickSQL.Tests.DataReaders
+namespace QuickSQL.Tests.DataReader
 {
     public class MySqlDataReader : BaseDataReader
     {
-        public override Providers Provider => Providers.MySql;
-
         public override DbConnection CreateConnection(string connectionString)
             => new MySqlConnection(connectionString);
 

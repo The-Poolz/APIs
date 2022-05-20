@@ -2,12 +2,14 @@
 {
     public static class RequestValidator
     {
-        public static bool IsValidRequest(Request requestSettings)
-            => NotNullTableName(requestSettings) && NotNullSelectedColumns(requestSettings);
+        public static bool IsValidRequest(Request request)
+            => NotNullTableName(request.TableName)
+            && NotNullSelectedColumns(request.SelectedColumns)
+            && ConditionsValidator.IsValidWhereCondition(request.WhereConditions);
 
-        public static bool NotNullTableName(Request requestSettings)
-            => requestSettings.TableName != null && requestSettings.TableName.Length != 0;
-        public static bool NotNullSelectedColumns(Request requestSettings)
-            => requestSettings.SelectedColumns != null && requestSettings.SelectedColumns.Length != 0;
+        public static bool NotNullTableName(string tableName)
+            => tableName != null && !string.IsNullOrEmpty(tableName.Trim());
+        public static bool NotNullSelectedColumns(string selectedColumns)
+            => selectedColumns != null && !string.IsNullOrEmpty(selectedColumns.Trim());
     }
 }
