@@ -41,7 +41,10 @@ using QuickSQL;
 
 Request tokenBalances = new Request(
     "TokenBalances",
-    "Token, Owner, Amount",
+    new Collection<string>
+	{
+		{ "Token" }, { "Owner" }, { "Amount" }
+	},
     new Collection<Condition>
     {
         new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" },
@@ -61,7 +64,10 @@ using QuickSQL.MicrosoftSqlServer;
 
 Request tokenBalances = new Request(
     "TokenBalances",
-    "Token, Owner, Amount",
+    new Collection<string>
+	{
+		{ "Token" }, { "Owner" }, { "Amount" }
+	},
     new Collection<Condition>
     {
         new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" },
@@ -76,9 +82,17 @@ string result = QuickSql.InvokeRequest(
 );
 ```
 
+## Security
+This library does not have SQL injection checks. 
+Best security practice is to create a read-only user. 
+It's also a good idea to limit the user's visibility to tables that they shouldn't see.
+
 ## I didn't find my provider. Instructions for adding your provider
 
-***The first step*** is to create a DataReader for your SQL provider. It is easier than it might seem, to implement your DateReader inherit the abstract class `BaseDataReader`. This abstract class have core logic for read SQL data. You need to define `CreateConnection()` and `CreateReader()` for your provider.
+***The first step*** is to create a DataReader for your SQL provider. 
+It is easier than it might seem, to implement your DateReader inherit the abstract class `BaseDataReader`. 
+This abstract class have core logic for read SQL data. 
+You need to define `CreateConnection()` and `CreateReader()` for your provider.
 
 **Example for MySql provider**
 ```c#
@@ -118,7 +132,8 @@ public class SqlQueryCreator : BaseQueryCreator
 {
     protected override string OnCreateCommandQuery(Request request)
     {
-        string commandQuery = $"SELECT {request.SelectedColumns} FROM {request.TableName}";
+        string selectedColumns = string.Join(", ", request.SelectedColumns);
+		string commandQuery = $"SELECT {selectedColumns} FROM {request.TableName}";
 
         if (request.WhereConditions != null)
         {

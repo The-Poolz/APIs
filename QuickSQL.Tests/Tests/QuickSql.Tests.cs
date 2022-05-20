@@ -25,9 +25,7 @@ namespace QuickSQL.Tests
                 "TokenBalances",
                 new Collection<string>
                 {
-                    { "Token" },
-                    { "Owner" },
-                    { "Amount" }
+                    { "Token" }, { "Owner" }, { "Amount" }
                 },
                 new Collection<Condition>
                 {
@@ -55,9 +53,7 @@ namespace QuickSQL.Tests
                 "TokenBalances",
                 new Collection<string>
                 {
-                    { "Token" },
-                    { "Owner" },
-                    { "Amount" }
+                    { "Token" }, { "Owner" }, { "Amount" }
                 },
                 new Collection<Condition>
                 {

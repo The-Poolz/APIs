@@ -24,9 +24,7 @@ namespace QuickSQL.Tests.DataReader
                 "TokenBalances",
                 new Collection<string>
                 {
-                    { "Token" },
-                    { "Owner" },
-                    { "Amount" }
+                    { "Token" }, { "Owner" }, { "Amount" }
                 },
                 new Collection<Condition>
                 {
