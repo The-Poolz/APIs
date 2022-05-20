@@ -1,4 +1,4 @@
-namespace QuickSQL.Tests
+namespace QuickSQL.MicrosoftSqlServer.Tests
 {
     public static class LocalConnection
     {
