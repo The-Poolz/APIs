@@ -1,5 +1,4 @@
 using QuickSQL.QueryCreator;
-using System.Linq;
 
 namespace QuickSQL.Tests.QueryCreator
 {

@@ -1,4 +1,4 @@
-# [QuickSQL](https://www.nuget.org/packages/ArdenHide.Utils.QuickSQL/1.0.0)
+# [QuickSQL](https://www.nuget.org/packages/ArdenHide.Utils.QuickSQL)
 [![Build Status](https://app.travis-ci.com/The-Poolz/APIs.svg?token=xusbS8YxMuyCLykrBixj&branch=master)](https://app.travis-ci.com/The-Poolz/APIs)
 [![codecov](https://codecov.io/gh/The-Poolz/APIs/branch/master/graph/badge.svg?token=0nHvyp3cmC)](https://codecov.io/gh/The-Poolz/APIs)
 [![CodeFactor](https://www.codefactor.io/repository/github/the-poolz/apis/badge?s=740ae1e3b7dbe3f939056f89e5d009f7544c75a2)](https://www.codefactor.io/repository/github/the-poolz/apis)
@@ -10,22 +10,22 @@ This is how this library came about. This library allows you to perform a SELECT
 ## Install
 **Package Manager**
 ```
-Install-Package ArdenHide.Utils.QuickSQL -Version 1.0.0
+Install-Package ArdenHide.Utils.QuickSQL
 ```
 **.NET CLI**
 ```
-dotnet add package ArdenHide.Utils.QuickSQL --version 1.0.0
+dotnet add package ArdenHide.Utils.QuickSQL
 ```
 
 You also need to install a package with your provider or implement your provider. Example for Microsoft Sql Server provider:
 
 **Package Manager**
 ```
-Install-Package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer -Version 1.0.0
+Install-Package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer
 ```
 **.NET CLI**
 ```
-dotnet add package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer --version 1.0.0
+dotnet add package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer
 ```
 
 ## Example usage:
@@ -40,11 +40,13 @@ using QuickSQL;
 
 Request tokenBalances = new Request(
     "TokenBalances",
-    "Token, Owner, Amount",
+    new Collection<string>
+    {
+        { "Token" }, { "Owner" }, { "Amount" }
+    },
     new Collection<Condition>
     {
-        new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" },
-        new Condition { ParamName = "Name", Operator = OperatorName.Equals, ParamValue = "'Alex'" },
+        new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
     });
 ```
 **Request fields**
@@ -60,11 +62,14 @@ using QuickSQL.MicrosoftSqlServer;
 
 Request tokenBalances = new Request(
     "TokenBalances",
-    "Token, Owner, Amount",
+    new Collection<string>
+    {
+        { "Token" }, { "Owner" }, { "Amount" }
+    },
     new Collection<Condition>
     {
         new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" },
-        new Condition { ParamName = "Name", Operator = OperatorName.Equals, ParamValue = "'Alex'" },
+        new Condition { ParamName = "Name", Operator = OperatorName.Equals, ParamValue = "'Alex'" }
     });
     
 string result = QuickSql.InvokeRequest(
@@ -75,9 +80,17 @@ string result = QuickSql.InvokeRequest(
 );
 ```
 
+## Security
+This library does not have SQL injection checks. 
+Best security practice is to create a read-only user. 
+It's also a good idea to limit the user's visibility to tables that they shouldn't see.
+
 ## I didn't find my provider. Instructions for adding your provider
 
-***The first step*** is to create a DataReader for your SQL provider. It is easier than it might seem, to implement your DateReader inherit the abstract class `BaseDataReader`. This abstract class have core logic for read SQL data. You need to define `CreateConnection()` and `CreateReader()` for your provider.
+***The first step*** is to create a DataReader for your SQL provider. 
+It is easier than it might seem, to implement your DateReader inherit the abstract class `BaseDataReader`. 
+This abstract class have core logic for read SQL data. 
+You need to define `CreateConnection()` and `CreateReader()` for your provider.
 
 **Example for MySql provider**
 ```c#
@@ -117,7 +130,8 @@ public class SqlQueryCreator : BaseQueryCreator
 {
     protected override string OnCreateCommandQuery(Request request)
     {
-        string commandQuery = $"SELECT {request.SelectedColumns} FROM {request.TableName}";
+        string selectedColumns = string.Join(", ", request.SelectedColumns);
+        string commandQuery = $"SELECT {selectedColumns} FROM {request.TableName}";
 
         if (request.WhereConditions != null)
         {
