@@ -39,7 +39,7 @@ dotnet add package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer
 ```c#
 using QuickSQL;
 
-Request request = new Request(
+Request tokenBalances = new Request(
     "TokenBalances",
     new Collection<string>
     {
@@ -61,7 +61,7 @@ Request request = new Request(
 using QuickSQL;
 using QuickSQL.MicrosoftSqlServer;
 
-Request request = new Request(
+Request tokenBalances = new Request(
     "TokenBalances",
     new Collection<string>
     {
