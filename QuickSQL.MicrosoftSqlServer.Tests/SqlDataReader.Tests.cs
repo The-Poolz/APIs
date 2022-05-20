@@ -17,7 +17,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
             string connectionString;
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
 
@@ -34,7 +34,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
             string connectionString;
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
             var request = new Request(
@@ -65,7 +65,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
             string connectionString;
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
             var request = new Request(
@@ -91,7 +91,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
             string connectionString;
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
             var request = new Request(
