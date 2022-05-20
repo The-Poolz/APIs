@@ -39,16 +39,16 @@ dotnet add package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer
 ```c#
 using QuickSQL;
 
-Request tokenBalances = new Request(
-	"TokenBalances",
-	new Collection<string>
-	{
-	    { "Token" }, { "Owner" }, { "Amount" }
-	},
-	new Collection<Condition>
-	{
-	    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
-	});
+Request request = new Request(
+    "TokenBalances",
+    new Collection<string>
+    {
+        { "Token" }, { "Owner" }, { "Amount" }
+    },
+    new Collection<Condition>
+    {
+        new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+    });
 ```
 **Request fields**
 
@@ -61,16 +61,16 @@ Request tokenBalances = new Request(
 using QuickSQL;
 using QuickSQL.MicrosoftSqlServer;
 
-Request tokenBalances = new Request(
-	"TokenBalances",
-	new Collection<string>
-	{
-		{ "Token" }, { "Owner" }, { "Amount" }
-	},
+Request request = new Request(
+    "TokenBalances",
+    new Collection<string>
+    {
+        { "Token" }, { "Owner" }, { "Amount" }
+    },
     new Collection<Condition>
     {
         new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" },
-        new Condition { ParamName = "Name", Operator = OperatorName.Equals, ParamValue = "'Alex'" },
+        new Condition { ParamName = "Name", Operator = OperatorName.Equals, ParamValue = "'Alex'" }
     });
     
 string result = QuickSql.InvokeRequest(
