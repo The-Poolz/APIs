@@ -42,7 +42,7 @@ using QuickSQL;
 Request tokenBalances = new Request(
 	"TokenBalances",
 	new Collection<string>
-    {
+	{
 		{ "Token" }, { "Owner" }, { "Amount" }
 	},
     new Collection<Condition>
@@ -64,7 +64,7 @@ using QuickSQL.MicrosoftSqlServer;
 
 Request tokenBalances = new Request(
     "TokenBalances",
-    new Collection<string>
+	new Collection<string>
 	{
 		{ "Token" }, { "Owner" }, { "Amount" }
 	},
