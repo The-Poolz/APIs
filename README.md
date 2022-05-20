@@ -11,22 +11,22 @@ This is how this library came about. This library allows you to perform a SELECT
 ## Install
 **Package Manager**
 ```
-Install-Package ArdenHide.Utils.QuickSQL -Version 1.0.0
+Install-Package ArdenHide.Utils.QuickSQL
 ```
 **.NET CLI**
 ```
-dotnet add package ArdenHide.Utils.QuickSQL --version 1.0.0
+dotnet add package ArdenHide.Utils.QuickSQL
 ```
 
 You also need to install a package with your provider or implement your provider. Example for Microsoft Sql Server provider:
 
 **Package Manager**
 ```
-Install-Package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer -Version 1.0.0
+Install-Package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer
 ```
 **.NET CLI**
 ```
-dotnet add package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer --version 1.0.0
+dotnet add package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer
 ```
 
 ## Example usage:
@@ -40,9 +40,9 @@ dotnet add package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer --version 1.0.0
 using QuickSQL;
 
 Request tokenBalances = new Request(
-    "TokenBalances",
-    new Collection<string>
-	{
+	"TokenBalances",
+	new Collection<string>
+    {
 		{ "Token" }, { "Owner" }, { "Amount" }
 	},
     new Collection<Condition>
