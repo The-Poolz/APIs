@@ -43,13 +43,12 @@ Request tokenBalances = new Request(
 	"TokenBalances",
 	new Collection<string>
 	{
-		{ "Token" }, { "Owner" }, { "Amount" }
+	    { "Token" }, { "Owner" }, { "Amount" }
 	},
-    new Collection<Condition>
-    {
-        new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" },
-        new Condition { ParamName = "Name", Operator = OperatorName.Equals, ParamValue = "'Alex'" },
-    });
+	new Collection<Condition>
+	{
+	    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+	});
 ```
 **Request fields**
 
@@ -63,7 +62,7 @@ using QuickSQL;
 using QuickSQL.MicrosoftSqlServer;
 
 Request tokenBalances = new Request(
-    "TokenBalances",
+	"TokenBalances",
 	new Collection<string>
 	{
 		{ "Token" }, { "Owner" }, { "Amount" }
