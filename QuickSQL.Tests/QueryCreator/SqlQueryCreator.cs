@@ -1,4 +1,5 @@
 using QuickSQL.QueryCreator;
+using System.Linq;
 
 namespace QuickSQL.Tests.QueryCreator
 {
@@ -6,7 +7,8 @@ namespace QuickSQL.Tests.QueryCreator
     {
         protected override string OnCreateCommandQuery(Request request)
         {
-            string commandQuery = $"SELECT {request.SelectedColumns} FROM {request.TableName}";
+            string selectedColumns = string.Join(", ", request.SelectedColumns);
+            string commandQuery = $"SELECT {selectedColumns} FROM {request.TableName}";
 
             if (request.WhereConditions != null)
             {

@@ -10,12 +10,12 @@ namespace QuickSQL
     /// </summary>
     public class Request
     {
-        public Request(string tableName, string selectedColumns)
+        public Request(string tableName, Collection<string> selectedColumns)
         {
             _tableName = tableName;
             _selectedColumns = selectedColumns;
         }
-        public Request(string tableName, string selectedColumns, Collection<Condition> whereConditions)
+        public Request(string tableName, Collection<string> selectedColumns, Collection<Condition> whereConditions)
         {
             _tableName = tableName;
             _selectedColumns = selectedColumns;
@@ -38,7 +38,7 @@ namespace QuickSQL
         /// <remarks>
         /// Example: "Id, Name, Address"
         /// </remarks>
-        private readonly string _selectedColumns;
+        private readonly Collection<string> _selectedColumns;
 
         /// <summary>
         /// Enter condition for search tables.<br/>
@@ -50,7 +50,7 @@ namespace QuickSQL
         private readonly Collection<Condition> _whereConditions;
 
         public string TableName => _tableName;
-        public string SelectedColumns => _selectedColumns;
+        public Collection<string> SelectedColumns => _selectedColumns;
         public Collection<Condition> WhereConditions => _whereConditions;
     }
 }
