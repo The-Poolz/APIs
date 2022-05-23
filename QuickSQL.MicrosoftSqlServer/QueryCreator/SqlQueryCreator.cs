@@ -3,7 +3,7 @@ using QuickSQL.QueryCreator;
 namespace QuickSQL.MicrosoftSqlServer
 {
     /// <summary>
-    /// Provides methods for creating SQL query string
+    /// Provides methods for creating SQL query string.
     /// </summary>
     public class SqlQueryCreator : BaseQueryCreator
     {

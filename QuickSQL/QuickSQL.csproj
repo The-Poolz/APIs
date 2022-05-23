@@ -6,17 +6,29 @@
     <RootNamespace>QuickSQL</RootNamespace>
     <Authors>ArdenHide</Authors>
     <Description>Small library for convenient work with SQL queries.</Description>
-    <Copyright></Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/The-Poolz/APIs</RepositoryUrl>
     <PackageId>ArdenHide.Utils.QuickSQL</PackageId>
     <PackageTags>ArdenHide, SQL, Sql, QuickSQL, MySQL, MySql</PackageTags>
     <PackageIcon>QuickSQL.png</PackageIcon>
     <PackageIconUrl />
+    <Version>1.2.0</Version>
+    <PackageProjectUrl>https://www.nuget.org/packages/ArdenHide.Utils.QuickSQL/</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="obj\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\QuickSQL.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
