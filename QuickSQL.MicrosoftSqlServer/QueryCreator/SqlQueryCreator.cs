@@ -1,5 +1,3 @@
-using System.Linq;
-
 using QuickSQL.QueryCreator;
 
 namespace QuickSQL.MicrosoftSqlServer
@@ -9,8 +7,6 @@ namespace QuickSQL.MicrosoftSqlServer
     /// </summary>
     public class SqlQueryCreator : BaseQueryCreator
     {
-        public override Providers Provider => Providers.MicrosoftSqlServer;
-
         /// <summary>
         /// Creates an SQL query string.
         /// </summary>
@@ -18,12 +14,13 @@ namespace QuickSQL.MicrosoftSqlServer
         /// <returns>Returns a SQL query string.</returns>
         protected override string OnCreateCommandQuery(Request request)
         {
-            string commandQuery = $"SELECT {request.SelectedColumns} FROM {request.TableName}";
-            if (!string.IsNullOrEmpty(request.WhereCondition))
+            string commandQuery = $"SELECT {string.Join(", ", request.SelectedColumns)} FROM {request.TableName}";
+
+            if (request.WhereConditions != null)
             {
-                string condition = string.Join(" AND ", request.WhereCondition.Split(",").ToList());
-                commandQuery += ($" WHERE {condition}");
+                commandQuery += $" {CreateWhereCondition(request.WhereConditions)}";
             }
+
             commandQuery += " FOR JSON PATH";
             return commandQuery;
         }

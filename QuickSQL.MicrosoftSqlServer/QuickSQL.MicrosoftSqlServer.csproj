@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PackageId>ArdenHide.Utils.QuickSQL.MicrosoftSqlServer</PackageId>
     <Authors>ArdenHide</Authors>
     <Company>ArdenHide</Company>
@@ -12,8 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ArdenHide.Utils.QuickSQL" Version="1.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QuickSQL\QuickSQL.csproj" />
   </ItemGroup>
 
 </Project>

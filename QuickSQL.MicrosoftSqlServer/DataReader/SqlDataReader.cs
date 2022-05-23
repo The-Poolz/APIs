@@ -7,8 +7,6 @@ namespace QuickSQL.MicrosoftSqlServer
 {
     public class SqlDataReader : BaseDataReader
     {
-        public override Providers Provider => Providers.MicrosoftSqlServer;
-
         public override DbConnection CreateConnection(string connectionString)
             => new SqlConnection(connectionString);
 
