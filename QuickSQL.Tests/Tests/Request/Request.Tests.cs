@@ -1,10 +1,10 @@
 ﻿using Xunit;
-using System.Collections.ObjectModel;
 using System.Text.Json;
+using System.Collections.ObjectModel;
 
 namespace QuickSQL.Tests.Requests
 {
-    public class RequestTests
+    public static class RequestTests
     {
         [Fact]
         public static void CreateRequest()
