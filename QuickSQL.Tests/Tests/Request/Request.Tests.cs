@@ -1,0 +1,66 @@
+﻿using Xunit;
+using System.Collections.ObjectModel;
+using System.Text.Json;
+
+namespace QuickSQL.Tests.Requests
+{
+    public class RequestTests
+    {
+        [Fact]
+        public static void CreateRequest()
+        {
+            var request = new Request();
+
+            Assert.NotNull(request);
+            Assert.IsType<Request>(request);
+        }
+
+        [Fact]
+        public static void CreateRequestWithParams()
+        {
+            var request = new Request(
+                "TokenBalances",
+                new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                });
+
+            Assert.NotNull(request);
+            Assert.IsType<Request>(request);
+        }
+
+        [Fact]
+        public static void CreateRequestWithCondition()
+        {
+            var request = new Request(
+                "TokenBalances",
+                new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                });
+
+            Assert.NotNull(request);
+            Assert.IsType<Request>(request);
+        }
+
+        [Fact]
+        public static void SerializeObject()
+        {
+            var request = new Request(
+                "TokenBalances",
+                new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                });
+
+            var result = JsonSerializer.Serialize(request);
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal("{\"TableName\":\"TokenBalances\",\"SelectedColumns\":[\"Token\",\"Owner\",\"Amount\"],\"WhereConditions\":[{\"ParamName\":\"Id\",\"Operator\":0,\"ParamValue\":\"1\"}]}", result);
+        }
+    }
+}
