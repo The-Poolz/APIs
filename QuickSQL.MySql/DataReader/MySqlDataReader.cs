@@ -7,8 +7,6 @@ namespace QuickSQL.MySql
 {
     public class MySqlDataReader : BaseDataReader
     {
-        public override Providers Provider => Providers.MySql;
-
         public override DbConnection CreateConnection(string connectionString)
             => new MySqlConnection(connectionString);
 

@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Collections.Generic;
 
 using QuickSQL.QueryCreator;
 
@@ -10,8 +9,6 @@ namespace QuickSQL.MySql
     /// </summary>
     public class MySqlQueryCreator : BaseQueryCreator
     {
-        public override Providers Provider => Providers.MySql;
-
         /// <summary>
         /// Creates an SQL query string.
         /// </summary>
@@ -20,11 +17,10 @@ namespace QuickSQL.MySql
         protected override string OnCreateCommandQuery(Request request)
         {
             string tableName = request.TableName;
-            List<string> columns = request.SelectedColumns.Split(",").ToList();
             string jsonColumns = "JSON_ARRAYAGG(JSON_OBJECT(";
-            foreach (var column in columns)
+            foreach (var column in request.SelectedColumns)
             {
-                if (columns.Last() == column)
+                if (request.SelectedColumns.Last() == column)
                     jsonColumns += $"'{column.Trim()}',{column.Trim()}";
                 else
                     jsonColumns += $"'{column.Trim()}',{column.Trim()}, ";
@@ -33,10 +29,9 @@ namespace QuickSQL.MySql
 
             string commandQuery = $"SELECT {jsonColumns} FROM {tableName}";
 
-            if (!string.IsNullOrEmpty(request.WhereCondition))
+            if (request.WhereConditions != null)
             {
-                string condition = string.Join(" AND ", request.WhereCondition.Split(",").ToList());
-                commandQuery += ($" WHERE {condition}");
+                commandQuery += $" {CreateWhereCondition(request.WhereConditions)}";
             }
 
             return commandQuery;
