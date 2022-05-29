@@ -55,6 +55,7 @@ namespace QuickSQL.Tests
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 });
+            log.WriteRequest(request);
 
             // Act
             var result = QuickSql.InvokeRequest(request, connectionString,
@@ -64,7 +65,6 @@ namespace QuickSQL.Tests
             Assert.NotNull(result);
             Assert.IsType<string>(result);
             Assert.Equal(expected, result);
-
             log.EndTest();
         }
 
