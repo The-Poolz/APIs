@@ -5,6 +5,7 @@ using Xunit.Abstractions;
 using System.Globalization;
 using System.Collections.ObjectModel;
 
+using QuickSQL.Tests.Logging;
 using QuickSQL.Tests.DataReader;
 using QuickSQL.Tests.QueryCreator;
 
@@ -31,7 +32,7 @@ namespace QuickSQL.Tests
         public void InvokeRequest()
         {
             // Test logging
-            TestLog log = new TestLog("InvokeRequest");
+            TestLog log = new TestLog();
             log.StartTest();
 
             // Is TravisCI settings

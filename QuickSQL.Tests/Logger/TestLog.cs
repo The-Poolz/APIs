@@ -1,28 +1,23 @@
 ﻿using System;
 using Serilog;
 
-namespace QuickSQL.Tests
+namespace QuickSQL.Tests.Logging
 {
     public class TestLog
     {
         private readonly DateTime StartTime;
-        public string TestName { get; set; }
 
-        public TestLog(string testName)
-        {
-            TestName = testName;
-            StartTime = DateTime.UtcNow;
-        }
+        public TestLog() { StartTime = DateTime.UtcNow; }
 
         public void StartTest()
         {
-            Log.Information($"{TestName} has been run...");
+            Log.Information("Test has been run...");
         }
 
         public void EndTest()
         {
-            Log.Information($"{TestName} completed.");
-            Log.Information($"{TestName} execution time {DateTime.UtcNow - StartTime}.");
+            Log.Information("Test completed.");
+            Log.Information($"Test execution time {DateTime.UtcNow - StartTime}.");
         }
 
         public void WriteConnection(bool isTravis, string connection)
