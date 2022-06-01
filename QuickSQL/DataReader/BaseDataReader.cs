@@ -6,22 +6,23 @@ namespace QuickSQL.DataReader
 {
     public abstract class BaseDataReader
     {
-        public string GetJsonData(string commandQuery, string connectionString, IDataReader reader = null)
+        public string GetJsonData(string commandQuery, string connectionString, IDataReader mock = null)
         {
             var jsonResult = new StringBuilder();
 
-            if (reader != null)
+            if (mock != null)
             {
-                jsonResult.Append(ReadData(reader));
+                jsonResult.Append(ReadData(mock));
                 return GetResultData(jsonResult.ToString());
             }
 
-            using var connection = CreateConnection(connectionString);
-            connection.Open();
+            using (var connection = CreateConnection(connectionString))
+            {
+                connection.Open();
 
-            reader = CreateReader(commandQuery, connection);
-            jsonResult.Append(ReadData(reader));
-
+                var reader = CreateReader(commandQuery, connection);
+                jsonResult.Append(ReadData(reader));
+            }
             return GetResultData(jsonResult.ToString());
         }
         public abstract DbConnection CreateConnection(string connectionString);

@@ -20,7 +20,7 @@ namespace QuickSQL.Tests
                 // Go to next position
                 .Callback(() => count++);
 
-            moq.Setup(x => x.GetValue(count)).Returns(JsonSerializer.Serialize(objectsToEmulate[count]));
+            moq.Setup(x => x.GetValue(count)).Returns(objectsToEmulate.Count == 0 ? "" : JsonSerializer.Serialize(objectsToEmulate[count]));
 
             return moq.Object;
         }
