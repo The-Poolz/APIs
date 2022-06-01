@@ -1,7 +1,7 @@
 ﻿using Moq;
-using System.Collections.Generic;
 using System.Data;
 using System.Text.Json;
+using System.Collections.Generic;
 
 namespace QuickSQL.Tests
 {
@@ -11,7 +11,7 @@ namespace QuickSQL.Tests
         {
             var moq = new Mock<IDataReader>();
 
-            // This var stores current position in 'ojectsToEmulate' list
+            // This var stores current position in 'objectsToEmulate' list
             int count = 0;
 
             moq.Setup(x => x.Read())
@@ -24,13 +24,5 @@ namespace QuickSQL.Tests
 
             return moq.Object;
         }
-    }
-
-    public class TokenBalances
-    {
-        public int Id { get; set; }
-        public string Token { get; set; }
-        public string Owner { get; set; }
-        public string Amount { get; set; }
     }
 }

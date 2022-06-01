@@ -1,11 +1,11 @@
 ﻿using Xunit;
 using System;
+using System.Data;
 using System.Globalization;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using QuickSQL.Tests.QueryCreator;
-using System.Collections.Generic;
-using System.Data;
 
 namespace QuickSQL.Tests.DataReader
 {

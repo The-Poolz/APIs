@@ -10,7 +10,7 @@ namespace QuickSQL.DataReader
         {
             var jsonResult = new StringBuilder();
 
-            if (reader != null) // If Mock or if user
+            if (reader != null) // If Mock
             {
                 while (reader.Read())
                     jsonResult.Append(reader.GetValue(0).ToString());
