@@ -10,21 +10,16 @@ namespace QuickSQL.DataReader
         {
             var jsonResult = new StringBuilder();
 
-            if (reader != null) // If Mock
-            {
-                while (reader.Read())
-                    jsonResult.Append(reader.GetValue(0).ToString());
-            }
-            else
+            if (reader == null)
             {
                 using var connection = CreateConnection(connectionString);
                 connection.Open();
 
                 reader = CreateReader(commandQuery, connection);
-
-                while (reader.Read())
-                    jsonResult.Append(reader.GetValue(0).ToString());
             }
+
+            while (reader.Read())
+                jsonResult.Append(reader.GetValue(0).ToString());
 
             string emptyJson = "[]";
             if (string.IsNullOrEmpty(jsonResult.ToString()))
