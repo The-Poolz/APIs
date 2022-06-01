@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Collections.ObjectModel;
 
 using QuickSQL.Tests.QueryCreator;
+using System.Collections.Generic;
+using System.Data;
 
 namespace QuickSQL.Tests.DataReader
 {
@@ -19,7 +21,6 @@ namespace QuickSQL.Tests.DataReader
         public static void GetJsonData()
         {
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
-            string expected = "[{\"Owner\": \"0x1a01ee5577c9d69c35a77496565b1bc95588b521\", \"Token\": \"ADH\", \"Amount\": \"400\"}]";
             var request = new Request(
                 "TokenBalances",
                 new Collection<string>
@@ -31,17 +32,40 @@ namespace QuickSQL.Tests.DataReader
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 });
             string commandQuery = new MySqlQueryCreator().CreateCommandQuery(request);
-            string connectionString;
+            string connectionString = null;
+            IDataReader reader = null;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
+            {
                 connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
+            }
             else
-                connectionString = LocalConnection.MySqlConnection;
+            {
+                List<TokenBalances> tokens = new List<TokenBalances>()
+                {
+                    new TokenBalances
+                    {
+                        Id = 1,
+                        Token = "ADH",
+                        Owner = "0x1a01ee5577c9d69c35a77496565b1bc95588b521",
+                        Amount = "400"
+                    },
+                    new TokenBalances
+                    {
+                        Id = 2,
+                        Token = "ADH",
+                        Owner = "0x2a01ee5557c9d69c35577496555b1bc95558b552",
+                        Amount = "300"
+                    }
+                };
 
-            var result = new MySqlDataReader().GetJsonData(commandQuery, connectionString);
+                reader = Mock.MockIDataReader(tokens);
+            }
+
+            var result = new MySqlDataReader().GetJsonData(commandQuery, connectionString, reader);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
-            Assert.Equal(expected, result);
+            Assert.NotEqual<string>("[]",result);
         }
 
         [Fact]

@@ -1,24 +1,35 @@
 ﻿using System.Text;
+using System.Data;
 using System.Data.Common;
 
 namespace QuickSQL.DataReader
 {
     public abstract class BaseDataReader
     {
-        public string GetJsonData(string commandQuery, string connectionString)
+        public string GetJsonData(string commandQuery, string connectionString, IDataReader reader = null)
         {
-            string emptyJson = "[]";
-            using var connection = CreateConnection(connectionString);
-            connection.Open();
-            var reader = CreateReader(commandQuery, connection);
-
             var jsonResult = new StringBuilder();
-            while (reader.Read())
+
+            if (reader != null) // If Mock or if user
             {
-                jsonResult.Append(reader.GetValue(0).ToString());
+                while (reader.Read())
+                    jsonResult.Append(reader.GetValue(0).ToString());
             }
+            else
+            {
+                using var connection = CreateConnection(connectionString);
+                connection.Open();
+
+                reader = CreateReader(commandQuery, connection);
+
+                while (reader.Read())
+                    jsonResult.Append(reader.GetValue(0).ToString());
+            }
+
+            string emptyJson = "[]";
             if (string.IsNullOrEmpty(jsonResult.ToString()))
                 return emptyJson;
+
             return jsonResult.ToString();
         }
         public abstract DbConnection CreateConnection(string connectionString);

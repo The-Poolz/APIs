@@ -1,3 +1,4 @@
+using System.Data;
 using System.Data.Common;
 
 using QuickSQL.DataReader;
@@ -16,7 +17,7 @@ namespace QuickSQL
         /// <param name="dataReader">DataReader defining <see cref="BaseDataReader.CreateConnection(string)"/> and <see cref="BaseDataReader.CreateReader(string, DbConnection)"/> methods for your provider.<br/>Supported providers <see cref="Providers"/>.</param>
         /// <param name="queryCreator">QueryCreator defining <see cref="BaseQueryCreator.OnCreateCommandQuery(Request)"</see> methods for your provider.<br/>Supported providers <see cref="Providers"/>./></param>
         /// <returns>Returns JSON string data if data read is success, or return empty JSON if data not found. Return null if operation failed.</returns>
-        public static string InvokeRequest(Request request, string connectionString, BaseDataReader dataReader, BaseQueryCreator queryCreator)
+        public static string InvokeRequest(Request request, string connectionString, BaseDataReader dataReader, BaseQueryCreator queryCreator, IDataReader mock = null)
         {
             if (string.IsNullOrEmpty(connectionString.Trim())
                 || dataReader == null
@@ -26,7 +27,7 @@ namespace QuickSQL
             }
 
             string commandQuery = queryCreator.CreateCommandQuery(request);
-            string result = dataReader.GetJsonData(commandQuery, connectionString);
+            string result = dataReader.GetJsonData(commandQuery, connectionString, mock);
             return result;
         }
     }
