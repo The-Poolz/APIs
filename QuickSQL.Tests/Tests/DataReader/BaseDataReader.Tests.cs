@@ -40,7 +40,7 @@ namespace QuickSQL.Tests.DataReader
             }
             else
             {
-                List<TokenBalances> tokens = new List<TokenBalances>()
+                Collection<TokenBalances> tokens = new Collection<TokenBalances>()
                 {
                     new TokenBalances
                     {

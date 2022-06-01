@@ -1,13 +1,13 @@
 ﻿using Moq;
 using System.Data;
 using System.Text.Json;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace QuickSQL.Tests
 {
     public static class Mock
     {
-        public static IDataReader MockIDataReader(List<TokenBalances> objectsToEmulate)
+        public static IDataReader MockIDataReader(Collection<TokenBalances> objectsToEmulate)
         {
             var moq = new Mock<IDataReader>();
 
