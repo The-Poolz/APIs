@@ -14,7 +14,7 @@
     <Version>1.2.1</Version>
     <PackageProjectUrl>https://www.nuget.org/packages/ArdenHide.Utils.QuickSQL/</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
