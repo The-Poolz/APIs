@@ -21,6 +21,7 @@ namespace QuickSQL.DataReader
                 return emptyJson;
             return jsonResult.ToString();
         }
+
         public abstract DbConnection CreateConnection(string connectionString);
         public abstract DbDataReader CreateReader(string commandQuery, DbConnection connection);
     }
