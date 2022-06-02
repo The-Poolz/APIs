@@ -7,15 +7,6 @@ namespace QuickSQL.Tests.Requests
     public static class RequestTests
     {
         [Fact]
-        public static void CreateRequest()
-        {
-            var request = new Request();
-
-            Assert.NotNull(request);
-            Assert.IsType<Request>(request);
-        }
-
-        [Fact]
         public static void CreateRequestWithParams()
         {
             var request = new Request(
