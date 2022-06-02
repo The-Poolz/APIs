@@ -17,7 +17,7 @@ namespace QuickSQL
         /// Uses default provider functions to read JSON data.<br/>
         /// The result of the function is the JSON data received from the created request.<br/>
         /// </summary>
-        /// <param name="request">Pass <see cref="Request"/> object with requred fields for database request.<br/>
+        /// <param name="request">Pass <see cref="Request"/> object with required fields for database request.<br/>
         /// Based on this object, a SQL command is created.</param>
         /// <param name="connectionString">Connection string to database.</param>
         /// <param name="dataReader">Supported or your custom DataReader.<br/></param>
