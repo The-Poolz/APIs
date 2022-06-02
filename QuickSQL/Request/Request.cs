@@ -83,5 +83,25 @@ namespace QuickSQL
         /// </example>
         /// </summary>
         public Collection<Condition> WhereConditions { get; init; }
+
+        /// <summary>
+        /// Enter condition for search tables.<br/>
+        /// Remarks: String parameter must be in single quotes.<br/>
+        /// <example>Example:
+        /// <code>Collection&lt;string&gt; selectedCol = new Collection&lt;string&gt; {
+        ///     { "Id" }, { "Name" }, { "Address" }
+        /// };
+        /// Collection&lt;Condition&gt; conditions = new Collection&lt;Condition&gt; {
+        ///     new Condition {
+        ///         ParamName = "Name",
+        ///         Operator = OperatorName.Equals,
+        ///         ParamValue = "'Alex'"
+        ///     }
+        /// };
+        ///         
+        /// Request request = new("TableName", selectedCol, conditions);</code>
+        /// </example>
+        /// </summary>
+        public Collection<Condition> OrderRules { get; init; }
     }
 }
