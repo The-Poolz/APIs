@@ -32,6 +32,32 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         }
 
         [Fact]
+        public static void IsValidOrderRulesInvalidSort()
+        {
+            var conditions = new Collection<OrderRule>
+            {
+                new OrderRule("Id", (SortBy)88),
+            };
+
+            var result = OrderRulesValidator.IsValidOrderRules(conditions);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public static void IsValidOrderRulesInvalidColName()
+        {
+            var conditions = new Collection<OrderRule>
+            {
+                new OrderRule("  ", SortBy.DESC),
+            };
+
+            var result = OrderRulesValidator.IsValidOrderRules(conditions);
+
+            Assert.False(result);
+        }
+
+        [Fact]
         public static void IsValidOrderRulesWithoutParam()
         {
             var request = new Request(
