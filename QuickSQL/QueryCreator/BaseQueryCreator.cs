@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using QuickSQL.QueryCreator.Helpers;
@@ -39,8 +40,8 @@ namespace QuickSQL.QueryCreator
         /// </returns>
         protected static string CreateWhereCondition(Collection<Condition> conditions)
         {
-            string whereCondition = string.Empty;
-            if (conditions != null)
+            string fullWhereConditionsString = string.Empty;
+            if (conditions != null || conditions.Count != 0)
             {
                 List<string> formatConditions = new List<string>();
                 foreach (var cond in conditions)
@@ -51,9 +52,30 @@ namespace QuickSQL.QueryCreator
                     formatConditions.Add(conditionString);
                 }
                 string condition = string.Join(" AND ", formatConditions);
-                whereCondition = ($"WHERE {condition}");
+                fullWhereConditionsString = ($"WHERE {condition}");
             }
-            return whereCondition;
+            return fullWhereConditionsString;
+        }
+
+        protected static string CreateOrderByRules(Collection<OrderRule> orderRules)
+        {
+            string fullOrderRulesString = string.Empty;
+            if (orderRules != null || orderRules.Count != 0)
+            {
+                List<string> formatRules = new List<string>();
+                foreach (var rule in orderRules.ToList())
+                {
+                    string ruleString;
+                    if (orderRules.Last() == rule)
+                        ruleString = $"{rule.ColumnName} {rule.Sort}";
+                    else
+                        ruleString = $"{rule.ColumnName} {rule.Sort}, ";
+                    formatRules.Add(ruleString);
+                }
+                string rulesString = string.Join(" AND ", formatRules);
+                fullOrderRulesString = ($"ORDER BY {rulesString}");
+            }
+            return fullOrderRulesString;
         }
 
         protected abstract string OnCreateCommandQuery(Request request);

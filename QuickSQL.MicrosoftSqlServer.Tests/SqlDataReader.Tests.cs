@@ -13,7 +13,6 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
         [Fact]
         public static void CreateConnection()
         {
-            ConnectionState expectedState = ConnectionState.Closed;
             string connectionString;
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
@@ -25,7 +24,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
 
             Assert.NotNull(result);
             Assert.IsType<SqlConnection>(result);
-            Assert.Equal(expectedState, result.State);
+            Assert.Equal(ConnectionState.Closed, result.State);
         }
 
         [Fact]

@@ -15,9 +15,7 @@ namespace QuickSQL.Tests.QueryCreator
             var request = new Request("TokenBalances",
                 new Collection<string>
                 {
-                    { "Token" },
-                    { "Owner" },
-                    { "Amount" }
+                    { "Token" }, { "Owner" }, { "Amount" }
                 });
 
             var result = new SqlQueryCreator().CreateCommandQuery(request);
@@ -33,12 +31,7 @@ namespace QuickSQL.Tests.QueryCreator
             string expected = "SELECT Token, Owner, Amount FROM TokenBalances WHERE Id = 1 FOR JSON PATH";
             var request = new Request(
                 "TokenBalances",
-                new Collection<string>
-                {
-                    { "Token" },
-                    { "Owner" },
-                    { "Amount" }
-                },
+                new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
                 new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
@@ -57,9 +50,7 @@ namespace QuickSQL.Tests.QueryCreator
             var request = new Request("",
                 new Collection<string>
                 {
-                    { "Token" },
-                    { "Owner" },
-                    { "Amount" }
+                    { "Token" }, { "Owner" }, { "Amount" }
                 });
 
             var result = new SqlQueryCreator().CreateCommandQuery(request);
