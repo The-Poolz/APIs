@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace QuickSQL.Tests.Requests
 {
-    public class OrderRuleTests
+    public static class OrderRuleTests
     {
         [Fact]
         public static void CreateOrderRule()
