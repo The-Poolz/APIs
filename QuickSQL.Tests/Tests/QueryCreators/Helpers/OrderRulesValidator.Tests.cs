@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 using QuickSQL.QueryCreator.Helpers;
 
-namespace QuickSQL.Tests.Tests.QueryCreators.Helpers
+namespace QuickSQL.Tests.QueryCreators.Helpers
 {
     public static class OrderRulesValidatorTests
     {
@@ -22,11 +22,27 @@ namespace QuickSQL.Tests.Tests.QueryCreators.Helpers
         }
 
         [Fact]
-        public static void IsValidOrderRulesWithoutParam()
+        public static void IsValidOrderRulesEmptyParams()
         {
             var conditions = new Collection<OrderRule> { };
 
             var result = OrderRulesValidator.IsValidOrderRules(conditions);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public static void IsValidOrderRulesWithoutParam()
+        {
+            var request = new Request(
+                "TokenBalances",
+                new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                });
+
+            var result = OrderRulesValidator.IsValidOrderRules(request.OrderRules);
 
             Assert.True(result);
         }
