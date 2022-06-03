@@ -12,7 +12,8 @@ namespace QuickSQL
     public class Request
     {
         /// <summary>
-        /// Constructor for JSON serializing.
+        /// Don't use this, as object parameters are only set on initialization.<br/>
+        /// This constructor for JSON serializing.
         /// </summary>
         public Request() { }
         /// <summary>

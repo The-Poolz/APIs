@@ -26,8 +26,4 @@
     <ProjectReference Include="..\QuickSQL\QuickSQL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Tests\Request\" />
-  </ItemGroup>
-
 </Project>

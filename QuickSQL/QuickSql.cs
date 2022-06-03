@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json;
 
 using QuickSQL.DataReader;
 using QuickSQL.QueryCreator;
@@ -35,7 +35,7 @@ namespace QuickSQL
 
             string commandQuery = queryCreator.CreateCommandQuery(request);
             string jsonResult = dataReader.GetJsonData(commandQuery, connectionString);
-            return JsonConvert.DeserializeObject(jsonResult);
+            return JsonSerializer.Deserialize<object>(jsonResult);
         }
     }
 }
