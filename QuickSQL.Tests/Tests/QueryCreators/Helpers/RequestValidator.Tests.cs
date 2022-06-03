@@ -89,7 +89,6 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
                     new OrderRule("Amount", SortBy.DESC)
                 });
 
-
             var result = RequestValidator.IsValidRequest(request);
 
             Assert.IsType<bool>(result);
