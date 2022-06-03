@@ -7,15 +7,6 @@ namespace QuickSQL.Tests.Requests
     public static class RequestTests
     {
         [Fact]
-        public static void CreateRequest()
-        {
-            var request = new Request();
-
-            Assert.NotNull(request);
-            Assert.IsType<Request>(request);
-        }
-
-        [Fact]
         public static void CreateRequestWithParams()
         {
             var request = new Request(
@@ -60,7 +51,7 @@ namespace QuickSQL.Tests.Requests
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
-            Assert.Equal("{\"TableName\":\"TokenBalances\",\"SelectedColumns\":[\"Token\",\"Owner\",\"Amount\"],\"WhereConditions\":[{\"ParamName\":\"Id\",\"Operator\":0,\"ParamValue\":\"1\"}]}", result);
+            Assert.Equal("{\"TableName\":\"TokenBalances\",\"SelectedColumns\":[\"Token\",\"Owner\",\"Amount\"],\"WhereConditions\":[{\"ParamName\":\"Id\",\"Operator\":0,\"ParamValue\":\"1\"}],\"OrderRules\":null}", result);
         }
     }
 }

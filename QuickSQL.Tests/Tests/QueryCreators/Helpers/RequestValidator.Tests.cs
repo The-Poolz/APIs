@@ -12,12 +12,7 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         {
             var request = new Request(
                 "TokenBalances",
-                new Collection<string>
-                {
-                    { "Token" },
-                    { "Owner" },
-                    { "Amount" }
-                },
+                new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
                 new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
@@ -35,9 +30,7 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
             var request = new Request("TokenBalances",
                 new Collection<string>
                 {
-                    { "Token" },
-                    { "Owner" },
-                    { "Amount" }
+                    { "Token" }, { "Owner" }, { "Amount" }
                 });
 
             var result = RequestValidator.IsValidRequest(request);
@@ -64,16 +57,50 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         }
 
         [Fact]
+        public static void IsValidRequestWithoutOrderBy()
+        {
+            var request = new Request(
+                "TokenBalances",
+                new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                });
+
+            var result = RequestValidator.IsValidRequest(request);
+
+            Assert.IsType<bool>(result);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public static void IsValidRequestOrderBy()
+        {
+            var request = new Request(
+                "TokenBalances",
+                new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
+                new Collection<Condition>
+                {
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                },
+                new Collection<OrderRule>
+                {
+                    new OrderRule("Id"),
+                    new OrderRule("Amount", SortBy.DESC)
+                });
+
+            var result = RequestValidator.IsValidRequest(request);
+
+            Assert.IsType<bool>(result);
+            Assert.True(result);
+        }
+
+        [Fact]
         public static void IsValidRequestWithoutTableName()
         {
             var request = new Request(
                 "    ",
-                new Collection<string>
-                {
-                    { "Token" },
-                    { "Owner" },
-                    { "Amount" }
-                },
+                new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
                 new Collection<Condition>
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
@@ -112,9 +139,7 @@ namespace QuickSQL.Tests.QueryCreators.Helpers
         {
             var selectedColumns = new Collection<string>
             {
-                { "Token" },
-                { "Owner" },
-                { "Amount" }
+                { "Token" }, { "Owner" }, { "Amount" }
             };
 
             var result = RequestValidator.NotNullSelectedColumns(selectedColumns);
