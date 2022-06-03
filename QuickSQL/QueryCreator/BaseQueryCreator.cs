@@ -65,14 +65,10 @@ namespace QuickSQL.QueryCreator
                 List<string> formatRules = new List<string>();
                 foreach (var rule in orderRules.ToList())
                 {
-                    string ruleString;
-                    if (orderRules.Last() == rule)
-                        ruleString = $"{rule.ColumnName} {rule.Sort}";
-                    else
-                        ruleString = $"{rule.ColumnName} {rule.Sort}, ";
+                    string ruleString = $"{rule.ColumnName} {rule.Sort}";
                     formatRules.Add(ruleString);
                 }
-                string rulesString = string.Join(" AND ", formatRules);
+                string rulesString = string.Join(", ", formatRules);
                 fullOrderRulesString = ($"ORDER BY {rulesString}");
             }
             return fullOrderRulesString;

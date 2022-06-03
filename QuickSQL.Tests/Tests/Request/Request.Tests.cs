@@ -51,7 +51,7 @@ namespace QuickSQL.Tests.Requests
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
-            Assert.Equal("{\"TableName\":\"TokenBalances\",\"SelectedColumns\":[\"Token\",\"Owner\",\"Amount\"],\"WhereConditions\":[{\"ParamName\":\"Id\",\"Operator\":0,\"ParamValue\":\"1\"}]}", result);
+            Assert.Equal("{\"TableName\":\"TokenBalances\",\"SelectedColumns\":[\"Token\",\"Owner\",\"Amount\"],\"WhereConditions\":[{\"ParamName\":\"Id\",\"Operator\":0,\"ParamValue\":\"1\"}],\"OrderRules\":null}", result);
         }
     }
 }

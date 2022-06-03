@@ -45,6 +45,26 @@ namespace QuickSQL.Tests.QueryCreator
         }
 
         [Fact]
+        public static void GetCommandQueryWithOrderRules()
+        {
+            string expected = "SELECT Token, Owner, Amount FROM TokenBalances ORDER BY Id ASC, Amount DESC FOR JSON PATH";
+            var request = new Request(
+                "TokenBalances",
+                new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
+                new Collection<OrderRule>
+                {
+                    new OrderRule("Id"),
+                    new OrderRule("Amount", SortBy.DESC)
+                });
+
+            var result = new SqlQueryCreator().CreateCommandQuery(request);
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
         public static void GetCommandQueryInvalidRequest()
         {
             var request = new Request("",
