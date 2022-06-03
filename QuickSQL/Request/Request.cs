@@ -12,6 +12,10 @@ namespace QuickSQL
     public class Request
     {
         /// <summary>
+        /// Constructor for JSON serializing.
+        /// </summary>
+        public Request() { }
+        /// <summary>
         /// Setting up a default request.
         /// </summary>
         /// <param name="tableName">Pass a table from which to take data.</param>

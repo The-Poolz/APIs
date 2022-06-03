@@ -35,8 +35,7 @@ namespace QuickSQL
 
             string commandQuery = queryCreator.CreateCommandQuery(request);
             string jsonResult = dataReader.GetJsonData(commandQuery, connectionString);
-            object result = JsonConvert.DeserializeObject(jsonResult);
-            return result;
+            return JsonConvert.DeserializeObject(jsonResult);
         }
     }
 }

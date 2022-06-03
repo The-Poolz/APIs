@@ -11,10 +11,11 @@
     <PackageTags>ArdenHide, SQL, Sql, QuickSQL, MySQL, MySql</PackageTags>
     <PackageIcon>QuickSQL.png</PackageIcon>
     <PackageIconUrl />
-    <Version>1.2.1</Version>
+    <Version>1.3.1</Version>
     <PackageProjectUrl>https://www.nuget.org/packages/ArdenHide.Utils.QuickSQL/</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <PackageReleaseNotes>- added constructor by default to Request model.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

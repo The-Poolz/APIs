@@ -9,9 +9,10 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/The-Poolz/APIs</RepositoryUrl>
     <PackageTags>ArdenHide, SQL, Sql, QuickSQL</PackageTags>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
     <PackageProjectUrl>https://www.nuget.org/packages/ArdenHide.Utils.QuickSQL/</PackageProjectUrl>
     <PackageIcon>QuickSQL.png</PackageIcon>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ArdenHide.Utils.QuickSQL" Version="1.2.0" />
+    <PackageReference Include="ArdenHide.Utils.QuickSQL" Version="1.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
 

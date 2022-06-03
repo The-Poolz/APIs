@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\QuickSQL.MicrosoftSqlServer\QuickSQL.MicrosoftSqlServer.csproj" />
-    <ProjectReference Include="..\QuickSQL\QuickSQL.csproj" />
   </ItemGroup>
 
 </Project>
