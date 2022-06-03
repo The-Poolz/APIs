@@ -26,6 +26,10 @@ namespace QuickSQL.Tests.QueryCreator
             {
                 commandQuery += $" {CreateWhereCondition(request.WhereConditions)}";
             }
+            if (request.OrderRules != null)
+            {
+                commandQuery += $" {CreateOrderByRules(request.OrderRules)}";
+            }
 
             return commandQuery;
         }
