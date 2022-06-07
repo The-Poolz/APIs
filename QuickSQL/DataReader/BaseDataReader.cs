@@ -25,8 +25,6 @@ namespace QuickSQL.DataReader
             }
             return GetResultData(jsonResult.ToString());
         }
-        public abstract DbConnection CreateConnection(string connectionString);
-        public abstract DbDataReader CreateReader(string commandQuery, DbConnection connection);
 
         public string ReadData(IDataReader reader)
         {
@@ -36,7 +34,6 @@ namespace QuickSQL.DataReader
 
             return jsonResult.ToString();
         }
-
         public string GetResultData(string jsonResult)
         {
             string emptyJson = "[]";
@@ -45,5 +42,7 @@ namespace QuickSQL.DataReader
 
             return jsonResult.ToString();
         }
+        public abstract DbConnection CreateConnection(string connectionString);
+        public abstract DbDataReader CreateReader(string commandQuery, DbConnection connection);
     }
 }

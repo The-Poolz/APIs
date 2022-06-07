@@ -16,7 +16,16 @@ namespace QuickSQL.Tests.DataAccess
         {
             var moq = new Mock<IDataReader>();
             // This var stores current position in 'objectsToEmulate' list
-            int currentItem = 0;
+            int currentItem = -1;
+
+            moq.Setup(r => r.Read())
+                .Returns(() => currentItem < objectsToEmulate.Length)
+                .Callback(() =>
+                {
+                    currentItem++;
+
+                    //onRead?.Invoke(row);
+                });
 
             moq.Setup(x => x.Read())
                 // Return 'True' while list still has an item
@@ -24,9 +33,9 @@ namespace QuickSQL.Tests.DataAccess
                 // Go to next position
                 .Callback(() => currentItem++);
 
-            var readData = ReturnReadData(objectsToEmulate[currentItem], request);
-            moq.Setup(x => x.GetValue(currentItem)).Returns(
-                readData == null ? "" : JsonSerializer.Serialize(readData));
+            moq.Setup(x => x.GetValue(0)).Returns(
+                ReturnReadData(objectsToEmulate[currentItem+1], request) == null ? 
+                "" : JsonSerializer.Serialize(ReturnReadData(objectsToEmulate[currentItem+1], request)));
 
             return moq.Object;
         }
@@ -48,22 +57,10 @@ namespace QuickSQL.Tests.DataAccess
             
             Type emulateType = emulateObject.GetType();
             PropertyInfo[] props = emulateType.GetProperties();
-            ExpandoObject expando = new ExpandoObject();
-            // Create Expando
-            foreach (var property in props)
-            {
-                AddProperty(expando, property.Name, property.GetValue(emulateObject));
-            }
+            ExpandoObject expando = CreateExpando(props, emulateObject);
 
             // Emulate SelectedColumns
-            foreach (var col in request.SelectedColumns)
-            {
-                var property = props.Where(x => x.Name == col);
-                if (property == null || property.Count() <= 0)
-                {
-                    expando.Remove(property.First().Name, out object obj);
-                }
-            }
+            expando = EmulateSelectedColumns(props, expando, request.SelectedColumns);
 
             // Emulate WhereConditions
             PropertyInfo[] expandoProps = expando.GetType().GetProperties();
@@ -74,6 +71,10 @@ namespace QuickSQL.Tests.DataAccess
                     // Получить нужное свойство
                     var prop = props.Where(x => x.Name == cond.ParamName).First();
                     var propValue = prop.GetValue(emulateObject);
+                    if (propValue.ToString() == "2")
+                    {
+                        Console.WriteLine("Done");
+                    }
 
                     // Проверить значение
                     switch (cond.Operator)
@@ -88,6 +89,29 @@ namespace QuickSQL.Tests.DataAccess
                 }
             }
             return null;
+        }
+
+        public static ExpandoObject EmulateSelectedColumns(PropertyInfo[] props, ExpandoObject expando, Collection<string> selectedColumns)
+        {
+            foreach (var col in selectedColumns)
+            {
+                var property = props.Where(x => x.Name == col);
+                if (property == null || property.Count() <= 0)
+                {
+                    expando.Remove(property.First().Name, out object obj);
+                }
+            }
+            return expando;
+        }
+
+        public static ExpandoObject CreateExpando<T>(PropertyInfo[] props, T emulateObject) where T : class
+        {
+            ExpandoObject expando = new();
+            foreach (var property in props)
+            {
+                AddProperty(expando, property.Name, property.GetValue(emulateObject));
+            }
+            return expando;
         }
 
         private static void AddProperty(ExpandoObject expando, string propertyName, object propertyValue)

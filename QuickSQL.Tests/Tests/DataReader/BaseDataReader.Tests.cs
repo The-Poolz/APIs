@@ -95,7 +95,8 @@ namespace QuickSQL.Tests.DataReader
             List<TokenBalances> emulated = new List<TokenBalances>()
             {
                 new TokenBalances { Id = 1, Amount = "400", Owner = "0x1a01ee5577c9d69c35a77496565b1bc95588b521", Token = "ADH" },
-                new TokenBalances { Id = 2, Amount = "300", Owner = "0x2", Token = "Poolz" }
+                new TokenBalances { Id = 2, Amount = "300", Owner = "0x2", Token = "Poolz" },
+                new TokenBalances { Id = 3, Amount = "200", Owner = "0x3", Token = "None" }
             };
             IDataReader mock = TestMock.MockIDataReader(emulated.ToArray(), request);
 
