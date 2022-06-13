@@ -18,7 +18,7 @@ namespace QuickSQL.Tests.QueryCreator
                 commandQuery += $" {CreateOrderByRules(request.OrderRules)}";
             }
 
-            commandQuery += " FOR JSON PATH";
+            commandQuery += " FOR JSON AUTO, WITHOUT_ARRAY_WRAPPER";
             return commandQuery;
         }
     }

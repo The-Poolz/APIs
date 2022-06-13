@@ -7,28 +7,45 @@ namespace QuickSQL.DataReader
     {
         public string GetJsonData(string commandQuery, string connectionString)
         {
-            string emptyJson = "[]";
-            int readCount = 0;
             using var connection = CreateConnection(connectionString);
             connection.Open();
             var reader = CreateReader(commandQuery, connection);
 
-            var jsonResult = new StringBuilder();
+            StringBuilder jsonResult = new();
             while (reader.Read())
             {
                 jsonResult.Append(reader.GetValue(0).ToString());
-                readCount++;
             }
-            if (string.IsNullOrEmpty(jsonResult.ToString()))
+
+            string stringJson = jsonResult.ToString();
+            // Return empty json if data nullable or empty
+            string emptyJson = "[]";
+            if (string.IsNullOrEmpty(stringJson))
                 return emptyJson;
-            if (readCount == 1)
+            // Return array
+            if (stringJson.Contains("},{")
+                || stringJson.Contains("}, {"))
             {
-                jsonResult.ToString().Remove(
-                    jsonResult.ToString().IndexOf('['));
-                jsonResult.ToString().Remove(
-                    jsonResult.ToString().IndexOf(']'));
+                // Check if json has array data
+                if (stringJson.Contains(":[")
+                    || stringJson.Contains(": ["))
+                {
+                    int startIndex = stringJson.IndexOf("]");
+                    string check = stringJson.Substring(startIndex);
+                    // If has many object after array return array
+                    // or return single object
+                    if (check.Contains("},{")
+                    || check.Contains("}, {"))
+                    {
+                        stringJson = $"[{stringJson}]";
+                    }
+                    return stringJson;
+                }
+
+                stringJson = $"[{stringJson}]";
             }
-            return jsonResult.ToString();
+            // Return single object
+            return stringJson;
         }
 
         public abstract DbConnection CreateConnection(string connectionString);
