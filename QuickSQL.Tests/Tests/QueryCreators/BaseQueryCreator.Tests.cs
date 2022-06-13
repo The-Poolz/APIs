@@ -11,7 +11,7 @@ namespace QuickSQL.Tests.QueryCreator
         [Fact]
         public static void GetCommandQuery()
         {
-            string expected = "SELECT Token, Owner, Amount FROM TokenBalances FOR JSON PATH";
+            string expected = "SELECT Token, Owner, Amount FROM TokenBalances FOR JSON AUTO, WITHOUT_ARRAY_WRAPPER";
             var request = new Request("TokenBalances",
                 new Collection<string>
                 {
@@ -28,7 +28,7 @@ namespace QuickSQL.Tests.QueryCreator
         [Fact]
         public static void GetCommandQueryWithCondition()
         {
-            string expected = "SELECT Token, Owner, Amount FROM TokenBalances WHERE Id = 1 FOR JSON PATH";
+            string expected = "SELECT Token, Owner, Amount FROM TokenBalances WHERE Id = 1 FOR JSON AUTO, WITHOUT_ARRAY_WRAPPER";
             var request = new Request(
                 "TokenBalances",
                 new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
@@ -47,7 +47,7 @@ namespace QuickSQL.Tests.QueryCreator
         [Fact]
         public static void GetCommandQueryWithOrderRules()
         {
-            string expected = "SELECT Token, Owner, Amount FROM TokenBalances ORDER BY Id ASC, Amount DESC FOR JSON PATH";
+            string expected = "SELECT Token, Owner, Amount FROM TokenBalances ORDER BY Id ASC, Amount DESC FOR JSON AUTO, WITHOUT_ARRAY_WRAPPER";
             var request = new Request(
                 "TokenBalances",
                 new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },

@@ -26,26 +26,10 @@ namespace QuickSQL.DataReader
             if (stringJson.Contains("},{")
                 || stringJson.Contains("}, {"))
             {
-                // Check if json has array data
-                if (stringJson.Contains(":[")
-                    || stringJson.Contains(": ["))
-                {
-                    int startIndex = stringJson.IndexOf("]");
-                    string check = stringJson.Substring(startIndex);
-                    // If has many object after array return array
-                    // or return single object
-                    if (check.Contains("},{")
-                    || check.Contains("}, {"))
-                    {
-                        stringJson = $"[{stringJson}]";
-                    }
-                    return stringJson;
-                }
-
                 stringJson = $"[{stringJson}]";
             }
             // Return single object
-            return stringJson;
+            return stringJson.Replace(" ", "");
         }
 
         public abstract DbConnection CreateConnection(string connectionString);
