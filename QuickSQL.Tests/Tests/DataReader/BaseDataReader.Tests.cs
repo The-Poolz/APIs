@@ -11,7 +11,7 @@ namespace QuickSQL.Tests.DataReader
     /// SqlDataReader has implemented the BaseDataReader tests.
     /// </summary>
     /// <remarks>
-    /// All tests with databese use the MySql provider.
+    /// All tests with databese use the Sql provider.
     /// </remarks>
     public static class BaseDataReaderTests
     {
@@ -30,21 +30,14 @@ namespace QuickSQL.Tests.DataReader
                 {
                     new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
                 });
-            string commandQuery;
+            string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
             string connectionString;
-            string result;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-            {
-                commandQuery = new MySqlQueryCreator().CreateCommandQuery(request);
-                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
-                result = new MySqlDataReader().GetJsonData(commandQuery, connectionString);
-            }
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
-            {
-                commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
-                result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
-            }
+
+            var result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -90,21 +83,14 @@ namespace QuickSQL.Tests.DataReader
                 {
                     { "Owner" }, { "Token" }, { "Amount" }
                 });
-            string commandQuery;
+            string commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
             string connectionString;
-            string result;
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-            {
-                commandQuery = new MySqlQueryCreator().CreateCommandQuery(request);
-                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
-                result = new MySqlDataReader().GetJsonData(commandQuery, connectionString);
-            }
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
             else
-            {
-                commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
                 connectionString = LocalConnection.MicrosoftSqlServerConnection;
-                result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
-            }
+
+            var result = new SqlDataReader().GetJsonData(commandQuery, connectionString);
 
             bool expected = result.StartsWith("[{") && result.EndsWith("}]");
             Assert.NotNull(result);
