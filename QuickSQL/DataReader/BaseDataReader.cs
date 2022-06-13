@@ -24,7 +24,8 @@ namespace QuickSQL.DataReader
                 return emptyJson;
             // Return array
             if (stringJson.Contains("},{")
-                || stringJson.Contains("}, {"))
+                || stringJson.Contains("}, {")
+                && !stringJson.StartsWith("[")) // This rule for MySql provider. MySql return always [result]
             {
                 stringJson = $"[{stringJson}]";
             }
