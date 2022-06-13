@@ -15,16 +15,8 @@ namespace QuickSQL.MicrosoftSqlServer
         protected override string OnCreateCommandQuery(Request request)
         {
             string commandQuery = $"SELECT {string.Join(", ", request.SelectedColumns)} FROM {request.TableName}";
-
-            if (request.WhereConditions != null)
-            {
-                commandQuery += $" {CreateWhereCondition(request.WhereConditions)}";
-            }
-            if (request.OrderRules != null)
-            {
-                commandQuery += $" {CreateOrderByRules(request.OrderRules)}";
-            }
-
+            commandQuery += request.WhereConditions != null ? $" {CreateWhereCondition(request.WhereConditions)}" : string.Empty;
+            commandQuery += request.OrderRules != null ? $" {CreateOrderByRules(request.OrderRules)}" : string.Empty;
             commandQuery += " FOR JSON PATH";
             return commandQuery;
         }
