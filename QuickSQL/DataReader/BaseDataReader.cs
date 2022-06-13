@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Data.Common;
+using System;
 
 namespace QuickSQL.DataReader
 {
@@ -23,14 +24,14 @@ namespace QuickSQL.DataReader
             if (string.IsNullOrEmpty(stringJson))
                 return emptyJson;
             // Return array
-            if (stringJson.Contains("},{")
-                || stringJson.Contains("}, {")
-                && !stringJson.StartsWith("[")) // This rule for MySql provider. MySql return always [result]
+            if (stringJson.Contains("},{", StringComparison.Ordinal)
+                || stringJson.Contains("}, {", StringComparison.Ordinal)
+                && !stringJson.StartsWith("[", StringComparison.Ordinal)) // This rule for MySql provider. MySql return always [result]
             {
                 stringJson = $"[{stringJson}]";
             }
             // Return single object
-            return stringJson.Replace(" ", "");
+            return stringJson.Replace(" ", "", StringComparison.Ordinal);
         }
 
         public abstract DbConnection CreateConnection(string connectionString);
