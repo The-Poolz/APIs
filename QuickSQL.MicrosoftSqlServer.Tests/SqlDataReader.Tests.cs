@@ -60,7 +60,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
         [Fact]
         public static void GetJsonDataDefault()
         {
-            string expected = "[{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}]";
+            string expected = "{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}";
             string connectionString;
             string isTravisCi = Environment.GetEnvironmentVariable("IsTravisCI");
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))

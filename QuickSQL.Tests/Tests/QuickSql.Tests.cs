@@ -41,6 +41,7 @@ namespace QuickSQL.Tests
                 new MySqlDataReader(), new MySqlQueryCreator());
 
             Assert.NotNull(result);
+            Assert.NotEqual("[]", result);
         }
 
         [Fact]

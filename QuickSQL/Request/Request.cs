@@ -112,7 +112,8 @@ namespace QuickSQL
         public Collection<Condition> WhereConditions { get; init; }
 
         /// <summary>
-        /// Enter condition for search tables.<br/>
+        /// Enter condition for sorting.<br/>
+        /// Default SortBy value SortBy.ASC
         /// <example>Example:
         /// <code>Collection&lt;string&gt; selectedCol = new Collection&lt;string&gt; {
         ///     { "Id" }, { "Name" }, { "Address" }

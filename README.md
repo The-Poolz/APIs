@@ -1,4 +1,4 @@
-# [QuickSQL](https://www.nuget.org/packages/ArdenHide.Utils.QuickSQL)
+﻿# [QuickSQL](https://www.nuget.org/packages/ArdenHide.Utils.QuickSQL)
 [![Build Status](https://app.travis-ci.com/The-Poolz/APIs.svg?token=xusbS8YxMuyCLykrBixj&branch=master)](https://app.travis-ci.com/The-Poolz/APIs)
 [![codecov](https://codecov.io/gh/The-Poolz/APIs/branch/master/graph/badge.svg?token=0nHvyp3cmC)](https://codecov.io/gh/The-Poolz/APIs)
 [![CodeFactor](https://www.codefactor.io/repository/github/the-poolz/apis/badge?s=740ae1e3b7dbe3f939056f89e5d009f7544c75a2)](https://www.codefactor.io/repository/github/the-poolz/apis)
@@ -32,6 +32,7 @@ dotnet add package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer
 
 >Providers currently supported: [SupportedProviders](https://github.com/The-Poolz/APIs/blob/master/QuickSQL/Providers.cs)
 >>Also you can add your provider, see below.
+>>> ⚠️ starting with QuickSQL 1.3.3, Poolz does not support the ArdenHide.Utils.QuickSQL.MySql package.
 
 ***The first step*** is to create the desired request.
 
@@ -39,45 +40,40 @@ dotnet add package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer
 using QuickSQL;
 
 Request tokenBalances = new Request(
-    "TokenBalances",
-    new Collection<string>
+    tableName: "TokenBalances",
+    selectedColumns: new Collection<string>
     {
         { "Token" }, { "Owner" }, { "Amount" }
     },
-    new Collection<Condition>
+    whereConditions: new Collection<Condition>
     {
         new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+    },
+    orderRules: new Collection<OrderRule>
+    {
+        new OrderRule("Amount", SortBy.DESC)
     });
 ```
 **Request fields**
 
 * `TableName` - This is a required parameter. Pass a table name from which to take data.
 * `SelectedColumns` - This is a required parameter. Pass columns from which to take data.
-* `WhereConditions` - Not required parameter. Enter condition for search tables. If it is a string parameter, you need to pass the condition parameter in single quotes, like `ParamValue = "'Alex'`.
+* `WhereConditions` - Not required parameter. Enter condition for search tables. If it is a string parameter, you need to pass the condition parameter in single quotes, like `ParamValue = "'Alex'`
+* `OrderRules` - Not required parameter. Enter condition for sorting. Default SortBy value SortBy.ASC
 
 ***The second step***, invoke request.
 ```c#
 using QuickSQL;
 using QuickSQL.MicrosoftSqlServer;
 
-Request tokenBalances = new Request(
-    "TokenBalances",
-    new Collection<string>
-    {
-        { "Token" }, { "Owner" }, { "Amount" }
-    },
-    new Collection<Condition>
-    {
-        new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" },
-        new Condition { ParamName = "Name", Operator = OperatorName.Equals, ParamValue = "'Alex'" }
-    });
-    
-string result = QuickSql.InvokeRequest(
-    tokenBalances,
-    connectionString,
-    new SqlDataReader(),
-    new SqlQueryCreator()
+object result = QuickSql.InvokeRequest(
+    request: tokenBalances,
+    connectionString: ConnectionString,
+    // your custom or supported provider
+    dataReader: new SqlDataReader(),
+    queryCreator: new SqlQueryCreator()
 );
+System.Console.WriteLine(JsonSerializer.Serialize(result));
 ```
 
 ## Security
@@ -120,7 +116,7 @@ public class SqlDataReader : BaseDataReader
 }
 ```
 
-***The second step*** is to create a QueryCreator for your SQL provider. You need to define `OnCreateCommandQuery()` for your provider. This function should create a SQL query string returning data in JSON format. You can use the `CreateWhereCondition()` internal function to create the condition string.
+***The second step*** is to create a QueryCreator for your SQL provider. You need to define `OnCreateCommandQuery()` for your provider. This function should create a SQL query string returning data in JSON format. You can use the `CreateWhereCondition()` internal function to create the condition string and `CreateOrderByRules()` for create order rules string.
 
 **Example for MicrosoftSqlServer provider**
 ```c#
@@ -130,15 +126,10 @@ public class SqlQueryCreator : BaseQueryCreator
 {
     protected override string OnCreateCommandQuery(Request request)
     {
-        string selectedColumns = string.Join(", ", request.SelectedColumns);
-        string commandQuery = $"SELECT {selectedColumns} FROM {request.TableName}";
-
-        if (request.WhereConditions != null)
-        {
-            commandQuery += $" {CreateWhereCondition(request.WhereConditions)}";
-        }
-
-        commandQuery += " FOR JSON PATH";
+        string commandQuery = $"SELECT {string.Join(", ", request.SelectedColumns)} FROM {request.TableName}";
+        commandQuery += request.WhereConditions != null ? $" {CreateWhereCondition(request.WhereConditions)}" : string.Empty;
+        commandQuery += request.OrderRules != null ? $" {CreateOrderByRules(request.OrderRules)}" : string.Empty;
+        commandQuery += " FOR JSON AUTO, WITHOUT_ARRAY_WRAPPER";
         return commandQuery;
     }
 }

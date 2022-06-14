@@ -6,19 +6,10 @@ namespace QuickSQL.Tests.QueryCreator
     {
         protected override string OnCreateCommandQuery(Request request)
         {
-            string selectedColumns = string.Join(", ", request.SelectedColumns);
-            string commandQuery = $"SELECT {selectedColumns} FROM {request.TableName}";
-
-            if (request.WhereConditions != null)
-            {
-                commandQuery += $" {CreateWhereCondition(request.WhereConditions)}";
-            }
-            if (request.OrderRules != null)
-            {
-                commandQuery += $" {CreateOrderByRules(request.OrderRules)}";
-            }
-
-            commandQuery += " FOR JSON PATH";
+            string commandQuery = $"SELECT {string.Join(", ", request.SelectedColumns)} FROM {request.TableName}";
+            commandQuery += request.WhereConditions != null ? $" {CreateWhereCondition(request.WhereConditions)}" : string.Empty;
+            commandQuery += request.OrderRules != null ? $" {CreateOrderByRules(request.OrderRules)}" : string.Empty;
+            commandQuery += " FOR JSON AUTO, WITHOUT_ARRAY_WRAPPER";
             return commandQuery;
         }
     }
