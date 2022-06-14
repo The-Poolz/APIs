@@ -33,12 +33,12 @@ namespace QuickSQL.Tests
             string connectionString;
 
             if (Convert.ToBoolean(isTravisCi, new CultureInfo("en-US")))
-                connectionString = Environment.GetEnvironmentVariable("TravisCIMicrosoftSqlServerConnection");
+                connectionString = Environment.GetEnvironmentVariable("TravisCIMySqlConnection");
             else
-                connectionString = LocalConnection.MicrosoftSqlServerConnection;
+                connectionString = LocalConnection.MySqlConnection;
 
             var result = QuickSql.InvokeRequest(request, connectionString,
-                new SqlDataReader(), new SqlQueryCreator());
+                new MySqlDataReader(), new MySqlQueryCreator());
 
             Assert.NotNull(result);
             Assert.NotEqual("[]", result);
