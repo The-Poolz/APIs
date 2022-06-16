@@ -40,11 +40,11 @@ namespace QuickSQL.QueryCreator
         /// </returns>
         protected static string CreateWhereCondition(Collection<Condition> conditions)
         {
-            string fullWhereConditionsString = string.Empty;
-            if (conditions != null || conditions.Count != 0)
-            {
-                List<string> formatConditions = new List<string>();
-                foreach (var cond in conditions)
+            if (conditions == null || conditions.Count == 0)
+                return string.Empty;
+
+            List<string> formatConditions = new List<string>();
+            foreach (var cond in conditions)
                 {
                     ValidOperators.Operators.TryGetValue(cond.Operator, out string operatorSymbol);
                     var conditionString = $"{cond.ParamName} {operatorSymbol} {cond.ParamValue}";
@@ -52,26 +52,22 @@ namespace QuickSQL.QueryCreator
                     formatConditions.Add(conditionString);
                 }
                 string condition = string.Join(" AND ", formatConditions);
-                fullWhereConditionsString = ($"WHERE {condition}");
-            }
-            return fullWhereConditionsString;
+                return $"WHERE {condition}";
         }
 
         protected static string CreateOrderByRules(Collection<OrderRule> orderRules)
         {
-            string fullOrderRulesString = string.Empty;
-            if (orderRules != null || orderRules.Count != 0)
-            {
-                List<string> formatRules = new List<string>();
-                foreach (var rule in orderRules.ToList())
+            if (orderRules == null || orderRules.Count == 0)
+                return string.Empty;
+
+            List<string> formatRules = new List<string>();
+            foreach (var rule in orderRules.ToList())
                 {
                     string ruleString = $"{rule.ColumnName} {rule.Sort}";
                     formatRules.Add(ruleString);
                 }
-                string rulesString = string.Join(", ", formatRules);
-                fullOrderRulesString = ($"ORDER BY {rulesString}");
-            }
-            return fullOrderRulesString;
+            string rulesString = string.Join(", ", formatRules);
+            return $"ORDER BY {rulesString}";
         }
 
         protected abstract string OnCreateCommandQuery(Request request);
