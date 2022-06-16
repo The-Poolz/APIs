@@ -22,7 +22,7 @@ namespace QuickSQL.MicrosoftSqlServer
             commandQuery.Add(CreateWhereCondition(request.WhereConditions));
             commandQuery.Add(CreateOrderByRules(request.OrderRules));
             commandQuery.Add("FOR JSON AUTO, WITHOUT_ARRAY_WRAPPER");
-            return string.Join(" ", commandQuery.where(T=>T != string.Empty));
+            return string.Join(" ", commandQuery.Where(T=>T != string.Empty));
         }
     }
 }
