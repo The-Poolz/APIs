@@ -40,7 +40,7 @@ namespace QuickSQL.QueryCreator
         /// </returns>
         protected static string CreateWhereCondition(Collection<Condition> conditions)
         {
-            if (orderRules == null || orderRules.Count == 0)
+            if (conditions == null || conditions.Count == 0)
                 return string.Empty;
 
             List<string> formatConditions = new List<string>();
