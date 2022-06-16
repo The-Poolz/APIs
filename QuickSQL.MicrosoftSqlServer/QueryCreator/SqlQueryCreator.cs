@@ -1,5 +1,6 @@
 using QuickSQL.QueryCreator;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace QuickSQL.MicrosoftSqlServer
 {
