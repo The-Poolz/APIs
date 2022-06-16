@@ -16,7 +16,8 @@ namespace QuickSQL.MicrosoftSqlServer
         protected override string OnCreateCommandQuery(Request request)
         {
             var commandQuery = new List<string>();
-            commandQuery.add($"SELECT {string.Join(", ", request.SelectedColumns)} FROM {request.TableName}");
+            commandQuery.add($"SELECT {string.Join(", ", request.SelectedColumns)}");
+            commandQuery.add($"FROM {request.TableName}");
             commandQuery.add(CreateWhereCondition(request.WhereConditions));
             commandQuery.add(CreateOrderByRules(request.OrderRules));
             commandQuery.add("FOR JSON AUTO, WITHOUT_ARRAY_WRAPPER");
