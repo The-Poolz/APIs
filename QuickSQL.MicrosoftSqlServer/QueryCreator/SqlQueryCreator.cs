@@ -1,6 +1,4 @@
 using QuickSQL.QueryCreator;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace QuickSQL.MicrosoftSqlServer
 {
@@ -16,13 +14,11 @@ namespace QuickSQL.MicrosoftSqlServer
         /// <returns>Returns a SQL query string.</returns>
         protected override string OnCreateCommandQuery(Request request)
         {
-            var commandQuery = new List<string>();
-            commandQuery.Add($"SELECT {string.Join(", ", request.SelectedColumns)}");
-            commandQuery.Add($"FROM {request.TableName}");
-            commandQuery.Add(CreateWhereCondition(request.WhereConditions));
-            commandQuery.Add(CreateOrderByRules(request.OrderRules));
-            commandQuery.Add("FOR JSON AUTO, WITHOUT_ARRAY_WRAPPER");
-            return string.Join(" ", commandQuery.Where(T=>T != string.Empty));
+            string commandQuery = $"SELECT {string.Join(", ", request.SelectedColumns)} FROM {request.TableName}";
+            commandQuery += request.WhereConditions != null ? $" {CreateWhereCondition(request.WhereConditions)}" : string.Empty;
+            commandQuery += request.OrderRules != null ? $" {CreateOrderByRules(request.OrderRules)}" : string.Empty;
+            commandQuery += " FOR JSON AUTO, WITHOUT_ARRAY_WRAPPER";
+            return commandQuery;
         }
     }
 }
