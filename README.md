@@ -6,7 +6,12 @@
 By default, Entity Framework does not support the ability to dynamically select by passing a string with the table name to get a DbSet.
 This is how this library came about. This library allows you to perform a SELECT query by passing `Request` object.
 
-[Report Bug](https://github.com/The-Poolz/APIs/issues/new/choose)
+## Report Bug
+You can send bug report: [Report Bug](https://github.com/The-Poolz/APIs/issues/new/choose)
+
+> **Note**
+> 
+> If you would like to submit a bug report. Please use a [template](bug_report.md)
 
 ## Install
 **Package Manager**
