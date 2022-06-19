@@ -2,10 +2,17 @@
 [![Build Status](https://app.travis-ci.com/The-Poolz/APIs.svg?token=xusbS8YxMuyCLykrBixj&branch=master)](https://app.travis-ci.com/The-Poolz/APIs)
 [![codecov](https://codecov.io/gh/The-Poolz/APIs/branch/master/graph/badge.svg?token=0nHvyp3cmC)](https://codecov.io/gh/The-Poolz/APIs)
 [![CodeFactor](https://www.codefactor.io/repository/github/the-poolz/apis/badge?s=740ae1e3b7dbe3f939056f89e5d009f7544c75a2)](https://www.codefactor.io/repository/github/the-poolz/apis)
-
+[![NPM version](https://badge.fury.io/gh/The-Poolz%2FAPIs.svg)](https://badge.fury.io/gh/The-Poolz%2FAPIs)
 
 By default, Entity Framework does not support the ability to dynamically select by passing a string with the table name to get a DbSet.
 This is how this library came about. This library allows you to perform a SELECT query by passing `Request` object.
+
+## Report Bug
+You can send bug report: [Report Bug](https://github.com/The-Poolz/APIs/issues/new/choose)
+
+> **Note**
+> 
+> If you would like to submit a bug report. Please use a [template](bug_report.md)
 
 ## Install
 **Package Manager**
@@ -32,7 +39,7 @@ dotnet add package ArdenHide.Utils.QuickSQL.MicrosoftSqlServer
 
 >Providers currently supported: [SupportedProviders](https://github.com/The-Poolz/APIs/blob/master/QuickSQL/Providers.cs)
 >>Also you can add your provider, see below.
->>> ⚠️ starting with QuickSQL 1.3.3, Poolz does not support the ArdenHide.Utils.QuickSQL.MySql package.
+>>>**Warning** starting with QuickSQL 1.3.3, Poolz does not support the ArdenHide.Utils.QuickSQL.MySql package.
 
 ***The first step*** is to create the desired request.
 
