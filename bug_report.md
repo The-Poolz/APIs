@@ -14,13 +14,13 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Additional context**
-Add any other context about the problem after the table.
+Add any other context about the problem.
 
 ## Instructions
 Specify the topic of the bug in the title.
 Use a template to describe the error.
 
-## MD table template: 
+## Template: 
 
 ```
 ---
@@ -28,4 +28,7 @@ Title: I found bug
 Describe the bug: Create a report to help us improve
 Expected behaviour:
 ---
+
+Screenshots / Live demo link - If applicable, add screenshots to help explain your problem.
+Additional context - Add any other context about the problem.
 ```
