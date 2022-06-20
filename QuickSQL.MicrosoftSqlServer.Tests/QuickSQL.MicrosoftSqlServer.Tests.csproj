@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\QuickSQL.MicrosoftSqlServer\QuickSQL.MicrosoftSqlServer.csproj" />
     <ProjectReference Include="..\QuickSQL.Tests\QuickSQL.Tests.csproj" />
   </ItemGroup>
 

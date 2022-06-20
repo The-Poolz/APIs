@@ -4,11 +4,13 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Globalization;
-using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using QuickSQL.Tests.Mock;
+using QuickSQL.DataReader;
+using QuickSQL.Tests.DataReader;
+using QuickSQL.Tests.QueryCreator;
 
 namespace QuickSQL.MicrosoftSqlServer.Tests
 {
@@ -27,7 +29,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
             var result = new SqlDataReader().CreateConnection(connectionString);
 
             Assert.NotNull(result);
-            Assert.IsType<SqlConnection>(result);
+            Assert.IsType<System.Data.SqlClient.SqlConnection>(result);
             Assert.Equal(ConnectionState.Closed, result.State);
         }
 
@@ -66,7 +68,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
         {
             string json = "{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}";
 
-            var result = new SqlDataReader().CreateResult(json);
+            var result = BaseDataReader.CreateResult(json);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -79,7 +81,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
             string json = "{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}," +
                 "{\"Token\":\"Poolz\",\"Owner\":\"0x2a01ee5557c9d69c35577496555b1bc95558b552\",\"Amount\":\"300\"}";
 
-            var result = new SqlDataReader().CreateResult(json);
+            var result = BaseDataReader.CreateResult(json);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -92,7 +94,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
         {
             string json = null;
 
-            var result = new SqlDataReader().CreateResult(json);
+            var result = BaseDataReader.CreateResult(json);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -105,7 +107,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
             string expected = "{\"Id\":1,\"Token\":\"ADH\",\"Owner\":\"0x1\",\"Amount\":\"400\"}" +
                 "{\"Id\":2,\"Token\":\"Poolz\",\"Owner\":\"0x2\",\"Amount\":\"300\"}";
 
-            List<TokenBalances> emulated = new List<TokenBalances>()
+            List<TokenBalances> emulated = new()
             {
                 new TokenBalances { Id = 1, Amount = "400", Owner = "0x1", Token = "ADH" },
                 new TokenBalances { Id = 2, Amount = "300", Owner = "0x2", Token = "Poolz" }
@@ -114,7 +116,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
             MockDataReader<TokenBalances> setup = new (emulated);
             setup.SetupDataReader(mock);
 
-            var result = new SqlDataReader().ReadData(mock.Object);
+            var result = BaseDataReader.ReadData(mock.Object);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -168,7 +170,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
 
             void result() => new SqlDataReader().GetJsonData(commandQuery, connectionString);
 
-            SqlException exception = Assert.Throws<SqlException>(result);
+            System.Data.SqlClient.SqlException exception = Assert.Throws<System.Data.SqlClient.SqlException>(result);
             Assert.Equal(expected, exception.Message);
         }
 

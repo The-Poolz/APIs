@@ -34,7 +34,7 @@ namespace QuickSQL.DataReader
         /// </summary>
         /// <param name="json">Pass a JSON string.</param>
         /// <returns>Return JSON string. Return array if two or more objects, or return single object.</returns>
-        public string CreateResult(string json)
+        public static string CreateResult(string json)
         {
             List<object> jsonList = JsonSerializer.Deserialize<List<object>>($"[{json}]");
             int resultCount = jsonList.Count;
@@ -53,7 +53,7 @@ namespace QuickSQL.DataReader
         /// </summary>
         /// <param name="reader">Pass <see cref="DbDataReader"/> to read data.</param>
         /// <returns>Return JSON string.</returns>
-        public string ReadData(IDataReader reader)
+        public static string ReadData(IDataReader reader)
         {
             StringBuilder jsonResult = new();
             while (reader.Read())

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using QuickSQL.Tests.Mock;
+using QuickSQL.DataReader;
 using QuickSQL.Tests.QueryCreator;
 
 namespace QuickSQL.Tests.DataReader
@@ -24,7 +25,7 @@ namespace QuickSQL.Tests.DataReader
         {
             string json = "{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}";
 
-            var result = new SqlDataReader().CreateResult(json);
+            var result = BaseDataReader.CreateResult(json);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -37,7 +38,7 @@ namespace QuickSQL.Tests.DataReader
             string json = "{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}," +
                 "{\"Token\":\"Poolz\",\"Owner\":\"0x2a01ee5557c9d69c35577496555b1bc95558b552\",\"Amount\":\"300\"}";
 
-            var result = new SqlDataReader().CreateResult(json);
+            var result = BaseDataReader.CreateResult(json);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -50,7 +51,7 @@ namespace QuickSQL.Tests.DataReader
         {
             string json = null;
 
-            var result = new SqlDataReader().CreateResult(json);
+            var result = BaseDataReader.CreateResult(json);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
@@ -63,7 +64,7 @@ namespace QuickSQL.Tests.DataReader
             string expected = "{\"Id\":1,\"Token\":\"ADH\",\"Owner\":\"0x1\",\"Amount\":\"400\"}" +
                 "{\"Id\":2,\"Token\":\"Poolz\",\"Owner\":\"0x2\",\"Amount\":\"300\"}";
 
-            List<TokenBalances> emulated = new List<TokenBalances>()
+            List<TokenBalances> emulated = new()
             {
                 new TokenBalances { Id = 1, Amount = "400", Owner = "0x1", Token = "ADH" },
                 new TokenBalances { Id = 2, Amount = "300", Owner = "0x2", Token = "Poolz" }
@@ -72,7 +73,7 @@ namespace QuickSQL.Tests.DataReader
             MockDataReader<TokenBalances> setup = new(emulated);
             setup.SetupDataReader(mock);
 
-            var result = new SqlDataReader().ReadData(mock.Object);
+            var result = BaseDataReader.ReadData(mock.Object);
 
             Assert.NotNull(result);
             Assert.IsType<string>(result);
