@@ -18,11 +18,7 @@
     <PackageReleaseNotes>- now the result can be either an array or a single object.</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="obj\" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <None Include="..\QuickSQL.png">
       <Pack>True</Pack>
