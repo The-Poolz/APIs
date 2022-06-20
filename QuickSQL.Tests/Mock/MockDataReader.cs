@@ -2,12 +2,13 @@
 using System.Data;
 using System.Text.Json;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace QuickSQL.Tests.Mock
 {
     public class MockDataReader<T> where T : class
     {
-        public MockDataReader(List<T> data) 
+        public MockDataReader(Collection<T> data) 
         {
             Data = data;
         }
