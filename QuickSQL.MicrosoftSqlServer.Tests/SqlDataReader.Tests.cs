@@ -41,7 +41,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
                 new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
                 new Collection<Condition>
                 {
-                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" },
                 });
             var commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
 
@@ -55,6 +55,44 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
 
             Assert.NotNull(result);
             Assert.IsType<System.Data.SqlClient.SqlDataReader>(result);
+        }
+
+        [Fact]
+        public static void CreateResultSingleObject()
+        {
+            string json = "{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}";
+
+            var result = new SqlDataReader().CreateResult(json);
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal(json, result);
+        }
+
+        [Fact]
+        public static void CreateResultArray()
+        {
+            string json = "{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}," +
+                "{\"Token\":\"Poolz\",\"Owner\":\"0x2a01ee5557c9d69c35577496555b1bc95558b552\",\"Amount\":\"300\"}";
+
+            var result = new SqlDataReader().CreateResult(json);
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.True(result.StartsWith("[{"), result);
+            Assert.True(result.EndsWith("}]"), result);
+        }
+
+        [Fact]
+        public static void CreateResultEmptyJson()
+        {
+            string json = null;
+
+            var result = new SqlDataReader().CreateResult(json);
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal("[]", result);
         }
 
         [Fact]
