@@ -110,7 +110,8 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
                 new TokenBalances { Id = 2, Amount = "300", Owner = "0x2", Token = "Poolz" }
             };
             var mock = new Mock<IDataReader>();
-            MockDataReader.SetupDataReader(mock, emulated.ToArray());
+            MockDataReader<TokenBalances> setup = new (emulated);
+            setup.SetupDataReader(mock);
 
             var result = new SqlDataReader().ReadData(mock.Object);
 
