@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 using System.Data;
+using System.Text.Json;
 using System.Data.Common;
 using System.Collections.Generic;
-using System.Text.Json;
 
 namespace QuickSQL.DataReader
 {

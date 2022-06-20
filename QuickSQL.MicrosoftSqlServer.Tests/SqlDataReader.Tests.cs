@@ -1,13 +1,14 @@
+using Moq;
 using Xunit;
 using System;
 using System.Data;
 using System.Data.Common;
 using System.Globalization;
 using System.Data.SqlClient;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
 using QuickSQL.Tests.Mock;
-using Moq;
 
 namespace QuickSQL.MicrosoftSqlServer.Tests
 {
