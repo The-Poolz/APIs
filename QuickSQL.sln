@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickSQL", "QuickSQL\QuickSQL.csproj", "{392EBE0B-D754-4161-B0BD-A9878DF6E87D}"
 EndProject
@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickSQL.MySql", "QuickSQL.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickSQL.MicrosoftSqlServer", "QuickSQL.MicrosoftSqlServer\QuickSQL.MicrosoftSqlServer.csproj", "{1A49F03D-8A06-46B8-B2DD-5AC441B4904F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickSQL.MicrosoftSqlServer.Tests", "QuickSQL.MicrosoftSqlServer.Tests\QuickSQL.MicrosoftSqlServer.Tests.csproj", "{855AAFA2-A963-43B9-B8D2-762FEEE38D9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickSQL.MicrosoftSqlServer.Tests", "QuickSQL.MicrosoftSqlServer.Tests\QuickSQL.MicrosoftSqlServer.Tests.csproj", "{855AAFA2-A963-43B9-B8D2-762FEEE38D9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickSQL.Tests.Interfaces", "QuickSQL.Tests.Interfaces\QuickSQL.Tests.Interfaces.csproj", "{F4F3388D-3D40-422F-91C8-2AFE38373D3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{855AAFA2-A963-43B9-B8D2-762FEEE38D9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{855AAFA2-A963-43B9-B8D2-762FEEE38D9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{855AAFA2-A963-43B9-B8D2-762FEEE38D9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4F3388D-3D40-422F-91C8-2AFE38373D3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4F3388D-3D40-422F-91C8-2AFE38373D3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4F3388D-3D40-422F-91C8-2AFE38373D3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4F3388D-3D40-422F-91C8-2AFE38373D3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

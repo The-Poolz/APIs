@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\QuickSQL.Tests\QuickSQL.Tests.csproj" />
+    <ProjectReference Include="..\QuickSQL.Tests.Interfaces\QuickSQL.Tests.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>
