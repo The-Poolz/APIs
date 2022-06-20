@@ -5,6 +5,9 @@ using System.Data.Common;
 using System.Globalization;
 using System.Data.SqlClient;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using QuickSQL.Tests.Mock;
+using Moq;
 
 namespace QuickSQL.MicrosoftSqlServer.Tests
 {
@@ -93,6 +96,27 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
             Assert.NotNull(result);
             Assert.IsType<string>(result);
             Assert.Equal("[]", result);
+        }
+
+        [Fact]
+        public static void ReadData()
+        {
+            string expected = "{\"Id\":1,\"Token\":\"ADH\",\"Owner\":\"0x1\",\"Amount\":\"400\"}" +
+                "{\"Id\":2,\"Token\":\"Poolz\",\"Owner\":\"0x2\",\"Amount\":\"300\"}";
+
+            List<TokenBalances> emulated = new List<TokenBalances>()
+            {
+                new TokenBalances { Id = 1, Amount = "400", Owner = "0x1", Token = "ADH" },
+                new TokenBalances { Id = 2, Amount = "300", Owner = "0x2", Token = "Poolz" }
+            };
+            var mock = new Mock<IDataReader>();
+            MockDataReader.SetupDataReader(mock, emulated.ToArray());
+
+            var result = new SqlDataReader().ReadData(mock.Object);
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal(expected, result);
         }
 
         [Fact]

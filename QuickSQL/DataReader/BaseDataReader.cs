@@ -49,11 +49,11 @@ namespace QuickSQL.DataReader
             return json.Replace(" ", "", StringComparison.Ordinal);
         }
         /// <summary>
-        /// Read data from reader, used <see cref="DbDataReader.Read()"/>
+        /// Read data from reader.
         /// </summary>
         /// <param name="reader">Pass <see cref="DbDataReader"/> to read data.</param>
         /// <returns>Return JSON string.</returns>
-        public string ReadData(DbDataReader reader)
+        public string ReadData(IDataReader reader)
         {
             StringBuilder jsonResult = new();
             while (reader.Read())

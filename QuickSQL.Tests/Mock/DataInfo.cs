@@ -1,8 +1,7 @@
 ﻿using System;
-using System.IO;
+using System.Text.Json;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace QuickSQL.Tests.Mock
 {
@@ -26,62 +25,10 @@ namespace QuickSQL.Tests.Mock
                 throw new ArgumentException($"{nameof(fieldNames)}.Length != number of properties");
         }
 
-        public Type GetFieldType(int i)
-        {
-            ThrowIfOutOfRange(i);
-
-            return _properties[i].PropertyType;
-        }
-
-        public string GetName(int i)
-        {
-            ThrowIfOutOfRange(i);
-
-            return _fieldNames != null ? _fieldNames[i] : _properties[i].Name;
-        }
-
-        public U GetValue<U>(int r, int c)
+        public string GetValue<U>(int r, int c)
         {
             ThrowIfOutOfRange(c);
-
-            PropertyInfo prop = _properties[c];
-            object obj = Data[r];
-            return (U)Convert.ChangeType(prop.GetValue(obj), typeof(U));
-        }
-
-        public string GetDataTypeName(int i)
-        {
-            Type t = GetFieldType(i);
-            return t.Name;
-        }
-
-        public Stream GetStream(int r, int c)
-        {
-            ThrowIfOutOfRange(c);
-
-            object obj = GetValue<object>(r, c);
-            BinaryFormatter bf = new BinaryFormatter();
-            MemoryStream ms = new MemoryStream();
-            bf.Serialize(ms, obj);
-            return ms;
-        }
-
-        public int GetOrdinal(string name)
-        {
-            for (int i = 0; i < _properties.Length; ++i)
-            {
-                if (_properties[i].Name == name)
-                    return i;
-            }
-            throw new IndexOutOfRangeException();
-        }
-
-        public int GetValues(int r, object[] values)
-        {
-            int length = Math.Min(FieldCount, values.Length);
-            for (int c = 0; c < length; c++)
-                values[c] = GetValue<object>(r, c);
-            return length;
+            return JsonSerializer.Serialize(Data[r]);
         }
 
         private void ThrowIfOutOfRange(int c)
