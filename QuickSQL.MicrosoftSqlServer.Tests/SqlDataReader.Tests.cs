@@ -1,10 +1,16 @@
+using Moq;
 using Xunit;
 using System;
 using System.Data;
 using System.Data.Common;
 using System.Globalization;
-using System.Data.SqlClient;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
+using QuickSQL.Tests.Mock;
+using QuickSQL.DataReader;
+using QuickSQL.Tests.DataReader;
+using QuickSQL.Tests.QueryCreator;
 
 namespace QuickSQL.MicrosoftSqlServer.Tests
 {
@@ -23,7 +29,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
             var result = new SqlDataReader().CreateConnection(connectionString);
 
             Assert.NotNull(result);
-            Assert.IsType<SqlConnection>(result);
+            Assert.IsType<System.Data.SqlClient.SqlConnection>(result);
             Assert.Equal(ConnectionState.Closed, result.State);
         }
 
@@ -41,7 +47,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
                 new Collection<string> { { "Token" }, { "Owner" }, { "Amount" } },
                 new Collection<Condition>
                 {
-                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" }
+                    new Condition { ParamName = "Id", Operator = OperatorName.Equals, ParamValue = "1" },
                 });
             var commandQuery = new SqlQueryCreator().CreateCommandQuery(request);
 
@@ -55,6 +61,66 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
 
             Assert.NotNull(result);
             Assert.IsType<System.Data.SqlClient.SqlDataReader>(result);
+        }
+
+        [Fact]
+        public static void CreateResultSingleObject()
+        {
+            string json = "{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}";
+
+            var result = BaseDataReader.CreateResult(json);
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal(json, result);
+        }
+
+        [Fact]
+        public static void CreateResultArray()
+        {
+            string json = "{\"Token\":\"ADH\",\"Owner\":\"0x1a01ee5577c9d69c35a77496565b1bc95588b521\",\"Amount\":\"400\"}," +
+                "{\"Token\":\"Poolz\",\"Owner\":\"0x2a01ee5557c9d69c35577496555b1bc95558b552\",\"Amount\":\"300\"}";
+
+            var result = BaseDataReader.CreateResult(json);
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.True(result.StartsWith("[{"), result);
+            Assert.True(result.EndsWith("}]"), result);
+        }
+
+        [Fact]
+        public static void CreateResultEmptyJson()
+        {
+            string json = null;
+
+            var result = BaseDataReader.CreateResult(json);
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal("[]", result);
+        }
+
+        [Fact]
+        public static void ReadData()
+        {
+            string expected = "{\"Id\":1,\"Token\":\"ADH\",\"Owner\":\"0x1\",\"Amount\":\"400\"}" +
+                "{\"Id\":2,\"Token\":\"Poolz\",\"Owner\":\"0x2\",\"Amount\":\"300\"}";
+
+            Collection<TokenBalances> emulated = new Collection<TokenBalances>(new List<TokenBalances>
+            {
+                new TokenBalances { Id = 1, Amount = "400", Owner = "0x1", Token = "ADH" },
+                new TokenBalances { Id = 2, Amount = "300", Owner = "0x2", Token = "Poolz" }
+            });
+            var mock = new Mock<IDataReader>();
+            MockDataReader<TokenBalances> setup = new(emulated);
+            setup.SetupDataReader(mock);
+
+            var result = BaseDataReader.ReadData(mock.Object);
+
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -104,7 +170,7 @@ namespace QuickSQL.MicrosoftSqlServer.Tests
 
             void result() => new SqlDataReader().GetJsonData(commandQuery, connectionString);
 
-            SqlException exception = Assert.Throws<SqlException>(result);
+            System.Data.SqlClient.SqlException exception = Assert.Throws<System.Data.SqlClient.SqlException>(result);
             Assert.Equal(expected, exception.Message);
         }
 

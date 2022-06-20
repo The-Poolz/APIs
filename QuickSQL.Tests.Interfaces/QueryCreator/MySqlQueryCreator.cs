@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-using QuickSQL.QueryCreator;
+﻿using QuickSQL.QueryCreator;
 
 namespace QuickSQL.Tests.QueryCreator
 {
